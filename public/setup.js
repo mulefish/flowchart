@@ -1,24 +1,88 @@
-const TEXT_UP = -20
-const TEXT_OVER = 20
+const TEXT_UP = -10
+const TEXT_OVER = 10
+const LINE_COLOR = "lightgray"
+const FONT_SIZE = 10
+const CHARCOAL = "#e9e9e9"
+const OUTLINE_COLOR = "#e9e9e9"
+
+const ORANGE = "#ff5533"
 let H = undefined
 let W = undefined
+// class Shape {
+//     constructor(x, y, size, text) {
+//         this.x = x;
+//         this.y = y;
+//         this.size = size; // Size (width/height for box, diameter for diamond)
+//         this.text = text;
+
+//         this.centerX = x + (size / 2);
+//         this.centerY = y + (size / 2);
+
+//         // Appearance
+//         this.type = undefined;
+//         this.backgroundColor = CHARCOAL;
+//         this.toggleColors = [CHARCOAL, ORANGE];
+//     }
+
+//     setShape(type) {
+//         this.type = type;
+//     }
+
+//     setToggleColors(color1, color2) {
+//         this.toggleColors = [color1, color2];
+//         this.backgroundColor = color1;
+//     }
+
+//     toggleBackgroundColor() {
+//         this.backgroundColor = (this.backgroundColor === this.toggleColors[0])
+//             ? this.toggleColors[1]
+//             : this.toggleColors[0];
+
+//         this.redraw();
+//     }
+
+//     redraw() {
+//         if (this.type === 'box') {
+//             drawBoxObject(this);
+//         } else if (this.type === 'diamond') {
+//             drawDiamondObject(this);
+//         }
+//     }
+// }
+
+// class TextObj extends Shape {
+//     constructor(x, y, size, text) {
+//         super(x, y, size, text);
+//         this.setShape("text");
+//         this.setToggleColors(CHARCOAL, ORANGE);
+//     }
+// }
+
+
+// class Diamond extends Shape {
+//     constructor(x, y, size, text) {
+//         super(x, y, size, text);
+//         this.setShape("diamond");
+//         this.setToggleColors(CHARCOAL, ORANGE);
+//     }
+// }
+
+
 class Shape {
     constructor(x, y, size, text) {
-        this.x = x;
-        this.y = y;
-        this.size = size;
+        this.x = x; // Reference starting point (Box: top-left, Diamond: center)
+        this.y = y; // Reference starting point (Box: top-left, Diamond: center)
+        this.size = size; // Size (width/height for box, half-diameter for diamond)
         this.text = text;
-        this.leftX = x;
-        this.leftY = y + (size / 2);
-        this.rightX = x + size;
-        this.rightY = y + (size / 2);
-        this.topX = x + (size / 2);
-        this.topY = y;
-        this.bottomX = x + (size / 2);
-        this.bottomY = y + size;
+
+        // Default center for boxes (rectangular shapes)
+        this.centerX = x + (size / 2); 
+        this.centerY = y + (size / 2);
+
+        // Appearance
         this.type = undefined;
-        this.backgroundColor = 'lightgray';
-        this.toggleColors = ['lightgray', 'yellow'];
+        this.backgroundColor = CHARCOAL;
+        this.toggleColors = [CHARCOAL, ORANGE];
     }
 
     setShape(type) {
@@ -47,19 +111,40 @@ class Shape {
     }
 }
 
+class TextObj extends Shape {
+    constructor(x, y, size, text) {
+        super(x, y, size, text);
+        this.setShape("text");
+        this.setToggleColors(CHARCOAL, ORANGE);
+    }
+}
+
 class Diamond extends Shape {
     constructor(x, y, size, text) {
         super(x, y, size, text);
         this.setShape("diamond");
-        this.setToggleColors('lightgreen', 'lightpink');
+        this.setToggleColors(CHARCOAL, ORANGE);
+        
+        // Override centerX and centerY for Diamond
+        this.centerX = x; // The center of a diamond is already `x`
+        this.centerY = y; // The center of a diamond is already `y`
     }
 }
+
 
 class Box extends Shape {
     constructor(x, y, size, text) {
         super(x, y, size, text);
         this.setShape("box");
-        this.setToggleColors('lightblue', 'lightcoral');
+        this.setToggleColors(CHARCOAL, ORANGE);
+    }
+}
+
+class Waypoint extends Shape {
+    constructor(x, y, size, text) {
+        super(x, y, size, text);
+        this.setShape("waypoint");
+        this.setToggleColors(CHARCOAL, ORANGE);
     }
 }
 
@@ -85,16 +170,51 @@ function drawBoxObject(obj) {
     box.setAttribute('width', obj.size);
     box.setAttribute('height', obj.size);
     box.setAttribute('fill', obj.backgroundColor || 'lightblue');
-    box.setAttribute('stroke', 'black');
+    box.setAttribute('stroke', OUTLINE_COLOR);
 
     let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.setAttribute('x', TEXT_OVER + obj.x + obj.size / 2);
     text.setAttribute('y', TEXT_UP + obj.y + obj.size / 2);
     text.setAttribute('text-anchor', 'middle');
     text.setAttribute('alignment-baseline', 'middle');
+    text.setAttribute('font-size', FONT_SIZE);
+
     text.textContent = obj.text;
 
     svg.appendChild(box);
+    svg.appendChild(text);
+}
+
+function drawCircleObject(obj) {
+    let circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute('cx', obj.x + obj.size / 2);
+    circle.setAttribute('cy', obj.y + obj.size / 2);
+    circle.setAttribute('r', obj.size / 2);
+    circle.setAttribute('fill', 'none');
+    circle.setAttribute('stroke', obj.strokeColor || 'gray');
+    circle.setAttribute('stroke-width', '2');
+    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', TEXT_OVER + obj.x);
+    text.setAttribute('y', TEXT_UP + obj.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('alignment-baseline', 'middle');
+    text.setAttribute('font-size', FONT_SIZE);
+
+    text.textContent = obj.text;
+
+    svg.appendChild(circle);
+    svg.appendChild(text);
+
+}
+
+function drawText(obj) {
+    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', 4 + obj.x);
+    text.setAttribute('y', obj.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('alignment-baseline', 'middle');
+    text.setAttribute('font-size', FONT_SIZE);
+    text.textContent = obj.text;
     svg.appendChild(text);
 }
 
@@ -107,61 +227,38 @@ function drawDiamondObject(obj) {
         ${obj.x - obj.size},${obj.y}
     `);
     diamond.setAttribute('fill', obj.backgroundColor || 'lightgreen');
-    diamond.setAttribute('stroke', 'black');
+    diamond.setAttribute('stroke', OUTLINE_COLOR);
 
     let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.setAttribute('x', TEXT_OVER + obj.x);
     text.setAttribute('y', TEXT_UP + obj.y);
     text.setAttribute('text-anchor', 'middle');
     text.setAttribute('alignment-baseline', 'middle');
+    text.setAttribute('font-size', FONT_SIZE);
+
     text.textContent = obj.text;
 
     svg.appendChild(diamond);
     svg.appendChild(text);
 }
 
+/**
+ * Calculate start and end coordinates for an arrow between two shapes.
+ * @param {Shape} obj1 - Source shape.
+ * @param {Shape} obj2 - Target shape.
+ * @param {string} direction - "downUp", "leftRight", "upDown", "rightLeft", "center".
+ * @returns {[number, number, number, number]} Coordinates (x1, y1, x2, y2).
+ */
 function getFromToXY(obj1, obj2, direction) {
     let x1, y1, x2, y2;
+    x1 = obj1.centerX;
+    y1 = obj1.centerY;
 
-    if (direction === downUp) {
-        if (obj1.type === "diamond") {
-            x1 = obj1.x; 
-            y1 = obj1.y - obj1.size;
-        } else {
-            x1 = obj1.x + obj1.size / 2;
-            y1 = obj1.y;
-        }
-        if (obj2.type === "diamond") {
-            x2 = obj2.x; 
-            y2 = obj2.y + obj2.size;
-        } else {
-            x2 = obj2.x + obj2.size / 2;
-            y2 = obj2.y + obj2.size;
-        }
-    } else if (direction === leftRight) {
-        if (obj1.type === "diamond") {
-            x1 = obj1.x + obj1.size;
-            y1 = obj1.y;
-        } else {
-            x1 = obj1.rightX;
-            y1 = obj1.rightY;
-        }
-
-        if (obj2.type === "diamond") {
-            x2 = obj2.x - obj2.size;
-            y2 = obj2.y;
-        } else {
-            x2 = obj2.leftX;
-            y2 = obj2.leftY;
-        }
-    } else {
-        console.error(`Invalid direction: ${direction}`);
-        return [0, 0, 0, 0];
-    }
+    x2 = obj2.centerX;
+    y2 = obj2.centerY;
 
     return [x1, y1, x2, y2];
 }
-
 
 
 /**
@@ -170,7 +267,7 @@ function getFromToXY(obj1, obj2, direction) {
  * @param {Shape} obj2 - Target shape.
  * @param {string} direction - "downUp" or "leftRight"
  */
-function drawArrow(obj1, obj2, direction) {
+function drawArrow(obj1, obj2, direction, arrowType) {
     /* 
     Each Arrow is Unique:
     Each arrow has its own SVG <g> group.
@@ -178,9 +275,7 @@ function drawArrow(obj1, obj2, direction) {
     */
     let [x1, y1, x2, y2] = getFromToXY(obj1, obj2, direction);
     
-    console.log("x1:", x1, "y1:", y1, "x2:", x2, "y2:", y2, "Direction:", direction);
-
-    const arrowLength = 10;
+    const arrowLength = 5;
     const arrowAngle = Math.PI / 6;
     const angle = Math.atan2(y2 - y1, x2 - x1);
 
@@ -196,8 +291,11 @@ function drawArrow(obj1, obj2, direction) {
     line.setAttribute('y1', y1);
     line.setAttribute('x2', x2);
     line.setAttribute('y2', y2);
-    line.setAttribute('stroke', 'gray');
-    line.setAttribute('stroke-width', '2');
+    line.setAttribute('stroke', LINE_COLOR);
+    line.setAttribute('stroke-width', '1');
+    if ( arrowType === dashed ) {
+        line.setAttribute('stroke-dasharray', '5,5');
+    }
 
     // Create Arrowhead
     let arrowPoint1 = {
@@ -215,7 +313,7 @@ function drawArrow(obj1, obj2, direction) {
         ${arrowPoint1.x},${arrowPoint1.y}
         ${arrowPoint2.x},${arrowPoint2.y}
     `);
-    arrowHead.setAttribute('fill', 'gray');
+    arrowHead.setAttribute('fill', 'gray'); // LINE_COLOR);
 
     // Append the line and arrowhead to the group
     arrowGroup.appendChild(line);
