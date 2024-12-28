@@ -20,46 +20,6 @@ window.addEventListener('resize', () => {
 });
 
 
-
-function drawDiamondObject(obj) {
-    // Begin path for the diamond
-    ctx.beginPath();
-    ctx.moveTo(obj.x, obj.y - obj.size); // Top point
-    ctx.lineTo(obj.x + obj.size, obj.y); // Right point
-    ctx.lineTo(obj.x, obj.y + obj.size); // Bottom point
-    ctx.lineTo(obj.x - obj.size, obj.y); // Left point
-    ctx.closePath();
-
-    // Fill the diamond
-    ctx.fillStyle = 'lightgreen';
-    ctx.fill();
-
-    // Draw the border
-    ctx.strokeStyle = 'black';
-    ctx.stroke();
-
-    // Draw the text in the center
-    ctx.font = '14px Arial';
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(obj.type, obj.x, obj.y);
-}
-
-// function drawBoxObject(obj) {
-//     // Draw the square
-//     ctx.fillStyle = 'lightblue';
-//     ctx.fillRect(obj.x, obj.y, obj.size, obj.size);
-
-//     // Draw the border
-//     ctx.strokeStyle = 'black';
-//     ctx.strokeRect(obj.x, obj.y, obj.size, obj.size);
-
-//     // Draw the text
-//     ctx.font = '14px Arial';
-//     ctx.fillStyle = 'black';
-//     ctx.fillText(obj.type, obj.x + 5, obj.y + obj.size / 2 + 5); // Slight adjustment for alignment
-// }
 function drawBoxObject(obj) {
     // Draw the square with dynamic background color
     ctx.fillStyle = obj.backgroundColor || 'lightblue';
@@ -76,3 +36,29 @@ function drawBoxObject(obj) {
     ctx.textBaseline = 'middle';
     ctx.fillText(obj.type, obj.x + obj.size / 2, obj.y + obj.size / 2);
 }
+
+function drawDiamondObject(obj) {
+    // Begin path for the diamond
+    ctx.beginPath();
+    ctx.moveTo(obj.x, obj.y - obj.size); // Top point
+    ctx.lineTo(obj.x + obj.size, obj.y); // Right point
+    ctx.lineTo(obj.x, obj.y + obj.size); // Bottom point
+    ctx.lineTo(obj.x - obj.size, obj.y); // Left point
+    ctx.closePath();
+
+    // Fill the diamond
+    ctx.fillStyle = obj.backgroundColor || 'lightgreen';
+    ctx.fill();
+
+    // Draw the border
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+
+    // Draw the text in the center
+    ctx.font = '14px Arial';
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(obj.type, obj.x, obj.y);
+}
+
