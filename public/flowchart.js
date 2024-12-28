@@ -1,3 +1,5 @@
+const leftRight = "leftright"
+const downUp = "downUp"
 let nodes = {}
 let fromTo = {}
 function getY(down) {
@@ -29,13 +31,11 @@ function setTheShapes() {
             console.log("%c FAILBOT! ", "background-color:pink;")
         }
     }
-    const leftRight = "leftright"
-    const downUp = "downUp"
     fromTo = {
         "Home": { target: "Disclosures", direction: leftRight },
         "Disclosures": { target: "SignIn", direction: leftRight },
         "SignIn": { target: "Password", direction: downUp },
-        "Home": { target: "Test", direction: downUp },
+        //"Home": { target: "Test", direction: downUp },
     }
     for (let key in fromTo) {
         const fromEntry = fromTo[key]
@@ -43,12 +43,6 @@ function setTheShapes() {
         const direction = fromEntry.direction
         const from = nodes[key]
         const to = nodes[toKey]
-        if (direction === leftRight) {
-            drawLeftRight(from, to)
-        } else if ( direction === downUp) {
-            drawDownUp(from, to)
-
-        }
+            drawArrow(from, to, direction)
     }
-
 } 
