@@ -164,15 +164,31 @@ function getFromToXY(obj1, obj2, direction) {
 
 
 
-
+/**
+ * Draw an arrow between two shapes
+ * @param {Shape} obj1 - Source shape.
+ * @param {Shape} obj2 - Target shape.
+ * @param {string} direction - "downUp" or "leftRight"
+ */
 function drawArrow(obj1, obj2, direction) {
+    /* 
+    Each Arrow is Unique:
+    Each arrow has its own SVG <g> group.
+    Prevents overwriting when multiple arrows originate from the same shape.
+    */
     let [x1, y1, x2, y2] = getFromToXY(obj1, obj2, direction);
     
-   
-    console.log("x1 " + x1 , x2, y1, y2, direction)
+    console.log("x1:", x1, "y1:", y1, "x2:", x2, "y2:", y2, "Direction:", direction);
+
     const arrowLength = 10;
     const arrowAngle = Math.PI / 6;
     const angle = Math.atan2(y2 - y1, x2 - x1);
+
+    // Create a group for the arrow (to avoid overwriting arrows)
+    let arrowGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); // Important and tricksy!
+    arrowGroup.setAttribute('class', 'arrow');
+    arrowGroup.setAttribute('data-from', obj1.text);
+    arrowGroup.setAttribute('data-to', obj2.text);
 
     // Create Line
     let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -201,9 +217,14 @@ function drawArrow(obj1, obj2, direction) {
     `);
     arrowHead.setAttribute('fill', 'gray');
 
-    svg.appendChild(line);
-    svg.appendChild(arrowHead);
+    // Append the line and arrowhead to the group
+    arrowGroup.appendChild(line);
+    arrowGroup.appendChild(arrowHead);
+
+    // Append the group to the SVG
+    svg.appendChild(arrowGroup);
 }
+
 
 
 // Init and onresize called from index.html
