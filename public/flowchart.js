@@ -1,78 +1,54 @@
-class Shape { 
-    constructor(x, y, size, text) {
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.text = text;
-        this.leftX = x;
-        this.leftY = y + (size / 2);
-        this.rightX = x + size;
-        this.rightY = y + (size / 2);
-        this.type = undefined;
-        this.backgroundColor = 'lightgray';
-        this.toggleColors = ['lightgray', 'yellow'];
+let nodes = {}
+let fromTo = {}
+function getY(down) {
+    down /= 10
+    return H *down
+}
+
+function getX(over) {
+    over /= 10 
+    return W * over 
+}
+function setTheShapes() {
+
+    nodes = {
+        "Home": new Box(getX(1), getY(6), 30, 'Home'),
+        "Disclosures": new Box(getX(2), getY(6), 30, 'Disclosures'),
+        "SignIn": new Diamond(getX(4), getY(6), 30, 'SignIn'),
+        "Password": new Box(getX(4), getY(1), 30, 'Password'),
+        "Test": new Box(getX(1), getY(1), 30, 'Test'),
     }
 
-    setShape(type) { 
-        this.type = type;
-    }
-
-    setToggleColors(color1, color2) {
-        this.toggleColors = [color1, color2];
-        this.backgroundColor = color1;
-    }
-
-    toggleBackgroundColor() {
-        this.backgroundColor = (this.backgroundColor === this.toggleColors[0]) 
-            ? this.toggleColors[1] 
-            : this.toggleColors[0];
-        
-        this.redraw();
-    }
-
-    redraw() {
-        if (this.type === 'box') {
-            drawBoxObject(this);
-        } else if (this.type === 'diamond') {
-            drawDiamondObject(this);
+    for (let k in nodes) {
+        const o = nodes[k]
+        if (o.type === "diamond") {
+            drawDiamondObject(o);
+        } else if (o.type === "box") {
+            drawBoxObject(o)
+        } else {
+            console.log("%c FAILBOT! ", "background-color:pink;")
         }
     }
-}
-
-class Diamond extends Shape {
-    constructor(x, y, size, text) {
-        super(x, y, size, text);
-        this.setShape("diamond");
-        this.setToggleColors('lightgreen', 'lightpink');
+    const leftRight = "leftright"
+    const downUp = "downUp"
+    fromTo = {
+        "Home": { target: "Disclosures", direction: leftRight },
+        "Disclosures": { target: "SignIn", direction: leftRight },
+        "SignIn": { target: "Password", direction: downUp },
+        "Home": { target: "Test", direction: downUp },
     }
-}
+    for (let key in fromTo) {
+        const fromEntry = fromTo[key]
+        const toKey = fromEntry.target
+        const direction = fromEntry.direction
+        const from = nodes[key]
+        const to = nodes[toKey]
+        if (direction === leftRight) {
+            drawLeftRight(from, to)
+        } else if ( direction === downUp) {
+            drawDownUp(from, to)
 
-class Box extends Shape {
-    constructor(x, y, size, text) {
-        super(x, y, size, text);
-        this.setShape("box");
-        this.setToggleColors('lightblue', 'lightcoral');
+        }
     }
-}
 
-function toggle(key){ 
-    nodes[key].toggleBackgroundColor()
-}
-
-const nodes = {
-    "d1": new Diamond(50, 100, 30, 'diamond'),
-    "b1": new Box(150, 100, 30, 'box'),
-    "b2": new Box(200, 30, 30, 'b2'),
-}
-for ( let k in nodes ) {
-    const o = nodes[k] 
-    if ( o.type === "diamond") {
-        drawDiamondObject(o);
-    } else if ( o.type === "box") {
-        drawBoxObject(o)
-    } else {
-        console.log("%c FAILBOT! ", "background-color:pink;")
-    }
-}
-
-drawArrow(100,100,300,120)
+} 

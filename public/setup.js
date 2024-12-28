@@ -1,109 +1,310 @@
-let H = undefined
-let W = undefined
-// Get the canvas and context
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
+const TEXT_UP = -20
+const TEXT_OVER = 20
+let H=undefined
+let W=undefined
+class Shape { 
+    constructor(x, y, size, text) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.text = text;
+        this.leftX = x;
+        this.leftY = y + (size / 2);
+        this.rightX = x + size;
+        this.rightY = y + (size / 2);
+        this.topX = x + (size / 2);
+        this.topY = y;
+        this.bottomX = x + (size / 2);
+        this.bottomY = y + size;
+        this.type = undefined;
+        this.backgroundColor = 'lightgray';
+        this.toggleColors = ['lightgray', 'yellow'];
+    }
 
-// // Set the canvas size dynamically
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight * 0.2; // 1/5 of the screen height
+    setShape(type) { 
+        this.type = type;
+    }
+
+    setToggleColors(color1, color2) {
+        this.toggleColors = [color1, color2];
+        this.backgroundColor = color1;
+    }
+
+    toggleBackgroundColor() {
+        this.backgroundColor = (this.backgroundColor === this.toggleColors[0]) 
+            ? this.toggleColors[1] 
+            : this.toggleColors[0];
+        
+        this.redraw();
+    }
+
+    redraw() {
+        if (this.type === 'box') {
+            drawBoxObject(this);
+        } else if (this.type === 'diamond') {
+            drawDiamondObject(this);
+        }
+    }
 }
 
-resizeCanvas();
-window.addEventListener('resize', () => {
+class Diamond extends Shape {
+    constructor(x, y, size, text) {
+        super(x, y, size, text);
+        this.setShape("diamond");
+        this.setToggleColors('lightgreen', 'lightpink');
+    }
+}
+
+class Box extends Shape {
+    constructor(x, y, size, text) {
+        super(x, y, size, text);
+        this.setShape("box");
+        this.setToggleColors('lightblue', 'lightcoral');
+    }
+}
+
+function toggle(key){ 
+    nodes[key].toggleBackgroundColor()
+}
+/////////////// DISPLAY logic follows ///////////////
+const svg = document.getElementById('mySVG');
+// Resize SVG dynamically
+function resizeSVG() {
+    svg.setAttribute('width', window.innerWidth);
+    svg.setAttribute('height', window.innerHeight * 0.2);
     H = window.innerHeight * 0.2;
     W = window.innerWidth;
+    console.log("And now? " + H + " W " +  W )
     document.getElementById("H").innerHTML = "H=" + H;
     document.getElementById("W").innerHTML = "W=" + W;
-    resizeCanvas();
-});
-
-
-function drawBoxObject(obj) {
-    // Draw the square with dynamic background color
-    ctx.fillStyle = obj.backgroundColor || 'lightblue';
-    ctx.fillRect(obj.x, obj.y, obj.size, obj.size);
-
-    // Draw the border
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(obj.x, obj.y, obj.size, obj.size);
-
-    // Draw the text
-    ctx.font = '14px Arial';
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(obj.type, obj.x + obj.size / 2, obj.y + obj.size / 2);
 }
 
+// Draw a Box Object
+function drawBoxObject(obj) {
+    let box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    box.setAttribute('x', obj.x);
+    box.setAttribute('y', obj.y);
+    box.setAttribute('width', obj.size);
+    box.setAttribute('height', obj.size);
+    box.setAttribute('fill', obj.backgroundColor || 'lightblue');
+    box.setAttribute('stroke', 'black');
+
+    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', TEXT_OVER + obj.x + obj.size / 2);
+    text.setAttribute('y', TEXT_UP + obj.y + obj.size / 2);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('alignment-baseline', 'middle');
+    text.textContent = obj.text;
+
+    svg.appendChild(box);
+    svg.appendChild(text);  
+}
+
+// Draw a Diamond Object
 function drawDiamondObject(obj) {
-    // Begin path for the diamond
-    ctx.beginPath();
-    ctx.moveTo(obj.x, obj.y - obj.size); // Top point
-    ctx.lineTo(obj.x + obj.size, obj.y); // Right point
-    ctx.lineTo(obj.x, obj.y + obj.size); // Bottom point
-    ctx.lineTo(obj.x - obj.size, obj.y); // Left point
-    ctx.closePath();
+    let diamond = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    diamond.setAttribute('points', `
+        ${obj.x},${obj.y - obj.size}
+        ${obj.x + obj.size},${obj.y}
+        ${obj.x},${obj.y + obj.size}
+        ${obj.x - obj.size},${obj.y}
+    `);
+    diamond.setAttribute('fill', obj.backgroundColor || 'lightgreen');
+    diamond.setAttribute('stroke', 'black');
 
-    // Fill the diamond
-    ctx.fillStyle = obj.backgroundColor || 'lightgreen';
-    ctx.fill();
+    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', TEXT_OVER + obj.x);
+    text.setAttribute('y', TEXT_UP + obj.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('alignment-baseline', 'middle');
+    text.textContent = obj.text;
 
-    // Draw the border
-    ctx.strokeStyle = 'black';
-    ctx.stroke();
-
-    // Draw the text in the center
-    ctx.font = '14px Arial';
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(obj.type, obj.x, obj.y);
+    svg.appendChild(diamond);
+    svg.appendChild(text);
 }
 
 /**
- * Draws a directional arrow from one point to another.
- * @param {number} x1 - Starting x-coordinate.
- * @param {number} y1 - Starting y-coordinate.
- * @param {number} x2 - Ending x-coordinate.
- * @param {number} y2 - Ending y-coordinate.
+ * Draws an arrow vertically from the bottom of one shape to the top of another.
+ * @param {Shape} obj1 - The source shape.
+ * @param {Shape} obj2 - The target shape.
  */
-function drawArrow(x1, y1, x2, y2) {
-    const arrowLength = 10; // Length of the arrowhead lines
-    const arrowAngle = Math.PI / 6; // Angle of the arrowhead (30°)
-    
-    // Draw the main line (arrow shaft)
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = 'gray';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  
-    // Calculate the angle of the line
+// function drawDownUp(obj1, obj2) {
+//     let x1, y1, x2, y2;
+
+//     // Determine origin points based on shape type for obj1 (source)
+//     if (obj1.type === "diamond") {
+//         x1 = obj1.x; // Center of diamond
+//         y1 = obj1.y + obj1.size; // Bottom tip of diamond
+//     } else {
+//         x1 = obj1.bottomX; // Bottom center for boxes
+//         y1 = obj1.bottomY;
+//     }
+
+//     // Determine destination points based on shape type for obj2 (target)
+//     if (obj2.type === "diamond") {
+//         x2 = obj2.x; // Center of diamond
+//         y2 = obj2.y - obj2.size; // Top tip of diamond
+//     } else {
+//         x2 = obj2.topX; // Top center for boxes
+//         y2 = obj2.topY;
+//     }
+
+//     const arrowLength = 10;
+//     const arrowAngle = Math.PI / 6;
+//     const angle = Math.atan2(y2 - y1, x2 - x1);
+
+//     // Create Line
+//     let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+//     line.setAttribute('x1', x1);
+//     line.setAttribute('y1', y1);
+//     line.setAttribute('x2', x2);
+//     line.setAttribute('y2', y2);
+//     line.setAttribute('stroke', 'gray');
+//     line.setAttribute('stroke-width', '2');
+
+//     // Create Arrowhead
+//     let arrowPoint1 = {
+//         x: x2 - arrowLength * Math.cos(angle - arrowAngle),
+//         y: y2 - arrowLength * Math.sin(angle - arrowAngle)
+//     };
+//     let arrowPoint2 = {
+//         x: x2 - arrowLength * Math.cos(angle + arrowAngle),
+//         y: y2 - arrowLength * Math.sin(angle + arrowAngle)
+//     };
+
+//     let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+//     arrowHead.setAttribute('points', `
+//         ${x2},${y2}
+//         ${arrowPoint1.x},${arrowPoint1.y}
+//         ${arrowPoint2.x},${arrowPoint2.y}
+//     `);
+//     arrowHead.setAttribute('fill', 'gray');
+
+//     svg.appendChild(line);
+//     svg.appendChild(arrowHead);
+// }
+
+/**
+ * Draws an arrow vertically from the bottom of one shape to the top of another.
+ * @param {Shape} obj1 - The source shape.
+ * @param {Shape} obj2 - The target shape.
+ */
+/**
+ * Draws an arrow vertically from the bottom of one shape to the top of another.
+ * @param {Shape} obj1 - The source shape.
+ * @param {Shape} obj2 - The target shape.
+ */
+function drawDownUp(obj1, obj2) {
+    let x1, y1, x2, y2;
+
+    if (obj1.type === "diamond") {
+        x1 = obj1.x;
+ //       y1 = obj1.topY - obj1.size / 2 
+       //  y1 = obj1.y + obj1.size; // Bottom tip of the diamond
+       y1 = obj1.y - obj1.size;
+ 
+    } else {
+        x1 = obj1.x + obj1.size / 2;
+        y1 = obj1.topY
+    }
+
+    // Determine destination points (Top of target shape)
+    if (obj2.type === "diamond") {
+        x2 = obj2.x; 
+        y2 = obj2.y - obj2.size; 
+    } else {
+        x2 = obj2.x + obj2.size / 2; 
+        y2 = obj2.y + obj2.size; 
+    }
+
+    const arrowLength = 10;
+    const arrowAngle = Math.PI / 6;
     const angle = Math.atan2(y2 - y1, x2 - x1);
-  
-    // Calculate arrowhead points with trigonometry!
-    
-    const arrowPoint1 = {
+
+    // Create Line
+    let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', 'gray');
+    line.setAttribute('stroke-width', '2');
+
+    // Create Arrowhead
+    let arrowPoint1 = {
         x: x2 - arrowLength * Math.cos(angle - arrowAngle),
         y: y2 - arrowLength * Math.sin(angle - arrowAngle)
     };
-    const arrowPoint2 = {
+    let arrowPoint2 = {
         x: x2 - arrowLength * Math.cos(angle + arrowAngle),
         y: y2 - arrowLength * Math.sin(angle + arrowAngle)
     };
 
-    // Draw the arrowhead
-    ctx.beginPath();
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(arrowPoint1.x, arrowPoint1.y);
-    ctx.lineTo(arrowPoint2.x, arrowPoint2.y);
-    ctx.lineTo(x2, y2);
-    ctx.closePath();
-    ctx.fillStyle = 'red';
-    ctx.fill();
+    let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    arrowHead.setAttribute('points', `
+        ${x2},${y2}
+        ${arrowPoint1.x},${arrowPoint1.y}
+        ${arrowPoint2.x},${arrowPoint2.y}
+    `);
+    arrowHead.setAttribute('fill', 'gray');
+
+    svg.appendChild(line);
+    svg.appendChild(arrowHead);
 }
 
 
+function drawLeftRight(obj1, obj2) {
+    let x1, y1, x2, y2;
+    // Determine origin points based on shape type
+    if (obj1.type === "diamond") {
+        x1 = obj1.x + obj1.size; // Right edge of diamond
+        y1 = obj1.y;             // Middle (vertical center) of diamond
+    } else {
+        x1 = obj1.rightX; // Default rightX for other shapes
+        y1 = obj1.rightY; // Default rightY for other shapes
+    }
+    if (obj2.type === "diamond") {
+        x2 = obj2.x - obj2.size; // Left edge of diamond
+        y2 = obj2.y;             // Middle (vertical center) of diamond
+    } else {
+        x2 = obj2.leftX; // Default leftX for other shapes
+        y2 = obj2.leftY; // Default leftY for other shapes
+    }
+
+    const arrowLength = 10;
+    const arrowAngle = Math.PI / 6;
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+
+    // Create Line
+    let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', 'gray');
+    line.setAttribute('stroke-width', '2');
+
+    // Create Arrowhead
+    let arrowPoint1 = {
+        x: x2 - arrowLength * Math.cos(angle - arrowAngle),
+        y: y2 - arrowLength * Math.sin(angle - arrowAngle)
+    };
+    let arrowPoint2 = {
+        x: x2 - arrowLength * Math.cos(angle + arrowAngle),
+        y: y2 - arrowLength * Math.sin(angle + arrowAngle)
+    };
+
+    let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    arrowHead.setAttribute('points', `
+        ${x2},${y2}
+        ${arrowPoint1.x},${arrowPoint1.y}
+        ${arrowPoint2.x},${arrowPoint2.y}
+    `);
+    arrowHead.setAttribute('fill', 'gray');
+
+    svg.appendChild(line);
+    svg.appendChild(arrowHead);
+}
+
+
+// Init and onresize called from index.html

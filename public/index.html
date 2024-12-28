@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Canvas</title>
+  <title>Responsive SVG Diagram</title>
   <style>
     html,
     body {
@@ -15,25 +12,35 @@
       overflow: hidden;
     }
 
-    canvas {
+    svg {
       display: block;
       width: 100vw;
       height: 20vh;
     }
   </style>
 </head>
-
 <body>
-  <canvas id="myCanvas"></canvas>
+  <svg id="mySVG"></svg>
   <hr />
   <span id="H"></span>
   <span id="W"></span>
-  <button onclick="toggle('b1')">b1</button>
-  <button onclick="toggle('d1')">d1</button>
-  <button onclick="toggle('b2')">b2</button>
-
+  <button onclick="toggle('Home')">Home</button>
+  <button onclick="toggle('Disclosures')">Disclosure</button>
+  <button onclick="toggle('SignIn')">SignIn</button>
+  <script>
+    function test() { 
+      let x = 1 / 10
+      console.log(x +" " + W)
+    }
+  </script>
+<button onclick="test()">test</button>
   <script src="setup.js"></script>
   <script src="flowchart.js"></script>
+  <script>
+    // Resize on load and window resize and add in the shapes
+    resizeSVG();
+    window.addEventListener('resize', resizeSVG);
+    setTheShapes();
+  </script>
 </body>
-
 </html>
