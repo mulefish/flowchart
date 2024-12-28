@@ -1,38 +1,39 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
 
 
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Responsive Canvas</title>
-      <style>
-        /* Ensure body and html take full screen size */
-        html, body {
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-        }
-    
-        /* Style for the canvas */
-        canvas {
-          display: block; /* Remove inline spacing */
-          width: 100vw; /* 100% of the viewport width */
-          height: 20vh; /* 1/5th (20%) of the viewport height */
-        }
-      </style>
-    </head>
-    <body>
-      <canvas id="myCanvas"></canvas>
-      <hr/>
-        <span id="H"></span>
-        <span id="W"></span>
-        <button onclick="toggle('b1')">b1</button>
-        <button onclick="toggle('d1')">d1</button>
-        <button onclick="toggle('b2')">b2</button>
-        
-        <script src="setup.js"></script>
-        <script src="flowchart.js"></script>
-    </body>
-    </html>
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Canvas</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 20vh;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas"></canvas>
+  <hr />
+  <span id="H"></span>
+  <span id="W"></span>
+  <button onclick="toggle('b1')">b1</button>
+  <button onclick="toggle('d1')">d1</button>
+  <button onclick="toggle('b2')">b2</button>
+
+  <script src="setup.js"></script>
+  <script src="flowchart.js"></script>
+</body>
+
+</html>

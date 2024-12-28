@@ -9,8 +9,8 @@ class Shape {
         this.rightX = x + size;
         this.rightY = y + (size / 2);
         this.type = undefined;
-        this.backgroundColor = 'lightgray'; // Default background
-        this.toggleColors = ['lightgray', 'yellow']; // Default toggle colors
+        this.backgroundColor = 'lightgray';
+        this.toggleColors = ['lightgray', 'yellow'];
     }
 
     setShape(type) { 
@@ -55,21 +55,10 @@ class Box extends Shape {
     }
 }
 
-// Toggle functions
-// function toggleBackgroundColorOfTheBox() { 
-//     box.toggleBackgroundColor();
-// }
-
-// function toggleBackgroundColorOfTheDiamond() { 
-//     diamond.toggleBackgroundColor();
-// }
-
 function toggle(key){ 
     nodes[key].toggleBackgroundColor()
 }
 
-////
-// Create instances
 const nodes = {
     "d1": new Diamond(50, 100, 30, 'diamond'),
     "b1": new Box(150, 100, 30, 'box'),
@@ -85,3 +74,5 @@ for ( let k in nodes ) {
         console.log("%c FAILBOT! ", "background-color:pink;")
     }
 }
+
+drawArrow(100,100,300,120)
