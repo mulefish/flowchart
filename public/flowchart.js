@@ -61,8 +61,8 @@ function setTheShapes() {
     const f = addNode(getX(c, -2), getY(c, 2), 20, c, boxType,  dashed, hasArrow,  neutral, "Signup", "Sign<br/>up") 
     const g = addNode(getX(f, 1), getY(f, 0), 20, f, boxType,  solid, hasArrow,  neutral, "Account", "Account<br/>details") 
     const h = addNode(getX(g, 1), getY(g, 0), 10, g, diamondType,  solid, hasArrow,  neutral, "Snow", "Is in<br/>snow") 
-    const i = addNode(getX(h, 1), getY(h, 0), 20, h, boxType,  solid, hasArrow,  neutral, "Associate", "Associate<br/>account") 
-
+    const i = addNode(getX(h, 1), getY(h, 0), 20, h, boxType,  solid, hasArrow,  positive, "Associate", "Associate<br/>account") 
+    fromTo[h.key].push({key: c.key, type: 'solid', arrowType: 'hasArrow', mood: negative})
     // // Draw the shapes!
     for (let k in nodes) {
         const o = nodes[k];
@@ -87,4 +87,5 @@ function setTheShapes() {
             drawArrow(from, to, lineType, arrowType, mood);
         }
     } 
+    console.log( fromTo )
 }
