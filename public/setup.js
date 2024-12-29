@@ -4,14 +4,14 @@ const TEXT_UP = -10;
 const TEXT_OVER = 10;
 const LINE_COLOR = "lightgray";
 const FONT_SIZE = 10;
-const CHARCOAL = "#e9e9e9";
+// const CHARCOAL = "#e9e9e9";
 const OUTLINE_COLOR = "#e9e9e9";
-const ORANGE = "#ff5533";
+// const ORANGE = "#ff5533";
 
 let H = window.innerHeight * 0.1; 
 let W = window.innerWidth; 
 
-
+/* 
 class Shape {
     constructor(x, y, size, text) {
         this.x = x; // Reference starting point (Box: top-left, Diamond: center)
@@ -89,7 +89,7 @@ class Waypoint extends Shape {
         this.setToggleColors(CHARCOAL, ORANGE);
     }
 }
-
+*/ 
 function toggle(key) {
     nodes[key].toggleBackgroundColor();
 }

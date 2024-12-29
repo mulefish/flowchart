@@ -1,95 +1,214 @@
-// ✅ **File 2: flowchart.js**
+// ✅ Step 1: Define Constants
+const STEP = 100;
+const SPRING_LENGTH = 150;
+const SPRING_STRENGTH = 0.05;
+const REPULSION_STRENGTH = 1000;
+const ITERATIONS = 50;
+const CHARCOAL = "#e9e9e9"; 
+const ORANGE = "#ff6633";
 
-const leftRight = "leftRight";
-const rightLeft = "rightLeft";
-const downUp = "downUp";
-const upDown = "upDown";
-const solid = "solid";
-const dashed = "dashed";
+// Node Shapes
+class Shape {
+    constructor(key, x, y, size, text) {
+        this.key = key;
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.text = text;
+        this.type = undefined;
+        this.centerX = x + (size / 2);
+        this.centerY = y + (size / 2);
+        this.backgroundColor = CHARCOAL;
+        this.toggleColors = [CHARCOAL, ORANGE];
+    }
 
-// Constants for grid spacing
-let GRID_X = W / 12; // Divides width into 12 columns
-let GRID_Y = H / 6;  // Divides height into 6 rows
+    setToggleColors(color1, color2) {
+        this.toggleColors = [color1, color2];
+        this.backgroundColor = color1;
+    }
 
-/**
- * Calculate X and Y dynamically based on grid positions.
- * @param {number} col - Column index (horizontal position).
- * @param {number} row - Row index (vertical position).
- * @param {number} offsetX - Horizontal adjustment (optional).
- * @param {number} offsetY - Vertical adjustment (optional).
- * @returns {Object} { x, y }
- */
-function getPosition(col, row, offsetX = 0, offsetY = 0) {
-    return {
-        x: col * GRID_X + offsetX,
-        y: row * GRID_Y + offsetY,
-    };
+    toggleBackgroundColor() {
+        this.backgroundColor = (this.backgroundColor === this.toggleColors[0])
+            ? this.toggleColors[1]
+            : this.toggleColors[0];
+        this.redraw();
+    }
+
+    redraw() {
+        if (this.type === 'box') {
+            drawBoxObject(this);
+        } else if (this.type === 'diamond') {
+            drawDiamondObject(this);
+        }
+    }
 }
 
-/**
- * Setup and draw nodes and connections
- */
-function setTheShapes() {
-    if (typeof W === 'undefined' || typeof H === 'undefined') {
-        console.error('W and H are undefined. Ensure resizeSVG() is called before setTheShapes.');
-        return;
+class Text extends Shape {
+    constructor(key, x, y, size, text) {
+        super(key, x, y, size, text);
+        this.type = "Text";
     }
-    nodes = {
-        "Home": new Box(getPosition(1, 3).x, getPosition(1, 3).y, 20, 'Home'),
-        "Disclosures": new Box(getPosition(4, 3).x, getPosition(4, 3).y, 20, 'Disclosures'),
-        "SignIn": new Diamond(getPosition(6, 3).x, getPosition(6, 3).y, 10, 'SignIn'),
-        "Password": new Box(getPosition(7, 1).x, getPosition(7, 1).y, 20, 'Password'),
-        "No1": new TextObj(getPosition(6, 5).x, getPosition(6, 5).y, 0, 'No'),
-        "SignUp": new Box(getPosition(3, 5).x, getPosition(3, 5).y, 20, 'SignUp'),
-        "STA": new Box(getPosition(4, 5).x, getPosition(4, 5).y, 20, 'Setup'),
-        "Snow": new Diamond(getPosition(5, 6).x, getPosition(5, 6).y, 10, 'Snow?'),
-        "Yes1": new TextObj(getPosition(8, 6).x, getPosition(8, 6).y, 0, 'Yes'),
-        "Associate": new Box(getPosition(9, 5).x, getPosition(9, 5).y, 20, 'Ass'),
-        "MFA": new Box(getPosition(9, 3).x, getPosition(9, 3).y, 20, 'MFA'),
-        "STALookup": new Diamond(getPosition(10, 3).x, getPosition(10, 3).y, 10, 'STA Lookup'),
-        "Found": new TextObj(getPosition(11, 2).x, getPosition(11, 2).y, 0, 'Found'),
-        "NotFound": new TextObj(getPosition(11, 5).x, getPosition(11, 5).y, 0, 'NotFound'),
-    };
+}
 
-    // Draw the nodes
+class Diamond extends Shape {
+    constructor(key, x, y, size, text) {
+        super(key, x, y, size, text);
+        this.type = "Diamond";
+    }
+}
 
-    for (let k in nodes) {
-        const o = nodes[k];
-        try {
-            if (o.type === "diamond") {
-                drawDiamondObject(o);
-            } else if (o.type === "box") {
-                drawBoxObject(o);
-            } else if (o.type === "waypoint") {
-                drawCircleObject(o);
-            } else if (o.type === "text") {
-                drawTextObject(o);
-            }
-        } catch (failbot) {
-            console.log("BOOM " + failbot)
+class Box extends Shape {
+    constructor(key, x, y, size, text) {
+        super(key, x, y, size, text);
+        this.type = "Box";
+    }
+}
+
+
+
+// ✅ Step 2: Declare `objects` and `arrayOfObjects`
+let objects = {
+    'A': { x: 0, y: 0, type: "box", text: "hello1" },
+    'B': { x: 0, y: 0, type: "box", text: "hello2" },
+    'C': { x: 0, y: 0, type: "diamond", text: "hello3" },
+    'D': { x: 0, y: 0, type: "text", text: "hello4" },
+    'E': { x: 0, y: 0, type: "box", text: "hello5" },
+    'F': { x: 0, y: 0, type: "box", text: "hello6" },
+    'Z': { x: 0, y: 0, type: "text", text: "hello7" }
+};
+
+let arrayOfObjects = [
+    { from: "A", to: "B", x: 0, y: 0, direction: "right" },
+    { from: "B", to: "Z", x: 0, y: 0, direction: "up" },
+    { from: "Z", to: "C", x: 0, y: 0, direction: "up" },
+    { from: "C", to: "D", x: 0, y: 0, direction: "up" }
+];
+
+// ✅ Step 3: Set Node Positions
+function setXYWithForceDirectedGraph() {
+    const nodeSpacing = W / (Object.keys(objects).length + 1);
+    const connectedNodes = new Set();
+
+    arrayOfObjects.forEach(edge => {
+        connectedNodes.add(edge.from);
+        connectedNodes.add(edge.to);
+    });
+
+    let index = 0;
+    for (let key in objects) {
+        if (connectedNodes.has(key)) {
+            objects[key].x = (index + 1) * nodeSpacing;
+            objects[key].y = H / 2;
+            index++;
         }
     }
 
-    // Define connections
-    fromTo = [
-        { from: "Home", target: "Disclosures", direction: leftRight, arrowType: solid },
-        { from: "Disclosures", target: "SignIn", direction: leftRight, arrowType: solid },
-        { from: "SignIn", target: "Password", direction: downUp, arrowType: solid },
-        { from: "SignIn", target: "SignUp", direction: upDown, arrowType: dashed },
-        { from: "SignUp", target: "STA", direction: leftRight, arrowType: solid },
-        { from: "STA", target: "Snow", direction: leftRight, arrowType: solid },
-        { from: "Snow", target: "No1", direction: leftRight, arrowType: solid },
-        { from: "No1", target: "SignIn", direction: downUp, arrowType: solid },
-        { from: "Snow", target: "Yes1", direction: rightLeft, arrowType: solid },
-        { from: "Yes1", target: "Associate", direction: leftRight, arrowType: solid },
-        { from: "SignIn", target: "MFA", direction: leftRight, arrowType: solid },
-        { from: "MFA", target: "STALookup", direction: leftRight, arrowType: solid },
-        { from: "STALookup", target: "Found", direction: upDown, arrowType: solid },
-        { from: "STALookup", target: "NotFound", direction: downUp, arrowType: solid },
-    ];
+    // Apply Attractive and Repulsive Forces
+    applyForces();
 
-    // Draw arrows
-    fromTo.forEach(({ from, target, direction, arrowType }) => {
-        drawArrow(nodes[from], nodes[target], direction, arrowType);
-    });
+    // Normalize Final Positions
+    normalizePositions();
+}
+
+// ✅ Step 4: Apply Forces
+function applyForces() {
+    for (let i = 0; i < ITERATIONS; i++) {
+        // Attractive Forces
+        arrayOfObjects.forEach(edge => {
+            const fromNode = objects[edge.from];
+            const toNode = objects[edge.to];
+            const dx = toNode.x - fromNode.x;
+            const dy = toNode.y - fromNode.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 0.1;
+            const force = (distance - SPRING_LENGTH) * SPRING_STRENGTH;
+
+            const fx = (force * dx) / distance;
+            const fy = (force * dy) / distance;
+
+            fromNode.x += fx;
+            fromNode.y += fy;
+            toNode.x -= fx;
+            toNode.y -= fy;
+        });
+
+        // Repulsive Forces
+        for (let keyA in objects) {
+            for (let keyB in objects) {
+                if (keyA === keyB) continue;
+                const nodeA = objects[keyA];
+                const nodeB = objects[keyB];
+                const dx = nodeB.x - nodeA.x;
+                const dy = nodeB.y - nodeA.y;
+                const distance = Math.sqrt(dx * dx + dy * dy) || 0.1;
+
+                if (distance < SPRING_LENGTH) {
+                    const force = (REPULSION_STRENGTH / (distance * distance)) * 0.1;
+
+                    const fx = (force * dx) / distance;
+                    const fy = (force * dy) / distance;
+
+                    nodeA.x -= fx;
+                    nodeA.y -= fy;
+                    nodeB.x += fx;
+                    nodeB.y += fy;
+                }
+            }
+        }
+    }
+}
+
+// ✅ Step 5: Normalize Node Positions
+function normalizePositions() {
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+
+    for (let key in objects) {
+        minX = Math.min(minX, objects[key].x);
+        maxX = Math.max(maxX, objects[key].x);
+        minY = Math.min(minY, objects[key].y);
+        maxY = Math.max(maxY, objects[key].y);
+    }
+
+    const rangeX = maxX - minX || 1;
+    const rangeY = maxY - minY || 1;
+
+    for (let key in objects) {
+        objects[key].x = ((objects[key].x - minX) / rangeX) * W;
+        objects[key].y = ((objects[key].y - minY) / rangeY) * (H - 40) + 20;
+    }
+}
+
+// ✅ Step 6: Populate the Nodes Collection
+let nodes = {};
+
+setXYWithForceDirectedGraph();
+
+for (let key in objects) {
+    let v = objects[key];
+    const x = v.x;
+    const y = v.y;
+    const t = v.text;
+
+    if (x > 0 || y > 0) {
+        if (v.type === "box") {
+            nodes[key] = new Box(key, x, y, 30, t);
+        } else if (v.type === "diamond") {
+            nodes[key] = new Diamond(key, x, y, 20, t);
+        } else if (v.type === "text") {
+            nodes[key] = new Text(key, x, y, 20, t);
+        }
+    } else {
+        console.log(`Skipping unconnected node: ${key}`);
+    }
+}
+
+// ✅ Step 7: Render Nodes
+for (let k in nodes) {
+    if (nodes[k].type === "Diamond") {
+        drawDiamondObject(nodes[k]);
+    } else if (nodes[k].type === "Box") {
+        drawBoxObject(nodes[k]);
+    } else if (nodes[k].type === "Text") {
+        drawTextObject(nodes[k]);
+    }
 }

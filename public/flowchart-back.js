@@ -1,158 +1,95 @@
-let H = undefined
-let W = undefined
-// Get the canvas and context
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
+// ✅ **File 2: flowchart.js**
 
-// // Set the canvas size dynamically
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight * 0.2; // 1/5 of the screen height
-}
+const leftRight = "leftRight";
+const rightLeft = "rightLeft";
+const downUp = "downUp";
+const upDown = "upDown";
+const solid = "solid";
+const dashed = "dashed";
 
-// Function to draw a square with text
-function drawSquareWithText(x, y, size, text) {
-  // Draw the square
-  ctx.fillStyle = 'lightblue';
-  ctx.fillRect(x, y, size, size);
-
-  // Draw the border
-  ctx.strokeStyle = 'black';
-  ctx.strokeRect(x, y, size, size);
-
-  // Draw the text
-  ctx.font = '14px Arial';
-  ctx.fillStyle = 'black';
-  ctx.fillText(text, x + 5, y + size / 2 + 5); // Slight adjustment for alignment
-}
-
-function drawDiamondWithText(x, y, size, text) {
-    // Begin path for the diamond
-    ctx.beginPath();
-    ctx.moveTo(x, y - size); // Top point
-    ctx.lineTo(x + size, y); // Right point
-    ctx.lineTo(x, y + size); // Bottom point
-    ctx.lineTo(x - size, y); // Left point
-    ctx.closePath();
-  
-    // Fill the diamond
-    ctx.fillStyle = 'lightgreen';
-    ctx.fill();
-  
-    // Draw the border
-    ctx.strokeStyle = 'black';
-    ctx.stroke();
-  
-    // Draw the text in the center
-    ctx.font = '14px Arial';
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(text, x, y);
-  }
-
+// Constants for grid spacing
+let GRID_X = W / 20; // Divides width into 12 columns
+let GRID_Y = H / 5;  // Divides height into 6 rows
 
 /**
- * Draws a line with an arrow from one point to another.
- * @param {number} x1 - Starting x-coordinate.
- * @param {number} y1 - Starting y-coordinate.
- * @param {number} x2 - Ending x-coordinate.
- * @param {number} y2 - Ending y-coordinate.
+ * Calculate X and Y dynamically based on grid positions.
+ * @param {number} col - Column index (horizontal position).
+ * @param {number} row - Row index (vertical position).
+ * @param {number} offsetX - Horizontal adjustment (optional).
+ * @param {number} offsetY - Vertical adjustment (optional).
+ * @returns {Object} { x, y }
  */
-function drawArrow(x1, y1, x2, y2) {
-    const arrowLength = 10; // Length of the arrowhead lines
-    const arrowAngle = Math.PI / 6; // Angle of the arrowhead (30°)
-    
-    // Draw the line
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  
-    // Calculate the angle of the line
-    const angle = Math.atan2(y2 - y1, x2 - x1);
-  
-    // Draw the arrowhead (two lines forming the arrow)
-    ctx.beginPath();
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(
-      x2 - arrowLength * Math.cos(angle - arrowAngle),
-      y2 - arrowLength * Math.sin(angle - arrowAngle)
-    );
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(
-      x2 - arrowLength * Math.cos(angle + arrowAngle),
-      y2 - arrowLength * Math.sin(angle + arrowAngle)
-    );
-    ctx.stroke();
-  }
-  
-  // Initial canvas setup
-  resizeCanvas();
-  window.addEventListener('resize', () => {
-    H = window.innerHeight * 0.2;
-    W = window.innerWidth;
-    document.getElementById("H").innerHTML = "H=" + H;
-    document.getElementById("W").innerHTML = "W=" + W;
-  
-    resizeCanvas();
-    drawSquareWithText(50, 100, 30, 'hello'); // Redraw square
-    drawDiamondWithText(150, 100, 30, 'dog'); // Redraw diamond
-    drawArrow(65, 115, 150, 100); // Redraw arrow
-  });
-  
-
-class Box {
-    constructor(x,y,size,text) {
-        this.x = x
-        this.y = y 
-        this.size = size 
-        this.text = text
-        this.leftX = x
-        this.leftY = y + ( size / 2 )
-        this.rightX = x + size
-        this.rightY = y + ( size / 2 )
-
-    }
-
+function getPosition(col, row, offsetX = 0, offsetY = 0) {
+    return {
+        x: col * GRID_X + offsetX,
+        y: row * GRID_Y + offsetY,
+    };
 }
 
-function drawBoxObject(obj) {
-    // Begin path for the diamond
-    ctx.beginPath();
-    ctx.moveTo(obj.x, obj.y - obj.size); // Top point
-    ctx.lineTo(obj.x + obj.size, obj.y); // Right point
-    ctx.lineTo(obj.x, obj.y + obj.size); // Bottom point
-    ctx.lineTo(obj.x - obj.size, obj.y); // Left point
-    ctx.closePath();
-  
-    // Fill the diamond
-    ctx.fillStyle = 'lightgreen';
-    ctx.fill();
-  
-    // Draw the border
-    ctx.strokeStyle = 'black';
-    ctx.stroke();
-  
-    // Draw the text in the center
-    ctx.font = '14px Arial';
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(obj.text, obj.x, obj.y);
-  }
+/**
+ * Setup and draw nodes and connections
+ */
+function setTheShapes() {
+    if (typeof W === 'undefined' || typeof H === 'undefined') {
+        console.error('W and H are undefined. Ensure resizeSVG() is called before setTheShapes.');
+        return;
+    }
+    nodes = {
+        "Home": new Box(getPosition(1, 3).x, getPosition(1, 3).y, 20, 'Home'),
+        "Disclosures": new Box(getPosition(4, 3).x, getPosition(4, 3).y, 20, 'Disclosures'),
+        "SignIn": new Diamond(getPosition(6, 3).x, getPosition(6, 3).y, 10, 'SignIn'),
+        "Password": new Box(getPosition(7, 1).x, getPosition(7, 1).y, 20, 'Password'),
+        "No1": new TextObj(getPosition(6, 5).x, getPosition(6, 5).y, 0, 'No'),
+        "SignUp": new Box(getPosition(3, 5).x, getPosition(3, 5).y, 20, 'SignUp'),
+        "STA": new Box(getPosition(4, 7).x, getPosition(4, 5).y, 20, 'Setup'),
+        "Snow": new Diamond(getPosition(5, 6).x, getPosition(5, 6).y, 10, 'Snow?'),
+        "Yes1": new TextObj(getPosition(8, 6).x, getPosition(8, 6).y, 0, 'Yes'),
+        "Associate": new Box(getPosition(9, 5).x, getPosition(9, 5).y, 20, 'Ass'),
+        "MFA": new Box(getPosition(9, 3).x, getPosition(9, 3).y, 20, 'MFA'),
+        "STALookup": new Diamond(getPosition(10, 3).x, getPosition(10, 3).y, 10, 'STA Lookup'),
+        "Found": new TextObj(getPosition(11, 2).x, getPosition(11, 2).y, 0, 'Found'),
+        "NotFound": new TextObj(getPosition(11, 5).x, getPosition(11, 5).y, 0, 'NotFound'),
+    };
 
+    // Draw the nodes
 
+    for (let k in nodes) {
+        const o = nodes[k];
+        try {
+            if (o.type === "diamond") {
+                drawDiamondObject(o);
+            } else if (o.type === "box") {
+                drawBoxObject(o);
+            } else if (o.type === "waypoint") {
+                drawCircleObject(o);
+            } else if (o.type === "text") {
+                drawTextObject(o);
+            }
+        } catch (failbot) {
+            console.log("BOOM " + failbot)
+        }
+    }
 
+    // Define connections
+    fromTo = [
+        { from: "Home", target: "Disclosures", direction: leftRight, arrowType: solid },
+        { from: "Disclosures", target: "SignIn", direction: leftRight, arrowType: solid },
+        { from: "SignIn", target: "Password", direction: downUp, arrowType: solid },
+        { from: "SignIn", target: "SignUp", direction: upDown, arrowType: dashed },
+        { from: "SignUp", target: "STA", direction: leftRight, arrowType: solid },
+        { from: "STA", target: "Snow", direction: leftRight, arrowType: solid },
+        { from: "Snow", target: "No1", direction: leftRight, arrowType: solid },
+        { from: "No1", target: "SignIn", direction: downUp, arrowType: solid },
+        { from: "Snow", target: "Yes1", direction: rightLeft, arrowType: solid },
+        { from: "Yes1", target: "Associate", direction: leftRight, arrowType: solid },
+        { from: "SignIn", target: "MFA", direction: leftRight, arrowType: solid },
+        { from: "MFA", target: "STALookup", direction: leftRight, arrowType: solid },
+        { from: "STALookup", target: "Found", direction: upDown, arrowType: solid },
+        { from: "STALookup", target: "NotFound", direction: downUp, arrowType: solid },
+    ];
 
-const box = new Box(50, 100, 30, 'OOP')
-  
-  // Initial draw
-  drawSquareWithText(50, 100, 30, 'hello');
-  drawDiamondWithText(150, 100, 30, 'dog');
-  drawArrow(65, 115, 150, 100);
-  
-
-  drawBoxObject(box)
+    // Draw arrows
+    fromTo.forEach(({ from, target, direction, arrowType }) => {
+        drawArrow(nodes[from], nodes[target], direction, arrowType);
+    });
+}
