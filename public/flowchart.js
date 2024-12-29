@@ -25,9 +25,9 @@ function setTheShapes() {
     //
     // NOTE: negative is UP!
     const refpoint = { x: 1 * GRID_X, y: 5 * GRID_Y }
-    const home = new Box(getX(refpoint, 0), getY(refpoint, 0), 20, 'Home')
-    const disclosures = new Box(getX(home, 1), getY(home, 0), 20, 'Disclosures')
-    const signIn = new Diamond(getX(disclosures, 1.5), getY(disclosures, 0.5), 10, 'SignIn')
+    const Home = new Box(getX(refpoint, 0), getY(refpoint, 0), 20, 'Home')
+    const Disclosures = new Box(getX(Home, 1), getY(Home, 0), 20, 'Disclosures')
+    const signIn = new Diamond(getX(Disclosures, 1.5), getY(Disclosures, 0.5), 10, 'SignIn')
     const password = new Box(getX(signIn, 0), getY(signIn, -4), 10, 'Password')
     const signUp = new Box(getX(signIn, -1), getY(signIn, 2), 20, 'SignUp')
     const STA = new Box(getX(signUp, 1), getY(signUp, 0), 20, 'STA')
@@ -43,11 +43,15 @@ function setTheShapes() {
     const Found = new TextObj(getX(ActiveRenewal, 1), getY(ActiveRenewal,-2), 0, 'Found')
     const NotFound = new TextObj(getX(ActiveRenewal, 1), getY(ActiveRenewal,3), 0, 'Not Found')
     const Elegable = new Diamond(getX(Found, 1), getY(Found, -1), 20, 'Renewable?')
-    const EndFlow = new Box(getX(Elegable, 1), getY(Elegable, -1), 20, 'End flow')
+    const Yes3 = new TextObj(getX(Elegable, 1), getY(Elegable,3), 0, 'Yes')
+    const No3 = new TextObj(getX(Elegable, 1), getY(Elegable,0), 0, 'No')
+    const PromptForRenewal = new Diamond(getX(Yes3, 1.2), getY(Disclosures, 0), 10, 'Prompt For Renewal')
+    const EndFlow = new Box(getX(No3, 1), getY(No3, -1), 20, 'End flow')
+
 
     nodes = {
-        Home: home,
-        Disclosures: disclosures,
+        Home,
+        Disclosures,
         SignIn: signIn,
         Password: password,
         SignUp: signUp,
@@ -63,23 +67,15 @@ function setTheShapes() {
         NotFound:NotFound,
         Found:Found,
         Elegable:Elegable,
-        EndFlow:EndFlow
+        EndFlow:EndFlow,
+        Yes3,
+        No3,
+        PromptForRenewal
     }
 
-    for (let k in nodes) {
-        const o = nodes[k];
-        if (o.type === "diamond") {
-            drawDiamondObject(o);
-        } else if (o.type === "box") {
-            drawBoxObject(o);
-        } else if (o.type === "waypoint") {
-            drawCircleObject(o);
-        } else if (o.type === "text") {
-            drawTextObject(o);
-        }
-    }
 
-    // Define connections
+
+    // Define edges
     fromTo = [
         { from: "Home", target: "Disclosures", direction: leftRight, arrowType: solid },
         { from: "Disclosures", target: "SignIn", direction: leftRight, arrowType: solid },
@@ -97,25 +93,33 @@ function setTheShapes() {
         { from: "Yes2", target: "ActiveRenewal", direction: leftRight, arrowType: solid },
         { from: "ActiveRenewal", target: "Found", direction: leftRight, arrowType: solid },
         { from: "ActiveRenewal", target: "NotFound", direction: leftRight, arrowType: solid },
+        { from: "Found", target: "Elegable", direction: leftRight, arrowType: solid },
+        { from: "Elegable", target: "Yes3", direction: leftRight, arrowType: solid },
+        { from: "Elegable", target: "No3", direction: leftRight, arrowType: solid },
+        { from: "Yes3", target: "PromptForRenewal", direction: leftRight, arrowType: solid },
+        { from: "PromptForRenewal", target: "No3", direction: leftRight, arrowType: solid },
+        { from: "No3", target: "EndFlow", direction: leftRight, arrowType: solid },
 
-        
+
+       // { from: "ActiveRenewal", target: "NotFound", direction: leftRight, arrowType: solid },
+
 
 
         
     ]
-    //     { from: "SignIn", target: "Password", direction: downUp, arrowType: solid },
-    //     { from: "SignIn", target: "SignUp", direction: upDown, arrowType: dashed },
-    //     { from: "SignUp", target: "STA", direction: leftRight, arrowType: solid },
-    //     { from: "STA", target: "Snow", direction: leftRight, arrowType: solid },
-    //     { from: "Snow", target: "No1", direction: leftRight, arrowType: solid },
-    //     { from: "No1", target: "SignIn", direction: downUp, arrowType: solid },
-    //     { from: "Snow", target: "Yes1", direction: rightLeft, arrowType: solid },
-    //     { from: "Yes1", target: "Associate", direction: leftRight, arrowType: solid },
-    //     { from: "SignIn", target: "MFA", direction: leftRight, arrowType: solid },
-    //     { from: "MFA", target: "STALookup", direction: leftRight, arrowType: solid },
-    //     { from: "STALookup", target: "Found", direction: upDown, arrowType: solid },
-    //     { from: "STALookup", target: "NotFound", direction: downUp, arrowType: solid },
-    // ];
+    // Draw the shapes
+    for (let k in nodes) {
+        const o = nodes[k];
+        if (o.type === "diamond") {
+            drawDiamondObject(o);
+        } else if (o.type === "box") {
+            drawBoxObject(o);
+        } else if (o.type === "waypoint") {
+            drawCircleObject(o);
+        } else if (o.type === "text") {
+            drawTextObject(o);
+        }
+    }
 
     // Draw arrows
     fromTo.forEach(({ from, target, direction, arrowType }) => {
