@@ -66,9 +66,9 @@ function setTheShapes() {
         SignIn,
         Password,
         SignUp,
-        STA: STA,
-        Snow: Snow,
-        No1: No1,
+        STA,
+        Snow,
+        No1,
         Yes1: Yes1,
         Associate,
         STALookup,
@@ -94,14 +94,16 @@ function setTheShapes() {
     // Define edges
     fromTo = [
         { from: "Home", target: "Disclosures", arrowType: solid },
+        
         { from: "Disclosures", target: "SignIn", arrowType: solid },
         { from: "SignIn", target: "Password", arrowType: solid },
         { from: "SignIn", target: "SignUp", arrowType: dashed },
         { from: "SignUp", target: "STA", arrowType: solid },
         { from: "STA", target: "Snow", arrowType: solid },
-        { from: "Snow", target: "No1", arrowType: solid },
-        { from: "No1", target: "SignIn", arrowType: solid },
-        { from: "Snow", target: "Yes1", arrowType: solid },
+      //  { from: "Snow", target: "No1", arrowType: solid },
+        { from: "Snow", middle: "No1", target: "SignIn", arrowType: solid },
+      //  { from: "No1", target: "SignIn", arrowType: solid },
+      //  { from: "Snow", target: "Yes1", arrowType: solid },
         { from: "Yes1", target: "Associate", arrowType: solid },
         { from: "Associate", target: "STALookup", arrowType: solid },
         { from: "STALookup", target: "No2", arrowType: solid },
@@ -124,7 +126,6 @@ function setTheShapes() {
         { from: "LocationFinder", target: "LegalNames", arrowType: solid },
 
 
-        
     ]
     // Draw the shapes!
     for (let k in nodes) {
@@ -133,20 +134,28 @@ function setTheShapes() {
             drawDiamondObject(o);
         } else if (o.type === "box") {
             drawBoxObject(o);
-        } else if (o.type === "waypoint") {
-            drawCircleObject(o);
         } else if (o.type === "text") {
             drawTextObject(o);
         }
     }
 
     // Draw arrows!
-    fromTo.forEach(({ from, target, arrowType }) => {
-        if (nodes[target].type === "text") {
-            drawArrow(nodes[from], nodes[target], arrowType, noArrow);
+    fromTo.forEach((entry)=> {
+
+        const f = nodes[entry.from]
+        const t = nodes[entry.target]
+        const m = entry.middle
+        const arrowType = entry.arrowType
+        const hasArrow = entry.hasArrow
+        if ( m !== undefined ) {
+            // DRAW LINE HERE
         } else {
-            drawArrow(nodes[from], nodes[target], arrowType, hasArrow);
+         drawArrow(f, t , arrowType, hasArrow);
+
         }
+
+
+
     });
 
 }

@@ -205,46 +205,133 @@ function drawDiamondObject(obj) {
 
 
 function getFromToXY(obj1, obj2) {
-    let x1, y1, x2, y2;
-    x1 = obj1.centerX;
-    y1 = obj1.centerY;
-    x2 = obj2.centerX;
-    y2 = obj2.centerY;
-    return [x1, y1, x2, y2];
+    let x1 = obj1.centerX || obj1.x;
+    let y1 = obj1.centerY || obj1.y;
+    let x2 = obj2.centerX || obj2.x;
+    let y2 = obj2.centerY || obj2.y;
 
+    if ([x1, y1, x2, y2].some(coord => coord === undefined || isNaN(coord))) {
+        console.error('Invalid coordinates passed to drawArrow:', { x1, y1, x2, y2 });
+    }
+
+    return [x1, y1, x2, y2];
 }
 
-function drawArrow(obj1, obj2, arrowType, hasArrow) {
-    /* 
-    Each Arrow is Unique!
-    Each arrow has its own SVG <g> group.
-    Prevents overwriting when multiple arrows originate from the same shape.
-    */
-    let [x1, y1, x2, y2] = getFromToXY(obj1, obj2);
 
-    const arrowLength = 6;
-    const arrowAngle = Math.PI / 6;
-    const angle = Math.atan2(y2 - y1, x2 - x1);
+// function drawArrow(obj1, obj2, arrowType, hasArrow) {
+//     /* 
+//     Each Arrow is Unique!
+//     Each arrow has its own SVG <g> group.
+//     Prevents overwriting when multiple arrows originate from the same shape.
+//     */
+//     let [x1, y1, x2, y2] = getFromToXY(obj1, obj2);
 
-    // Create a group for the arrow (to avoid overwriting arrows)
-    let arrowGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); // Important and tricksy!
+//     const arrowLength = 6;
+//     const arrowAngle = Math.PI / 6;
+//     const angle = Math.atan2(y2 - y1, x2 - x1);
+
+//     // Create a group for the arrow (to avoid overwriting arrows)
+//     let arrowGroup = document.createElementNS("http://www.w3.org/2000/svg", "g"); // Important and tricksy!
+//     arrowGroup.setAttribute('class', 'arrow');
+//     arrowGroup.setAttribute('data-from', obj1.text);
+//     arrowGroup.setAttribute('data-to', obj2.text);
+
+//     // Create Line
+//     let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+//     line.setAttribute('x1', x1);
+//     line.setAttribute('y1', y1);
+//     line.setAttribute('x2', x2);
+//     line.setAttribute('y2', y2);
+//     line.setAttribute('stroke', LINE_COLOR);
+//     line.setAttribute('stroke-width', '1');
+//     if (arrowType === dashed) {
+//         line.setAttribute('stroke-dasharray', '5,5');
+//     }
+//     if (hasArrow !== noArrow) {
+//         // Create Arrowhead
+//         let arrowPoint1 = {
+//             x: x2 - arrowLength * Math.cos(angle - arrowAngle),
+//             y: y2 - arrowLength * Math.sin(angle - arrowAngle)
+//         };
+//         let arrowPoint2 = {
+//             x: x2 - arrowLength * Math.cos(angle + arrowAngle),
+//             y: y2 - arrowLength * Math.sin(angle + arrowAngle)
+//         };
+
+//         let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+//         arrowHead.setAttribute('points', `
+//         ${x2},${y2}
+//         ${arrowPoint1.x},${arrowPoint1.y}
+//         ${arrowPoint2.x},${arrowPoint2.y}
+//     `);
+//         arrowHead.setAttribute('fill', ORANGE);  // //'gray'); // LINE_COLOR);
+//         arrowGroup.appendChild(arrowHead);
+//     }
+//     arrowGroup.appendChild(line);
+
+//     svg.appendChild(arrowGroup);
+// }
+
+function drawArrow(obj1, obj2, arrowType = solid, hasArrow = true) {
+    let intermediateTextObj = obj2.type === 'text' ? obj2 : null;
+    let finalTarget = obj2;
+
+    // If the next node is a TextObj and has another outgoing arrow
+    if (intermediateTextObj && fromTo.some(edge => edge.from === obj2.text)) {
+        finalTarget = nodes[fromTo.find(edge => edge.from === obj2.text).target];
+    }
+
+    // Get coordinates
+    let [x1, y1] = [obj1.centerX || obj1.x, obj1.centerY || obj1.y];
+    let [x2, y2] = [finalTarget.centerX || finalTarget.x, finalTarget.centerY || finalTarget.y];
+
+    if ([x1, y1, x2, y2].some(coord => coord === undefined || isNaN(coord))) {
+        console.error("Invalid coordinates for arrow:", { x1, y1, x2, y2 });
+        return;
+    }
+
+    // SVG Group for the arrow
+    let arrowGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
     arrowGroup.setAttribute('class', 'arrow');
     arrowGroup.setAttribute('data-from', obj1.text);
-    arrowGroup.setAttribute('data-to', obj2.text);
+    arrowGroup.setAttribute('data-to', finalTarget.text);
 
-    // Create Line
-    let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute('x1', x1);
-    line.setAttribute('y1', y1);
-    line.setAttribute('x2', x2);
-    line.setAttribute('y2', y2);
-    line.setAttribute('stroke', LINE_COLOR);
-    line.setAttribute('stroke-width', '1');
-    if (arrowType === dashed) {
-        line.setAttribute('stroke-dasharray', '5,5');
+    let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+    if (intermediateTextObj) {
+        // Create a smooth Bézier curve through the TextObj
+        let [ix, iy] = [intermediateTextObj.centerX || intermediateTextObj.x, intermediateTextObj.centerY || intermediateTextObj.y];
+        let controlX1 = (x1 + ix) / 2;
+        let controlY1 = (y1 + iy) / 2;
+        let controlX2 = (ix + x2) / 2;
+        let controlY2 = (iy + y2) / 2;
+
+        path.setAttribute('d', `
+            M ${x1},${y1}
+            Q ${controlX1},${controlY1} ${ix},${iy}
+            Q ${controlX2},${controlY2} ${x2},${y2}
+        `);
+    } else {
+        // Regular straight line if no TextObj is in between
+        path.setAttribute('d', `M ${x1},${y1} L ${x2},${y2}`);
     }
-    if (hasArrow !== noArrow) {
-        // Create Arrowhead
+
+    path.setAttribute('stroke', LINE_COLOR);
+    path.setAttribute('stroke-width', '1');
+    path.setAttribute('fill', 'none');
+
+    if (arrowType === dashed) {
+        path.setAttribute('stroke-dasharray', '5,5');
+    }
+
+    arrowGroup.appendChild(path);
+
+    // Arrowhead at the end
+    if (hasArrow) {
+        const arrowLength = 6;
+        const arrowAngle = Math.PI / 6;
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+
         let arrowPoint1 = {
             x: x2 - arrowLength * Math.cos(angle - arrowAngle),
             y: y2 - arrowLength * Math.sin(angle - arrowAngle)
@@ -256,15 +343,78 @@ function drawArrow(obj1, obj2, arrowType, hasArrow) {
 
         let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         arrowHead.setAttribute('points', `
-        ${x2},${y2}
-        ${arrowPoint1.x},${arrowPoint1.y}
-        ${arrowPoint2.x},${arrowPoint2.y}
-    `);
-        arrowHead.setAttribute('fill', ORANGE);  // //'gray'); // LINE_COLOR);
+            ${x2},${y2}
+            ${arrowPoint1.x},${arrowPoint1.y}
+            ${arrowPoint2.x},${arrowPoint2.y}
+        `);
+        arrowHead.setAttribute('fill', ORANGE);
+
         arrowGroup.appendChild(arrowHead);
     }
-    arrowGroup.appendChild(line);
 
     svg.appendChild(arrowGroup);
 }
+function drawArrowThrough(obj1, middleObj, obj2, arrowType = solid, hasArrow = true) {
+    // Get coordinates for start, middle, and end
+    let [x1, y1] = [obj1.centerX || obj1.x, obj1.centerY || obj1.y];
+    let [xm, ym] = [middleObj.centerX || middleObj.x, middleObj.centerY || middleObj.y];
+    let [x2, y2] = [obj2.centerX || obj2.x, obj2.centerY || obj2.y];
 
+    if ([x1, y1, xm, ym, x2, y2].some(coord => coord === undefined || isNaN(coord))) {
+        console.error("Invalid coordinates for arrowThrough:", { x1, y1, xm, ym, x2, y2 });
+        return;
+    }
+
+    // Create SVG Group for the arrow
+    let arrowGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    arrowGroup.setAttribute('class', 'arrow');
+    arrowGroup.setAttribute('data-from', obj1.text);
+    arrowGroup.setAttribute('data-middle', middleObj.text);
+    arrowGroup.setAttribute('data-to', obj2.text);
+
+    // Create SVG Path for smooth curve through middleObj
+    let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute('d', `
+        M ${x1},${y1}
+        Q ${(x1 + xm) / 2},${(y1 + ym) / 2} ${xm},${ym}
+        Q ${(xm + x2) / 2},${(ym + y2) / 2} ${x2},${y2}
+    `);
+
+    path.setAttribute('stroke', LINE_COLOR);
+    path.setAttribute('stroke-width', '1');
+    path.setAttribute('fill', 'none');
+
+    if (arrowType === dashed) {
+        path.setAttribute('stroke-dasharray', '5,5');
+    }
+
+    arrowGroup.appendChild(path);
+
+    // Arrowhead at the end
+    if (hasArrow) {
+        const arrowLength = 6;
+        const arrowAngle = Math.PI / 6;
+        const angle = Math.atan2(y2 - ym, x2 - xm);
+
+        let arrowPoint1 = {
+            x: x2 - arrowLength * Math.cos(angle - arrowAngle),
+            y: y2 - arrowLength * Math.sin(angle - arrowAngle)
+        };
+        let arrowPoint2 = {
+            x: x2 - arrowLength * Math.cos(angle + arrowAngle),
+            y: y2 - arrowLength * Math.sin(angle + arrowAngle)
+        };
+
+        let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        arrowHead.setAttribute('points', `
+            ${x2},${y2}
+            ${arrowPoint1.x},${arrowPoint1.y}
+            ${arrowPoint2.x},${arrowPoint2.y}
+        `);
+        arrowHead.setAttribute('fill', 'red');
+
+        arrowGroup.appendChild(arrowHead);
+    }
+
+    svg.appendChild(arrowGroup);
+}
