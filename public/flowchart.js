@@ -31,12 +31,12 @@ function setTheShapes() {
     const refpoint = { x: 1 * GRID_X, y: 5 * GRID_Y }
     const Home = new Box(getX(refpoint, 0), getY(refpoint, 0), 20, 'Home')
     const Disclosures = new Box(getX(Home, 1), getY(Home, 0), 20, 'Disclosures')
-    const signIn = new Diamond(getX(Disclosures, 1.5), getY(Disclosures, 0.5), 10, 'SignIn')
-    const password = new Box(getX(signIn, 0), getY(signIn, -4), 10, 'Password')
-    const signUp = new Box(getX(signIn, -1), getY(signIn, 2), 20, 'SignUp')
-    const STA = new Box(getX(signUp, 1), getY(signUp, 0), 20, 'STA')
+    const SignIn = new Diamond(getX(Disclosures, 1.5), getY(Disclosures, 0.5), 10, 'SignIn')
+    const Password = new Box(getX(SignIn, 0), getY(SignIn, -4), 10, 'Password')
+    const SignUp = new Box(getX(SignIn, -1), getY(SignIn, 2), 20, 'SignUp')
+    const STA = new Box(getX(SignUp, 1), getY(SignUp, 0), 20, 'STA')
     const Snow = new Box(getX(STA, 1), getY(STA, 0), 20, 'Snow?')
-    const _inbetween = getInbetween(Snow, signIn)
+    const _inbetween = getInbetween(Snow, SignIn)
     const No1 = new TextObj(getX(_inbetween, 0.2), getY(_inbetween, 0), 0, 'No')
     const Yes1 = new TextObj(getX(Snow, 1), getY(Snow, 0), 0, 'Yes')
     const Associate = new Box(getX(Yes1, 1), getY(Yes1, 0), 20, 'Associate')
@@ -63,22 +63,22 @@ function setTheShapes() {
     nodes = {
         Home,
         Disclosures,
-        SignIn: signIn,
-        Password: password,
-        SignUp: signUp,
+        SignIn,
+        Password,
+        SignUp,
         STA: STA,
         Snow: Snow,
         No1: No1,
         Yes1: Yes1,
-        Associate: Associate,
-        STALookup: STALookup,
-        Yes2: Yes2,
-        No2: No2,
-        ActiveRenewal: ActiveRenewal,
-        NotFound: NotFound,
-        Found: Found,
-        Elegable: Elegable,
-        EndFlow: EndFlow,
+        Associate,
+        STALookup,
+        Yes2,
+        No2,
+        ActiveRenewal,
+        NotFound,
+        Found,
+        Elegable,
+        EndFlow,
         Yes3,
         No3,
         PromptForRenewal, 
@@ -90,8 +90,6 @@ function setTheShapes() {
         LocationFinder,
         LegalNames
     }
-
-
 
     // Define edges
     fromTo = [

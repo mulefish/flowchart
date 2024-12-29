@@ -4,7 +4,7 @@ const TEXT_UP = -10;
 const TEXT_OVER = 10;
 const LINE_COLOR = "lightgray";
 const FONT_SIZE = 12;
-const CHARCOAL = "#e9e9e9";
+const CHARCOAL = "#fafafa";
 const OUTLINE_COLOR = "#e9e9e9";
 const ORANGE = "#ff5533";
 
