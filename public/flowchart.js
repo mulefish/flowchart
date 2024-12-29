@@ -17,7 +17,7 @@ let nodes = {}
 let fromTo = {} 
 
 let GRID_X = VIEWPORT_WIDTH / 30;
-let GRID_Y = VIEWPORT_HEIGHT / 6;
+let GRID_Y = VIEWPORT_HEIGHT / 8;
 
 function getX(obj, col) {
     return (GRID_X * col) + obj.x
@@ -67,20 +67,14 @@ function setTheShapes() {
     const j = addNode(getX(e, 1), getY(e, 0), 10, e, diamondType,  solid, hasArrow,  neutral, "STA", "STA<br/>lookup") 
     const k = addNode(getX(j, 1), getY(j, -1), 10, j, boxType,  solid, hasArrow,  positive, "SnowRenew", "Renew<br/>Snow") 
     const l = addNode(getX(j, 1), getY(j, 1), 10, j, diamondType,  solid, hasArrow,  negative, "SnowActive", "Snow<br/>active<br/>enrollment") 
+    const m = addNode(getX(l, 1), getY(l, 3), 10, l, diamondType,  solid, hasArrow,  positive, "PreEnrollComplete", "Preenrollment<br/>complete") 
+    const n = addNode(getX(m, 1), getY(m, -2), 20, m, boxType,  solid, hasArrow,  positive, "End flow", "End flow<br/>dashboard") 
+    const o = addNode(getX(l, 6), getY(l, 0), 20, l, boxType,  solid, hasArrow,  negative, "LocationFinder", "Location<br/>Finder")     
+    const p = addNode(getX(l, 2), getY(l, -1), 20, l, boxType,  solid, hasArrow,  positive, "ContinueOldRenewal", "Continue<br/>from last<br/>renewal flow") 
 
 
 
-
-    // // Draw the shapes!
-    for (let k in nodes) {
-        const o = nodes[k];
-        if (o.type === "diamond") {
-            drawDiamondObject(o);
-        } else if (o.type === "box") {
-            drawBoxObject(o);
-        }
-    }
-
+    // Draw  the arrows!
     for ( let key in fromTo ) {
         const ary = fromTo[key]
         for ( let i = 0 ; i < ary.length; i++) {
@@ -95,5 +89,16 @@ function setTheShapes() {
             drawArrow(from, to, lineType, arrowType, mood);
         }
     } 
-    console.log( fromTo )
+
+    // // Draw the shapes and the text
+    for (let k in nodes) {
+        const o = nodes[k];
+        if (o.type === "diamond") {
+            drawDiamondObject(o);
+        } else if (o.type === "box") {
+            drawBoxObject(o);
+        }
+    }
+
+
 }
