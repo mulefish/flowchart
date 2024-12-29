@@ -6,6 +6,8 @@ const downUp = "downUp";
 const upDown = "upDown";
 const solid = "solid";
 const dashed = "dashed";
+const noArrow = "noArrow"
+const hasArrow = "hasArrow" // Not used
 let nodes = []
 
 let GRID_X = VIEWPORT_WIDTH / 30;
@@ -43,7 +45,7 @@ function setTheShapes() {
     const Found = new TextObj(getX(ActiveRenewal, 1), getY(ActiveRenewal,-2), 0, 'Found')
     const NotFound = new TextObj(getX(ActiveRenewal, 1), getY(ActiveRenewal,3), 0, 'Not Found')
     const Elegable = new Diamond(getX(Found, 1), getY(Found, -1), 20, 'Renewable?')
-    const Yes3 = new TextObj(getX(Elegable, 1), getY(Elegable,3), 0, 'Yes')
+    const Yes3 = new TextObj(getX(Elegable, 0.5), getY(Elegable,3), 0, 'Yes')
     const No3 = new TextObj(getX(Elegable, 1), getY(Elegable,0), 0, 'No')
     const PromptForRenewal = new Diamond(getX(Yes3, 1.2), getY(Disclosures, 0), 10, 'Prompt For Renewal')
     const EndFlow = new Box(getX(No3, 1), getY(No3, -1), 20, 'End flow')
@@ -77,31 +79,31 @@ function setTheShapes() {
 
     // Define edges
     fromTo = [
-        { from: "Home", target: "Disclosures", direction: leftRight, arrowType: solid },
-        { from: "Disclosures", target: "SignIn", direction: leftRight, arrowType: solid },
-        { from: "SignIn", target: "Password", direction: downUp, arrowType: solid },
-        { from: "SignIn", target: "SignUp", direction: upDown, arrowType: dashed },
-        { from: "SignUp", target: "STA", direction: upDown, arrowType: solid },
-        { from: "STA", target: "Snow", direction: leftRight, arrowType: solid },
-        { from: "Snow", target: "No1", direction: downUp, arrowType: solid },
-        { from: "No1", target: "SignIn", direction: downUp, arrowType: solid },
-        { from: "Snow", target: "Yes1", direction: leftRight, arrowType: solid },
-        { from: "Yes1", target: "Associate", direction: leftRight, arrowType: solid },
-        { from: "Associate", target: "STALookup", direction: leftRight, arrowType: solid },
-        { from: "STALookup", target: "No2", direction: downUp, arrowType: solid },
-        { from: "STALookup", target: "Yes2", direction: leftRight, arrowType: solid },
-        { from: "Yes2", target: "ActiveRenewal", direction: leftRight, arrowType: solid },
-        { from: "ActiveRenewal", target: "Found", direction: leftRight, arrowType: solid },
-        { from: "ActiveRenewal", target: "NotFound", direction: leftRight, arrowType: solid },
-        { from: "Found", target: "Elegable", direction: leftRight, arrowType: solid },
-        { from: "Elegable", target: "Yes3", direction: leftRight, arrowType: solid },
-        { from: "Elegable", target: "No3", direction: leftRight, arrowType: solid },
-        { from: "Yes3", target: "PromptForRenewal", direction: leftRight, arrowType: solid },
-        { from: "PromptForRenewal", target: "No3", direction: leftRight, arrowType: solid },
-        { from: "No3", target: "EndFlow", direction: leftRight, arrowType: solid },
+        { from: "Home", target: "Disclosures", arrowType: solid },
+        { from: "Disclosures", target: "SignIn", arrowType: solid },
+        { from: "SignIn", target: "Password", arrowType: solid },
+        { from: "SignIn", target: "SignUp", arrowType: dashed },
+        { from: "SignUp", target: "STA", arrowType: solid },
+        { from: "STA", target: "Snow", arrowType: solid },
+        { from: "Snow", target: "No1", arrowType: solid },
+        { from: "No1", target: "SignIn", arrowType: solid },
+        { from: "Snow", target: "Yes1", arrowType: solid },
+        { from: "Yes1", target: "Associate", arrowType: solid },
+        { from: "Associate", target: "STALookup", arrowType: solid },
+        { from: "STALookup", target: "No2", arrowType: solid },
+        { from: "STALookup", target: "Yes2", arrowType: solid },
+        { from: "Yes2", target: "ActiveRenewal", arrowType: solid },
+        { from: "ActiveRenewal", target: "Found", arrowType: solid },
+        { from: "ActiveRenewal", target: "NotFound", arrowType: solid },
+        { from: "Found", target: "Elegable", arrowType: solid },
+        { from: "Elegable", target: "Yes3", arrowType: solid },
+        { from: "Elegable", target: "No3", arrowType: solid },
+        { from: "Yes3", target: "PromptForRenewal", arrowType: solid },
+        { from: "PromptForRenewal", target: "No3", arrowType: solid },
+        { from: "No3", target: "EndFlow", arrowType: solid },
 
 
-       // { from: "ActiveRenewal", target: "NotFound", direction: leftRight, arrowType: solid },
+       // { from: "ActiveRenewal", target: "NotFound", arrowType: solid },
 
 
 
@@ -122,7 +124,13 @@ function setTheShapes() {
     }
 
     // Draw arrows
-    fromTo.forEach(({ from, target, direction, arrowType }) => {
-        drawArrow(nodes[from], nodes[target], direction, arrowType);
-    });
+        fromTo.forEach(({ from, target, arrowType }) => {
+            if ( nodes[target].type === "text") {
+                yellow("from " + from + " type " + nodes[from].type + " nodes[target].type " + nodes[target].type)
+                drawArrow(nodes[from], nodes[target], arrowType, noArrow);
+            } else {
+                drawArrow(nodes[from], nodes[target], arrowType, hasArrow);
+            }
+        });
+    
 }

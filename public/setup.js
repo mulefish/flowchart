@@ -60,7 +60,7 @@ function yellow(obj) {
 class TextObj extends Shape {
     constructor(x, y, size, text) {
         super(x, y, size, text);
-        const msg = {x,y,size, text}
+        const msg = { x, y, size, text }
         this.setShape("text");
         this.setToggleColors(CHARCOAL, ORANGE);
         this.centerX = x;
@@ -90,7 +90,7 @@ class Box extends Shape {
 
 /////////////// DISPLAY logic follows ///////////////
 const svg = document.getElementById('mySVG');
-function resizeSVG() {} // Maybe
+function resizeSVG() { } // Maybe
 
 function getPosition(col, row, offsetX = 0, offsetY = 0) {
     if (typeof W === 'undefined' || typeof H === 'undefined') {
@@ -179,15 +179,15 @@ function getFromToXY(obj1, obj2) {
 
 }
 
-function drawArrow(obj1, obj2, direction, arrowType) {
+function drawArrow(obj1, obj2, arrowType, hasArrow) {
     /* 
     Each Arrow is Unique!
     Each arrow has its own SVG <g> group.
     Prevents overwriting when multiple arrows originate from the same shape.
     */
     let [x1, y1, x2, y2] = getFromToXY(obj1, obj2);
-    
-    const arrowLength = 5;
+
+    const arrowLength = 6;
     const arrowAngle = Math.PI / 6;
     const angle = Math.atan2(y2 - y1, x2 - x1);
 
@@ -208,30 +208,28 @@ function drawArrow(obj1, obj2, direction, arrowType) {
     if (arrowType === dashed) {
         line.setAttribute('stroke-dasharray', '5,5');
     }
+    if (hasArrow !== noArrow) {
+        // Create Arrowhead
+        let arrowPoint1 = {
+            x: x2 - arrowLength * Math.cos(angle - arrowAngle),
+            y: y2 - arrowLength * Math.sin(angle - arrowAngle)
+        };
+        let arrowPoint2 = {
+            x: x2 - arrowLength * Math.cos(angle + arrowAngle),
+            y: y2 - arrowLength * Math.sin(angle + arrowAngle)
+        };
 
-    // Create Arrowhead
-    let arrowPoint1 = {
-        x: x2 - arrowLength * Math.cos(angle - arrowAngle),
-        y: y2 - arrowLength * Math.sin(angle - arrowAngle)
-    };
-    let arrowPoint2 = {
-        x: x2 - arrowLength * Math.cos(angle + arrowAngle),
-        y: y2 - arrowLength * Math.sin(angle + arrowAngle)
-    };
-
-    let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-    arrowHead.setAttribute('points', `
+        let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        arrowHead.setAttribute('points', `
         ${x2},${y2}
         ${arrowPoint1.x},${arrowPoint1.y}
         ${arrowPoint2.x},${arrowPoint2.y}
     `);
-    arrowHead.setAttribute('fill', ORANGE);  // //'gray'); // LINE_COLOR);
-
-    // Append the line and arrowhead to the group
+        arrowHead.setAttribute('fill', ORANGE);  // //'gray'); // LINE_COLOR);
+        arrowGroup.appendChild(arrowHead);
+    }
     arrowGroup.appendChild(line);
-    arrowGroup.appendChild(arrowHead);
 
-    // Append the group to the SVG
     svg.appendChild(arrowGroup);
 }
 
