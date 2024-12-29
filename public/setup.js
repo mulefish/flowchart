@@ -103,6 +103,67 @@ function getPosition(col, row, offsetX = 0, offsetY = 0) {
     };
 }
 
+// function drawBoxObject(obj) {
+//     let box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+//     box.setAttribute('x', obj.x);
+//     box.setAttribute('y', obj.y);
+//     box.setAttribute('width', obj.size);
+//     box.setAttribute('height', obj.size);
+//     box.setAttribute('fill', obj.backgroundColor || 'lightblue');
+//     box.setAttribute('stroke', OUTLINE_COLOR);
+
+//     let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+//     text.setAttribute('x', TEXT_OVER + obj.x + obj.size / 2);
+//     text.setAttribute('y', TEXT_UP + obj.y + obj.size / 2);
+//     text.setAttribute('text-anchor', 'middle');
+//     text.setAttribute('alignment-baseline', 'middle');
+//     text.setAttribute('font-size', FONT_SIZE);
+//     text.textContent = obj.text;
+//     text.setAttribute('style', 'user-select: none;'); // Selectable text in a Viz is crazy; This stops that.
+//     box.addEventListener('click', () => obj.toggleBackgroundColor());
+//     text.addEventListener('click', () => obj.toggleBackgroundColor());
+
+//     svg.appendChild(box);
+//     svg.appendChild(text);
+// }
+
+
+function getHTMLLikeText(obj) {
+    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', TEXT_OVER + obj.x + obj.size / 2);
+    text.setAttribute('y', TEXT_UP + obj.y + obj.size / 2);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('alignment-baseline', 'middle');
+    text.setAttribute('font-size', FONT_SIZE);
+    text.setAttribute('style', 'user-select: none;');
+
+    // Handle multi-line text!
+    let lines = obj.text.split('<br/>');
+    lines.forEach((line, index) => {
+        let tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+        tspan.setAttribute('x', TEXT_OVER + obj.x + obj.size / 2); // Align horizontally
+        tspan.setAttribute('dy', index === 0 ? 0 : FONT_SIZE); // Offset subsequent lines
+        tspan.textContent = line.trim();
+        text.appendChild(tspan);
+    });
+    return text
+
+}
+
+function drawTextObject(obj) {
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', obj.x);
+    text.setAttribute('y', obj.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('alignment-baseline', 'middle');
+    text.setAttribute('font-size', FONT_SIZE);
+    text.setAttribute('fill', ORANGE);
+    text.textContent = obj.text;
+    text.setAttribute('style', 'user-select: none;'); // Selectable text in a Viz is crazy; This stops that.
+    
+    svg.appendChild(text);
+}
+
 function drawBoxObject(obj) {
     let box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     box.setAttribute('x', obj.x);
@@ -111,21 +172,16 @@ function drawBoxObject(obj) {
     box.setAttribute('height', obj.size);
     box.setAttribute('fill', obj.backgroundColor || 'lightblue');
     box.setAttribute('stroke', OUTLINE_COLOR);
-
-    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute('x', TEXT_OVER + obj.x + obj.size / 2);
-    text.setAttribute('y', TEXT_UP + obj.y + obj.size / 2);
-    text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('alignment-baseline', 'middle');
-    text.setAttribute('font-size', FONT_SIZE);
-    text.textContent = obj.text;
-    text.setAttribute('style', 'user-select: none;'); // Selectable text in a Viz is crazy; This stops that.
+    const text = getHTMLLikeText(obj)
+    // Add event listeners
     box.addEventListener('click', () => obj.toggleBackgroundColor());
     text.addEventListener('click', () => obj.toggleBackgroundColor());
 
     svg.appendChild(box);
     svg.appendChild(text);
 }
+
+
 
 function drawDiamondObject(obj) {
     let diamond = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
@@ -138,14 +194,7 @@ function drawDiamondObject(obj) {
     diamond.setAttribute('fill', obj.backgroundColor || 'lightgreen');
     diamond.setAttribute('stroke', OUTLINE_COLOR);
 
-    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute('x', obj.x);
-    text.setAttribute('y', obj.y);
-    text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('alignment-baseline', 'middle');
-    text.setAttribute('font-size', FONT_SIZE);
-    text.textContent = obj.text;
-    text.setAttribute('style', 'user-select: none;'); // Selectable text in a Viz is crazy; This stops that.
+    const text = getHTMLLikeText(obj)
     diamond.addEventListener('click', () => obj.toggleBackgroundColor());
     text.addEventListener('click', () => obj.toggleBackgroundColor());
 
@@ -153,21 +202,7 @@ function drawDiamondObject(obj) {
     svg.appendChild(text);
 }
 
-function drawTextObject(obj) {
-    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute('x', obj.x);
-    text.setAttribute('y', obj.y);
-    text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('alignment-baseline', 'middle');
-    text.setAttribute('font-size', FONT_SIZE);
-    text.setAttribute('fill', ORANGE);
-    text.textContent = obj.text;
-    //text.setAttribute('style', 'user-select: none;'); // Selectable text in a Viz is crazy; This stops that.
-    // box.addEventListener('click', () => obj.toggleBackgroundColor());
-    // text.addEventListener('click', () => obj.toggleBackgroundColor());
 
-    svg.appendChild(text);
-}
 
 function getFromToXY(obj1, obj2) {
     let x1, y1, x2, y2;
