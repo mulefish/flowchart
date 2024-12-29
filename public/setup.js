@@ -219,48 +219,119 @@ function getFromToXY(obj1, obj2) {
 }
 
 
+// function drawArrow(obj1, obj2, isSolid, arrowType, mood) {
+
+//     console.log("isSolid: " + isSolid + " arrowType: " + arrowType + " mood " + mood)
+
+//     let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+//     line.setAttribute('x1', obj1.centerX);
+//     line.setAttribute('y1', obj1.centerY);
+//     line.setAttribute('x2', obj2.centerX);
+//     line.setAttribute('y2', obj2.centerY);
+
+//     let clr = CHARCOAL
+//     let lineWidth = '1'
+//     if (mood === positive) {
+//         clr = "#00ff00"
+//         //lineWidth = '2'
+//     } else if (mood === negative) {
+//         clr = "#ff0000"
+//         //lineWidth = '2'
+//     }
+
+//     line.setAttribute('stroke', clr);
+//     line.setAttribute('stroke-width', lineWidth);
+//     if (isSolid === dashed) {
+//         line.setAttribute('stroke-dasharray', '5,5');
+//     }
+//     svg.appendChild(line);
+
+//     if (arrowType === hasArrow) {
+//         const arrowLength = 4;
+//         const arrowAngle = Math.PI / 6; // 30 degrees 
+//         const angle = Math.atan2(obj2.centerY - obj1.centerY, obj2.centerX - obj1.centerX);
+
+//         let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+//         arrowHead.setAttribute('points', `
+//         ${obj2.centerX},${obj2.centerY}
+//         ${obj2.centerX - arrowLength * Math.cos(angle - arrowAngle)},${obj2.centerY - arrowLength * Math.sin(angle - arrowAngle)}
+//         ${obj2.centerX - arrowLength * Math.cos(angle + arrowAngle)},${obj2.centerY - arrowLength * Math.sin(angle + arrowAngle)}
+//     `);
+
+//         clr = 'darkgray' // ORANGE
+//         if (mood === positive) {
+//             clr = "#00ff00"
+//         } else if (mood === negative) {
+//             clr = "#ff0000"
+//         }
+
+//         arrowHead.setAttribute('fill', clr);
+//         arrowHead.setAttribute('stroke', clr);
+
+//         svg.appendChild(arrowHead);
+//     }
+// }
+
 function drawArrow(obj1, obj2, isSolid, arrowType, mood) {
+    console.log("isSolid: " + isSolid + " arrowType: " + arrowType + " mood " + mood);
 
-    console.log("isSolid: " + isSolid + " arrowType: " + arrowType + " mood " + mood)
+    const OFFSET = 10; // Shorten start and end by 20 pixels
 
+    // Calculate the angle of the line
+    const angle = Math.atan2(obj2.centerY - obj1.centerY, obj2.centerX - obj1.centerX);
+
+    // Shorten the start and end points
+    const x1 = obj1.centerX + OFFSET * Math.cos(angle);
+    const y1 = obj1.centerY + OFFSET * Math.sin(angle);
+    const x2 = obj2.centerX - OFFSET * Math.cos(angle);
+    const y2 = obj2.centerY - OFFSET * Math.sin(angle);
+
+    // Create the line
     let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute('x1', obj1.centerX);
-    line.setAttribute('y1', obj1.centerY);
-    line.setAttribute('x2', obj2.centerX);
-    line.setAttribute('y2', obj2.centerY);
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
 
-    let clr = CHARCOAL 
-    let lineWidth = '1' 
-    if ( mood === positive) {
-        clr = "#00ff00" 
-        lineWidth = '2'
-    } else if ( mood === negative ) {
-        clr = "#ff0000" 
-        lineWidth = '2'
+    let clr = CHARCOAL;
+    let lineWidth = '1';
+    if (mood === positive) {
+        clr = "#00ff00";
+    } else if (mood === negative) {
+        clr = "#ff0000";
     }
 
     line.setAttribute('stroke', clr);
     line.setAttribute('stroke-width', lineWidth);
+
     if (isSolid === dashed) {
         line.setAttribute('stroke-dasharray', '5,5');
     }
+
     svg.appendChild(line);
 
+    // Create the arrowhead
     if (arrowType === hasArrow) {
         const arrowLength = 4;
-        const arrowAngle = Math.PI / 6; // 30 degrees 
-        const angle = Math.atan2(obj2.centerY - obj1.centerY, obj2.centerX - obj1.centerX);
+        const arrowAngle = Math.PI / 6; // 30 degrees
 
         let arrowHead = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         arrowHead.setAttribute('points', `
-        ${obj2.centerX},${obj2.centerY}
-        ${obj2.centerX - arrowLength * Math.cos(angle - arrowAngle)},${obj2.centerY - arrowLength * Math.sin(angle - arrowAngle)}
-        ${obj2.centerX - arrowLength * Math.cos(angle + arrowAngle)},${obj2.centerY - arrowLength * Math.sin(angle + arrowAngle)}
-    `);
-        arrowHead.setAttribute('fill', ORANGE);
-        arrowHead.setAttribute('stroke', ORANGE);
+            ${x2},${y2}
+            ${x2 - arrowLength * Math.cos(angle - arrowAngle)},${y2 - arrowLength * Math.sin(angle - arrowAngle)}
+            ${x2 - arrowLength * Math.cos(angle + arrowAngle)},${y2 - arrowLength * Math.sin(angle + arrowAngle)}
+        `);
+
+        clr = 'darkgray';
+        if (mood === positive) {
+            clr = "#00ff00";
+        } else if (mood === negative) {
+            clr = "#ff0000";
+        }
+
+        arrowHead.setAttribute('fill', clr);
+        arrowHead.setAttribute('stroke', clr);
 
         svg.appendChild(arrowHead);
     }
 }
-

@@ -63,6 +63,14 @@ function setTheShapes() {
     const h = addNode(getX(g, 1), getY(g, 0), 10, g, diamondType,  solid, hasArrow,  neutral, "Snow", "Is in<br/>snow") 
     const i = addNode(getX(h, 1), getY(h, 0), 20, h, boxType,  solid, hasArrow,  positive, "Associate", "Associate<br/>account") 
     fromTo[h.key].push({key: c.key, type: 'solid', arrowType: 'hasArrow', mood: negative})
+    // 
+    const j = addNode(getX(e, 1), getY(e, 0), 10, e, diamondType,  solid, hasArrow,  neutral, "STA", "STA<br/>lookup") 
+    const k = addNode(getX(j, 1), getY(j, -1), 10, j, boxType,  solid, hasArrow,  positive, "SnowRenew", "Renew<br/>Snow") 
+    const l = addNode(getX(j, 1), getY(j, 1), 10, j, diamondType,  solid, hasArrow,  negative, "SnowActive", "Snow<br/>active<br/>enrollment") 
+
+
+
+
     // // Draw the shapes!
     for (let k in nodes) {
         const o = nodes[k];
