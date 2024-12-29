@@ -68,10 +68,10 @@ class Box extends Shape {
 
 // ✅ Step 2: Declare `objects` and `arrayOfObjects`
 let objects = {
-    'A': { x: 0, y: 0, type: "box", text: "hello1" },
-    'B': { x: 0, y: 0, type: "box", text: "hello2" },
-    'C': { x: 0, y: 0, type: "diamond", text: "hello3" },
-    'D': { x: 0, y: 0, type: "text", text: "hello4" },
+    'A': { type: "box", text: "hello1" },
+    'B': { type: "box", text: "hello2" },
+    'C': { type: "diamond", text: "hello3" },
+    'D': { type: "text", text: "hello4" },
     'E': { x: 0, y: 0, type: "box", text: "hello5" },
     'F': { x: 0, y: 0, type: "box", text: "hello6" },
     'Z': { x: 0, y: 0, type: "text", text: "hello7" }
