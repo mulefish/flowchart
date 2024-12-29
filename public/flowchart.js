@@ -6,67 +6,76 @@ const downUp = "downUp";
 const upDown = "upDown";
 const solid = "solid";
 const dashed = "dashed";
+let nodes = []
 
-// Constants for grid spacing
-let GRID_X = W / 12; // Divides width into 12 columns
-let GRID_Y = H / 6;  // Divides height into 6 rows
+let GRID_X = VIEWPORT_WIDTH / 30;
+let GRID_Y = VIEWPORT_HEIGHT / 10;
 
-/**
- * Calculate X and Y dynamically based on grid positions.
- * @param {number} col - Column index (horizontal position).
- * @param {number} row - Row index (vertical position).
- * @param {number} offsetX - Horizontal adjustment (optional).
- * @param {number} offsetY - Vertical adjustment (optional).
- * @returns {Object} { x, y }
- */
-function getPosition(col, row, offsetX = 0, offsetY = 0) {
-    return {
-        x: col * GRID_X + offsetX,
-        y: row * GRID_Y + offsetY,
-    };
+function getX(obj, col) {
+    return col * GRID_X + obj.x
+}
+function getY(obj, row) {
+    return row * GRID_Y + obj.y
 }
 
-/**
- * Setup and draw nodes and connections
- */
-function setTheShapes() {
-    if (typeof W === 'undefined' || typeof H === 'undefined') {
-        console.error('W and H are undefined. Ensure resizeSVG() is called before setTheShapes.');
-        return;
-    }
-    nodes = {
-        "Home": new Box(getPosition(1, 3).x, getPosition(1, 3).y, 20, 'Home'),
-        "Disclosures": new Box(getPosition(4, 3).x, getPosition(4, 3).y, 20, 'Disclosures'),
-        "SignIn": new Diamond(getPosition(6, 3).x, getPosition(6, 3).y, 10, 'SignIn'),
-        "Password": new Box(getPosition(7, 1).x, getPosition(7, 1).y, 20, 'Password'),
-        "No1": new TextObj(getPosition(6, 5).x, getPosition(6, 5).y, 0, 'No'),
-        "SignUp": new Box(getPosition(3, 5).x, getPosition(3, 5).y, 20, 'SignUp'),
-        "STA": new Box(getPosition(4, 5).x, getPosition(4, 5).y, 20, 'Setup'),
-        "Snow": new Diamond(getPosition(5, 6).x, getPosition(5, 6).y, 10, 'Snow?'),
-        "Yes1": new TextObj(getPosition(8, 6).x, getPosition(8, 6).y, 0, 'Yes'),
-        "Associate": new Box(getPosition(9, 5).x, getPosition(9, 5).y, 20, 'Ass'),
-        "MFA": new Box(getPosition(9, 3).x, getPosition(9, 3).y, 20, 'MFA'),
-        "STALookup": new Diamond(getPosition(10, 3).x, getPosition(10, 3).y, 10, 'STA Lookup'),
-        "Found": new TextObj(getPosition(11, 2).x, getPosition(11, 2).y, 0, 'Found'),
-        "NotFound": new TextObj(getPosition(11, 5).x, getPosition(11, 5).y, 0, 'NotFound'),
-    };
 
-    // Draw the nodes
+function setTheShapes() {
+    // Relative positioning! Not as clever as a general force directed graph with springs and gravity but way way simplier. 
+    // And not hard coded! This relative stuff is a OK comprimise(sic) methinks. 
+    //
+    // NOTE: negative is UP!
+    const refpoint = { x: 1 * GRID_X, y: 5 * GRID_Y }
+    const home = new Box(getX(refpoint, 0), getY(refpoint, 0), 20, 'Home')
+    const disclosures = new Box(getX(home, 1), getY(home, 0), 20, 'Disclosures')
+    const signIn = new Diamond(getX(disclosures, 1.5), getY(disclosures, 0.5), 10, 'SignIn')
+    const password = new Box(getX(signIn, 0), getY(signIn, -4), 10, 'Password')
+    const signUp = new Box(getX(signIn, -1), getY(signIn, 2), 20, 'SignUp')
+    const STA = new Box(getX(signUp, 1), getY(signUp, 0), 20, 'STA')
+    const Snow = new Box(getX(STA, 1), getY(STA, 0), 20, 'Snow?')
+    const _inbetween = {x:( Snow.x + signIn.x ) / 2, y:( Snow.y + signIn.y ) / 2}
+    const No1 = new TextObj(getX(_inbetween, 0.2), getY(_inbetween,0), 0, 'No')
+    const Yes1 = new TextObj(getX(Snow, 1), getY(Snow,0), 0, 'Yes')
+    const Associate = new Box(getX(Yes1, 1), getY(Yes1, 0), 20, 'Associate')
+    const STALookup = new Box(getX(Associate, 1), getY(Associate, 0), 20, 'STA Lookup')
+    const Yes2 = new TextObj(getX(STALookup, 1), getY(STALookup,-1), 0, 'Yes')
+    const No2 = new TextObj(getX(STALookup, 1), getY(STALookup,1), 0, 'No')
+    const ActiveRenewal = new Box(getX(Yes2, 1), getY(Yes2, -1), 20, 'Active Renewal')
+    const Found = new TextObj(getX(ActiveRenewal, 1), getY(ActiveRenewal,-2), 0, 'Found')
+    const NotFound = new TextObj(getX(ActiveRenewal, 1), getY(ActiveRenewal,3), 0, 'Not Found')
+    const Elegable = new Diamond(getX(Found, 1), getY(Found, -1), 20, 'Renewable?')
+    const EndFlow = new Box(getX(Elegable, 1), getY(Elegable, -1), 20, 'End flow')
+
+    nodes = {
+        Home: home,
+        Disclosures: disclosures,
+        SignIn: signIn,
+        Password: password,
+        SignUp: signUp,
+        STA: STA,
+        Snow:Snow,
+        No1: No1,
+        Yes1: Yes1,
+        Associate:Associate,
+        STALookup:STALookup,
+        Yes2:Yes2,
+        No2:No2,
+        ActiveRenewal:ActiveRenewal,
+        NotFound:NotFound,
+        Found:Found,
+        Elegable:Elegable,
+        EndFlow:EndFlow
+    }
 
     for (let k in nodes) {
         const o = nodes[k];
-        try {
-            if (o.type === "diamond") {
-                drawDiamondObject(o);
-            } else if (o.type === "box") {
-                drawBoxObject(o);
-            } else if (o.type === "waypoint") {
-                drawCircleObject(o);
-            } else if (o.type === "text") {
-                drawTextObject(o);
-            }
-        } catch (failbot) {
-            console.log("BOOM " + failbot)
+        if (o.type === "diamond") {
+            drawDiamondObject(o);
+        } else if (o.type === "box") {
+            drawBoxObject(o);
+        } else if (o.type === "waypoint") {
+            drawCircleObject(o);
+        } else if (o.type === "text") {
+            drawTextObject(o);
         }
     }
 
@@ -76,17 +85,37 @@ function setTheShapes() {
         { from: "Disclosures", target: "SignIn", direction: leftRight, arrowType: solid },
         { from: "SignIn", target: "Password", direction: downUp, arrowType: solid },
         { from: "SignIn", target: "SignUp", direction: upDown, arrowType: dashed },
-        { from: "SignUp", target: "STA", direction: leftRight, arrowType: solid },
+        { from: "SignUp", target: "STA", direction: upDown, arrowType: solid },
         { from: "STA", target: "Snow", direction: leftRight, arrowType: solid },
-        { from: "Snow", target: "No1", direction: leftRight, arrowType: solid },
+        { from: "Snow", target: "No1", direction: downUp, arrowType: solid },
         { from: "No1", target: "SignIn", direction: downUp, arrowType: solid },
-        { from: "Snow", target: "Yes1", direction: rightLeft, arrowType: solid },
+        { from: "Snow", target: "Yes1", direction: leftRight, arrowType: solid },
         { from: "Yes1", target: "Associate", direction: leftRight, arrowType: solid },
-        { from: "SignIn", target: "MFA", direction: leftRight, arrowType: solid },
-        { from: "MFA", target: "STALookup", direction: leftRight, arrowType: solid },
-        { from: "STALookup", target: "Found", direction: upDown, arrowType: solid },
-        { from: "STALookup", target: "NotFound", direction: downUp, arrowType: solid },
-    ];
+        { from: "Associate", target: "STALookup", direction: leftRight, arrowType: solid },
+        { from: "STALookup", target: "No2", direction: downUp, arrowType: solid },
+        { from: "STALookup", target: "Yes2", direction: leftRight, arrowType: solid },
+        { from: "Yes2", target: "ActiveRenewal", direction: leftRight, arrowType: solid },
+        { from: "ActiveRenewal", target: "Found", direction: leftRight, arrowType: solid },
+        { from: "ActiveRenewal", target: "NotFound", direction: leftRight, arrowType: solid },
+
+        
+
+
+        
+    ]
+    //     { from: "SignIn", target: "Password", direction: downUp, arrowType: solid },
+    //     { from: "SignIn", target: "SignUp", direction: upDown, arrowType: dashed },
+    //     { from: "SignUp", target: "STA", direction: leftRight, arrowType: solid },
+    //     { from: "STA", target: "Snow", direction: leftRight, arrowType: solid },
+    //     { from: "Snow", target: "No1", direction: leftRight, arrowType: solid },
+    //     { from: "No1", target: "SignIn", direction: downUp, arrowType: solid },
+    //     { from: "Snow", target: "Yes1", direction: rightLeft, arrowType: solid },
+    //     { from: "Yes1", target: "Associate", direction: leftRight, arrowType: solid },
+    //     { from: "SignIn", target: "MFA", direction: leftRight, arrowType: solid },
+    //     { from: "MFA", target: "STALookup", direction: leftRight, arrowType: solid },
+    //     { from: "STALookup", target: "Found", direction: upDown, arrowType: solid },
+    //     { from: "STALookup", target: "NotFound", direction: downUp, arrowType: solid },
+    // ];
 
     // Draw arrows
     fromTo.forEach(({ from, target, direction, arrowType }) => {

@@ -1,13 +1,10 @@
-let H = undefined
-let W = undefined
-// Get the canvas and context
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 
 // // Set the canvas size dynamically
 function resizeCanvas() {
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight * 0.2; // 1/5 of the screen height
+  canvas.height = window.innerHeight * 0.4; // 1/5 of the screen height
 }
 
 // Function to draw a square with text
@@ -51,19 +48,10 @@ function drawDiamondWithText(x, y, size, text) {
     ctx.fillText(text, x, y);
   }
 
-
-/**
- * Draws a line with an arrow from one point to another.
- * @param {number} x1 - Starting x-coordinate.
- * @param {number} y1 - Starting y-coordinate.
- * @param {number} x2 - Ending x-coordinate.
- * @param {number} y2 - Ending y-coordinate.
- */
 function drawArrow(x1, y1, x2, y2) {
-    const arrowLength = 10; // Length of the arrowhead lines
+    const arrowLength = 10;
     const arrowAngle = Math.PI / 6; // Angle of the arrowhead (30°)
     
-    // Draw the line
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
@@ -92,17 +80,10 @@ function drawArrow(x1, y1, x2, y2) {
   // Initial canvas setup
   resizeCanvas();
   window.addEventListener('resize', () => {
-    H = window.innerHeight * 0.2;
-    W = window.innerWidth;
     document.getElementById("H").innerHTML = "H=" + H;
     document.getElementById("W").innerHTML = "W=" + W;
-  
     resizeCanvas();
-    drawSquareWithText(50, 100, 30, 'hello'); // Redraw square
-    drawDiamondWithText(150, 100, 30, 'dog'); // Redraw diamond
-    drawArrow(65, 115, 150, 100); // Redraw arrow
   });
-  
 
 class Box {
     constructor(x,y,size,text) {
@@ -114,29 +95,24 @@ class Box {
         this.leftY = y + ( size / 2 )
         this.rightX = x + size
         this.rightY = y + ( size / 2 )
-
     }
-
 }
 
 function drawBoxObject(obj) {
     // Begin path for the diamond
     ctx.beginPath();
-    ctx.moveTo(obj.x, obj.y - obj.size); // Top point
-    ctx.lineTo(obj.x + obj.size, obj.y); // Right point
-    ctx.lineTo(obj.x, obj.y + obj.size); // Bottom point
-    ctx.lineTo(obj.x - obj.size, obj.y); // Left point
+    ctx.moveTo(obj.x, obj.y - obj.size);
+    ctx.lineTo(obj.x + obj.size, obj.y);
+    ctx.lineTo(obj.x, obj.y + obj.size);
+    ctx.lineTo(obj.x - obj.size, obj.y);
     ctx.closePath();
   
-    // Fill the diamond
     ctx.fillStyle = 'lightgreen';
     ctx.fill();
   
-    // Draw the border
     ctx.strokeStyle = 'black';
     ctx.stroke();
   
-    // Draw the text in the center
     ctx.font = '14px Arial';
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
@@ -144,12 +120,7 @@ function drawBoxObject(obj) {
     ctx.fillText(obj.text, obj.x, obj.y);
   }
 
-
-
-
 const box = new Box(50, 100, 30, 'OOP')
-  
-  // Initial draw
   drawSquareWithText(50, 100, 30, 'hello');
   drawDiamondWithText(150, 100, 30, 'dog');
   drawArrow(65, 115, 150, 100);

@@ -1,51 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Responsive SVG Diagram</title>
-  <style>
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    svg {
-      display: block;
-      width: 100vw;
-      height: 20vh;
-    }
-  </style>
+  <script>
+    const VIEWPORT_HEIGHT = window.innerHeight * 0.3;
+    const VIEWPORT_WIDTH = window.innerWidth; 
+  </script>
 </head>
+
 <body>
-  <svg id="mySVG"></svg>
+  <div id="viewport"></div>
+  <script>
+    const s = `<svg id="mySVG" width="${VIEWPORT_WIDTH}" height="${VIEWPORT_HEIGHT}" viewBox="0 0 ${VIEWPORT_WIDTH} ${VIEWPORT_HEIGHT}">`
+    document.getElementById("viewport").innerHTML = s
+  </script>
+
   <hr />
-  <span id="H"></span>
-  <span id="W"></span>
+  <span id="VIEWPORT_HEIGHT"></span>
+  <span id="VIEWPORT_WIDTH"></span>
   <button onclick="toggle('Home')">Home</button>
   <button onclick="toggle('Disclosures')">Disclosure</button>
   <button onclick="toggle('SignIn')">SignIn</button>
-  <script>
-    function test() { 
-      let x = 1 / 10
-      console.log(x +" " + W)
-    }
-  </script>
-<button onclick="test()">test</button>
-
-
-
+  <button onclick="test()">test</button>
   <script src="setup.js"></script>
   <script src="flowchart.js"></script>
   <script>
-    // Resize on load and window resize and add in the shapes
-
-
     resizeSVG();
     window.addEventListener('resize', resizeSVG);
     setTheShapes();
   </script>
 </body>
+
 </html>
