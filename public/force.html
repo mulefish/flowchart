@@ -36,17 +36,23 @@
         resizeCanvas();
 
 
-        const negative = "neg"
-        const positive = "pos"
+        const negative = "negative"
+        const positive = "positive"
         const neutral = "neutral"
+        const other = "other"
+        const biodata = "biodata"
+        const docselection="docselection"
+        const scheduler="scheduler"
+        const payment="payment"
+
         // Graph Data
         const names = {};
-        names["a"] = { text: "Main Flowchart Steps", children: [] };
-        names["b"] = { text: "Disclosures", children: [] };
-        names["c"] = { text: "Sign In", children: [] };
-        names["e"] = { text: "Password Reset", children: [] };
-        names["f"] = { text: "MFA", children: [] };
-        names["g"] = { text: "Sign Up", children: [] };
+        names["a"] = { text: "Main Flowchart Steps", group:other, children: [] };
+        names["b"] = { text: "Disclosures", group:biodata,children: [] };
+        names["c"] = { text: "Sign In",  group:biodata,children: [] };
+        names["e"] = { text: "Password Reset",  group:biodata,children: [] };
+        names["f"] = { text: "MFA",  group:biodata,children: [] };
+        names["g"] = { text: "Sign Up",  group:biodata,children: [] };
 
         names["a"].children = [{id:"b", mood:negative}];
         names["b"].children = [{id:"c", mood:positive}];
