@@ -255,7 +255,7 @@ function drawNode(ctx, node) {
     switch (node.shape) {
         case 'circle':
             ctx.beginPath();
-            ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI);
+            ctx.arc(node.x, node.y, 1, 0, 2 * Math.PI);
             ctx.fill();
             ctx.stroke();
             break;

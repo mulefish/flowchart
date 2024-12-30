@@ -79,9 +79,24 @@
         names["BaC"] = { text: "Birth and Citizenship", shape:box, group:biodata, children:[]};
         names["Eligibility"] = { text: "Eligibility", shape:box, group:biodata, children:[]};
         names["Enrollment"] = { text: "Enrollment?", shape:diamond, group:other, children:[]};
-        names["Address"] = { text: "Address?", shape:diamond, group:biodata, children:[]};
         names["Attributes"] = { text: "Attributes", shape:diamond, group:biodata, children:[]};
+        names["Address"] = { text: "Address?", shape:diamond, group:biodata, children:[]};
         names["OR"] = { text: "Online renewal", shape:diamond, group:other, children:[]};
+        names["Payment"] = { text: "Payment", shape:box, group:payment, children:[]};
+        names["CoLPR"] = { text: "Citizen or LPR", shape:diamond, group:docselection, children:[]};
+        names["PID_LPR"] = { text: "PhotoId (LPR)", shape:box, group:docselection, children:[]};
+        names["PID_Citizen"] = { text: "PhotoId (Citizen)", shape:box, group:docselection, children:[]};
+        names["ListA"] = { text: "List A?", shape:diamond, group:docselection, children:[]};
+        names["CD"] = { text: "Citizen Docs", shape:box, group:docselection, children:[]};
+        names["NC"] = { text: "Name check", shape:box, group:docselection, children:[]};
+        names["PicIdMatch"] = { text: "Photo ID and citizenship match", shape:diamond, group:docselection, children:[]};
+        names["Scheduler"] = { text: "Scheduler", shape:box, group:scheduler, children:[]};
+        names["ALD"] = { text: "Add linking docs", shape:box, group:scheduler, children:[]};
+        names["LtENC"] = { text: "Link to Enrollment Name complete?", shape:diamond, group:scheduler, children:[]};
+        names["ASP"] = { text: "Appointment summary screen", shape:diamond, group:scheduler, children:[]};
+        names["EFD3"] = { text: "End flow/dashboard", shape:diamond, group:scheduler, children:[]};
+        names["OSS"] = { text: "Online summary screen", shape:diamond, group:scheduler, children:[]};
+
 
 
         names["home"].children = [{id:"disclosures", mood:neutral}];
@@ -108,6 +123,27 @@
         names["Enrollment"].children = [{id:"Address", mood:negative},{id:"Attributes", mood:positive}]
         names["Attributes"].children = [{id:"Address", mood:neutral}]
         names["Address"].children = [{id:"OR", mood:neutral}]
+        names["OR"].children = [{id:"Payment", mood:positive},{id:"CoLPR", mood:positive} ]
+        names["Payment"].children = [{id:"OSS", mood:neutral}  ]
+        names["OSS"].children = [{id:"EFD3", mood:neutral}  ]
+        names["CoLPR"].children = [{id:"PID_LPR", mood:neutral},{id:"PID_Citizen", mood:neutral} ]
+        names["PID_Citizen"].children = [{id:"ListA", mood:neutral} ]
+        names["ListA"].children = [{id:"CD", mood:negative} ]
+        names["CD"].children = [{id:"NC", mood:neutral} ]
+        names["NC"].children = [{id:"PicIdMatch", mood:neutral} ]
+        names["PicIdMatch"].children = [{id:"Scheduler", mood:positive}, {id:"ALD", mood:negative} ]
+        names["ALD"].children = [{id:"LtENC", mood:neutral} ]
+        names["LtENC"].children = [{id:"Scheduler", mood:positive}  ]
+        names["Scheduler"].children = [{id:"ASP", mood:neutral}  ]
+        names["ASP"].children = [{id:"EFD3", mood:neutral}  ]
+
+
+
+        
+
+
+
+        
 
 
 
