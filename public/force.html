@@ -52,7 +52,7 @@
 
         // Graph Data
         const names = {};
-        names["a"] = { text: "Home/Landing Page", shape:circle, group:other, children: [] };
+        names["a"] = { text: "Home/Landing Page", shape:box, group:other, children: [] };
         names["b"] = { text: "Disclosures", shape:box, group:other,children: [] };
         names["c"] = { text: "Sign In",  shape:diamond, group:biodata,children: [] };
         names["e"] = { text: "Password Reset", shape:box,  group:biodata,children: [] };
@@ -61,17 +61,16 @@
         names["h"] = { text: "Account Details", shape:box, group:biodata, children:[]};
         names["i"] = { text: "Associate to account", shape:box, group:biodata, children:[]};
         names["j"] = { text: "Existing enrollment in snow", shape:box, group:biodata, children:[]};
+        names["k"] = { text: "STA Lookup", shape:diamond, group:other, children:[]};
+        names["l"] = { text: "Active Enrollment in Snow", shape:diamond, group:other, children:[]};
+        names["m"] = { text: "Active Renewal in Snow", shape:diamond, group:other, children:[]};
+        names["n"] = { text: "Elegible to renew?", shape:diamond, group:other, children:[]};
+        names["o"] = { text: "Continue from last renewal flow", shape:diamond, group:other, children:[]};
+
+        // 
 
 
 
-// //         //Home/Landing Page Q&A
-// // Disclosures
-// // Sign In
-// // Password Reset
-// // MFA (Multi-Factor Authentication)
-// // Sign Up
-// Account Details (Manual lookup when Enrollment is in STA Lookup)
-// STA Lookup
 // Found (Renewal Flows)
 // Not Found (Enrollment Flow)
 // Eligible to Renew?
@@ -99,6 +98,11 @@
         names["g"].children = [{id:"h", mood:neutral}];
         names["h"].children = [{id:"j", mood:neutral}];
         names["j"].children = [{id:"i", mood:positive},{id:"c", mood:negative}];
+        names["f"].children = [{id:"k", mood:neutral}];
+        names["k"].children = [{id:"l", mood:negative}, {id:"m", mood:positive}];
+        names["m"].children = [{id:"o", mood:positive}, {id:"n", mood:negative}];
+        
+
 
     </script>
 

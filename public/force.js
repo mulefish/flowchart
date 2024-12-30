@@ -61,11 +61,12 @@ function shortenLine(x1, y1, x2, y2, offset) {
     };
 }
 
-// Draw an arrowhead
-function drawArrowhead(ctx, fromX, fromY, toX, toY) {
+// Draw an arrowhead with specified color
+function drawArrowhead(ctx, fromX, fromY, toX, toY, color) {
     const headLength = 10; // Arrowhead length
     const angle = Math.atan2(toY - fromY, toX - fromX);
 
+    ctx.fillStyle = color; // Arrowhead inherits line color
     ctx.beginPath();
     ctx.moveTo(toX, toY);
     ctx.lineTo(
@@ -180,16 +181,26 @@ function drawGraph() {
 
     // Draw links
     for (const link of links) {
-        ctx.strokeStyle = link.mood === 'positive' ? 'green' :
-                          link.mood === 'negative' ? 'red' : 'gray';
+        const shortened = shortenLine(
+            link.source.x,
+            link.source.y,
+            link.target.x,
+            link.target.y,
+            20
+        );
+
+        const color = link.mood === 'positive' ? 'green' :
+                      link.mood === 'negative' ? 'red' : 'gray';
+
+        ctx.strokeStyle = color;
         ctx.lineWidth = 2;
 
         ctx.beginPath();
-        ctx.moveTo(link.source.x, link.source.y);
-        ctx.lineTo(link.target.x, link.target.y);
+        ctx.moveTo(shortened.x1, shortened.y1);
+        ctx.lineTo(shortened.x2, shortened.y2);
         ctx.stroke();
 
-        drawArrowhead(ctx, link.source.x, link.source.y, link.target.x, link.target.y);
+        drawArrowhead(ctx, shortened.x1, shortened.y1, shortened.x2, shortened.y2, color);
     }
 
     // Draw nodes
@@ -213,11 +224,65 @@ canvas.addEventListener('click', (event) => {
 
 // Animation loop
 let animationId;
-function tick() {wd
+function tick() {
     updateSimulation();
     drawGraph();
     animationId = requestAnimationFrame(tick);
 }
 
-// Start animation
+// Stop the animation and save the state
+function stopAnimation() {
+    console.log("stop animation");
+    cancelAnimationFrame(animationId); // Stop the animation loop
+    
+    // Serialize nodes and links into localStorage
+    localStorage.setItem("nodes", JSON.stringify(nodes));
+    localStorage.setItem("links", JSON.stringify(
+        links.map(link => ({
+            source: link.source.id,
+            target: link.target.id,
+            mood: link.mood
+        }))
+    ));
+    
+    console.log("State saved to localStorage.");
+}
+
+// Load the state and reset the animation
+function loadState() {
+    console.log("loadState");
+    const savedNodes = JSON.parse(localStorage.getItem("nodes"));
+    const savedLinks = JSON.parse(localStorage.getItem("links"));
+
+    if (savedNodes && savedLinks) {
+        // Restore nodes
+        nodes = savedNodes.map(node => ({
+            ...node,
+            vx: 0, // Reset velocity
+            vy: 0  // Reset velocity
+        }));
+        
+        // Create a mapping of node IDs to node objects
+        const nodeMap = {};
+        nodes.forEach(node => {
+            nodeMap[node.id] = node;
+        });
+
+        // Restore links with correct references to node objects
+        links = savedLinks.map(link => ({
+            source: nodeMap[link.source],
+            target: nodeMap[link.target],
+            mood: link.mood
+        }));
+        
+        console.log("State loaded from localStorage.");
+        
+        // Restart the animation if stopped
+        if (!animationId) {
+            tick();
+        }
+    } else {
+        console.warn("No saved state found in localStorage.");
+    }
+}
 tick();
