@@ -22,8 +22,8 @@
 <body>
     <canvas id="graphCanvas"></canvas>
     <hr/>
-    <button id="stopButton">Stop Animation</button>
-    <button id="loadState">Load State</button>
+    <button onclick="stopAnimation()">Stop Animation</button>
+    <button onclick="loadState()">Load State</button>
     <script>
         const canvas = document.getElementById('graphCanvas');
         const ctx = canvas.getContext('2d');
@@ -40,6 +40,7 @@
         const negative = "negative"
         const positive = "positive"
         const neutral = "neutral"
+        const dashed = 'dashed'
         const other = "other"
         const biodata = "biodata"
         const docselection="docselection"
@@ -91,7 +92,7 @@
 
         names["a"].children = [{id:"b", mood:neutral}];
         names["b"].children = [{id:"c", mood:neutral}];
-        names["c"].children = [{id:"e", mood:neutral},{id:"f", mood:neutral},{id:"g", mood:neutral}];
+        names["c"].children = [{id:"e", mood:neutral},{id:"f", mood:neutral},{id:"g", mood:dashed}];
         names["g"].children = [{id:"h", mood:neutral}];
         names["h"].children = [{id:"j", mood:neutral}];
         names["j"].children = [{id:"i", mood:positive},{id:"c", mood:negative}];
