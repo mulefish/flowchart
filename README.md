@@ -1,4 +1,5 @@
 # repo
+https://github.com/mulefish/flowchart
 
 # What is this? 
 Thinking about adding a 'debug' .vue in the header that will interogate the Pinia store for state OK/NotOk.
