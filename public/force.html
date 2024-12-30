@@ -48,16 +48,54 @@
 
         // Graph Data
         const names = {};
-        names["a"] = { text: "Main Flowchart Steps", group:other, children: [] };
+        names["a"] = { text: "Home/Landing Page", group:other, children: [] };
         names["b"] = { text: "Disclosures", group:biodata,children: [] };
         names["c"] = { text: "Sign In",  group:biodata,children: [] };
         names["e"] = { text: "Password Reset",  group:biodata,children: [] };
         names["f"] = { text: "MFA",  group:biodata,children: [] };
         names["g"] = { text: "Sign Up",  group:biodata,children: [] };
+        names["h"] = { text: "Account Details", group:biodata, children:[]};
+        names["i"] = { text: "Associate to account", group:biodata, children:[]};
+        names["j"] = { text: "Existing enrollment in snow", group:biodata, children:[]};
+
+
+
+// //         //Home/Landing Page Q&A
+// // Disclosures
+// // Sign In
+// // Password Reset
+// // MFA (Multi-Factor Authentication)
+// // Sign Up
+// Account Details (Manual lookup when Enrollment is in STA Lookup)
+// STA Lookup
+// Found (Renewal Flows)
+// Not Found (Enrollment Flow)
+// Eligible to Renew?
+// End Flow/Dashboard
+// Prompt for Renewal
+// Reprint Required?
+// Reprint Required Notice
+// Location Finder
+// Legal Names
+// Birth and Citizenship
+// Eligibility
+// Enrollment?
+// Attributes
+// Address
+// Contact Validation (Red Cross Symbol)
+// Online Renewal?
+// Citizen or LPR?
+// Photo ID (Citizen)
+// Payment
+
 
         names["a"].children = [{id:"b", mood:negative}];
         names["b"].children = [{id:"c", mood:positive}];
-        names["c"].children = [{id:"e", mood:negative},{id:"f", mood:negative},{id:"g", mood:positive}];
+        names["c"].children = [{id:"e", mood:neutral},{id:"f", mood:neutral},{id:"g", mood:neutral}];
+        names["g"].children = [{id:"h", mood:neutral},{id:"c", mood:negative}];
+        names["h"].children = [{id:"j", mood:neutral}];
+        names["j"].children = [{id:"i", mood:positive},{id:"c", mood:negative}];
+
     </script>
 
 
