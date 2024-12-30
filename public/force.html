@@ -1,188 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Force-Directed Graph with Dynamic Viewport</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Force-Directed Graph with Dynamic Viewport</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
 
-    #graphCanvas {
-      display: block;
-      width: 100%;
-      border-bottom: 1px solid #ccc;
-    }
-  </style>
+        #graphCanvas {
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
 </head>
+
 <body>
-  <canvas id="graphCanvas"></canvas>
-  <script>
-    // Set up the canvas dynamically
-    const canvas = document.getElementById('graphCanvas');
-    const ctx = canvas.getContext('2d');
+    <canvas id="graphCanvas"></canvas>
+    <hr/>
+    <button id="stopButton">Stop Animation</button>
+    <script>
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight * 0.2; // 20% of window height
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    // Graph data: Nodes and Links
-    const nodes = [
-      { id: 'A', x: 100, y: 50, vx: 0, vy: 0 },
-      { id: 'B', x: 300, y: 70, vx: 0, vy: 0 },
-      { id: 'C', x: 500, y: 100, vx: 0, vy: 0 },
-      { id: 'D', x: 800, y: 50, vx: 0, vy: 0 }
-    ];
-
-    const links = [
-      { source: nodes[0], target: nodes[1] },
-      { source: nodes[1], target: nodes[2] },
-      { source: nodes[2], target: nodes[3] },
-      { source: nodes[0], target: nodes[3] }
-    ];
-
-    // Simulation parameters
-    const SPRING_LENGTH = 150;
-    const SPRING_STRENGTH = 0.05;
-    const REPULSION_STRENGTH = 1000;
-    const DAMPING = 0.8;
-
-    // Utility to calculate distance
-    function distance(node1, node2) {
-      return Math.sqrt((node1.x - node2.x) ** 2 + (node1.y - node2.y) ** 2);
-    }
-
-    // Update simulation logic
-    function updateSimulation() {
-      // Repulsion between nodes
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const nodeA = nodes[i];
-          const nodeB = nodes[j];
-          const dist = distance(nodeA, nodeB);
-          if (dist === 0) continue;
-
-          const force = REPULSION_STRENGTH / (dist * dist);
-          const dx = nodeA.x - nodeB.x;
-          const dy = nodeA.y - nodeB.y;
-          const fx = (dx / dist) * force;
-          const fy = (dy / dist) * force;
-
-          nodeA.vx += fx;
-          nodeA.vy += fy;
-          nodeB.vx -= fx;
-          nodeB.vy -= fy;
+        // Adjust canvas to fit the screen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 0.8;
         }
-      }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-      // Spring forces
-      for (const link of links) {
-        const { source, target } = link;
-        const dist = distance(source, target);
-        const delta = dist - SPRING_LENGTH;
-        const force = SPRING_STRENGTH * delta;
-        const dx = target.x - source.x;
-        const dy = target.y - source.y;
 
-        const fx = (dx / dist) * force;
-        const fy = (dy / dist) * force;
+        const negative = "neg"
+        const positive = "pos"
+        const neutral = "neutral"
+        // Graph Data
+        const names = {};
+        names["a"] = { text: "Main Flowchart Steps", children: [] };
+        names["b"] = { text: "Disclosures", children: [] };
+        names["c"] = { text: "Sign In", children: [] };
+        names["e"] = { text: "Password Reset", children: [] };
+        names["f"] = { text: "MFA", children: [] };
+        names["g"] = { text: "Sign Up", children: [] };
 
-        source.vx += fx;
-        source.vy += fy;
-        target.vx -= fx;
-        target.vy -= fy;
-      }
+        names["a"].children = [{id:"b", mood:negative}];
+        names["b"].children = [{id:"c", mood:positive}];
+        names["c"].children = [{id:"e", mood:negative},{id:"f", mood:negative},{id:"g", mood:positive}];
+    </script>
 
-      // Update positions and enforce boundary constraints
-      for (const node of nodes) {
-        node.vx *= DAMPING;
-        node.vy *= DAMPING;
 
-        node.x += node.vx;
-        node.y += node.vy;
+    <script src="force.js"></script>
 
-        node.x = Math.max(10, Math.min(canvas.width - 10, node.x));
-        node.y = Math.max(10, Math.min(canvas.height - 10, node.y));
-      }
-    }
 
-    // Draw the graph with IDs
-    function drawGraph() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw links
-      ctx.strokeStyle = '#999';
-      ctx.lineWidth = 1;
-      for (const link of links) {
-        ctx.beginPath();
-        ctx.moveTo(link.source.x, link.source.y);
-        ctx.lineTo(link.target.x, link.target.y);
-        ctx.stroke();
-      }
-
-      // Draw nodes
-      ctx.fillStyle = 'steelblue';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = '12px Arial';
-
-      for (const node of nodes) {
-        // Draw node circle
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, 10, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.strokeStyle = 'white';
-        ctx.stroke();
-
-        // Draw node ID
-        ctx.fillStyle = 'white';
-        ctx.fillText(node.id, node.x, node.y);
-        ctx.fillStyle = 'steelblue';
-      }
-    }
-
-    // Animation loop
-    function tick() {
-      updateSimulation();
-      drawGraph();
-      requestAnimationFrame(tick);
-    }
-
-    tick();
-
-    // Dragging behavior
-    let draggedNode = null;
-
-    canvas.addEventListener('mousedown', (event) => {
-      const mouseX = event.offsetX;
-      const mouseY = event.offsetY;
-      for (const node of nodes) {
-        const dist = Math.sqrt((mouseX - node.x) ** 2 + (mouseY - node.y) ** 2);
-        if (dist < 10) {
-          draggedNode = node;
-          break;
-        }
-      }
-    });
-
-    canvas.addEventListener('mousemove', (event) => {
-      if (draggedNode) {
-        draggedNode.x = event.offsetX;
-        draggedNode.y = event.offsetY;
-        draggedNode.vx = 0;
-        draggedNode.vy = 0;
-      }
-    });
-
-    canvas.addEventListener('mouseup', () => {
-      draggedNode = null;
-    });
-  </script>
 </body>
+
 </html>
