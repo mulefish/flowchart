@@ -68,12 +68,20 @@
         names["CLSS"] = { text: "Continue from last saved step", shape:box, group:"terminal", children:[]};
         names["EFD"] = { text: "End flow/dashboard", shape:box, group:"terminal", children:[]};
         names["PFR"] = { text: "Prompt for renewal", shape:diamond, group:"terminal", children:[]};
-        names["RR"] = { text: "Reprint required", shape:diamond, group:"terminal", children:[]};
         names["PEC"] = { text: "Pre Enrollment Complete", shape:diamond, group:"terminal", children:[]};
         names["CfLSEF"] = { text: "Continue from last saved enrollment flow", shape:box, group:"terminal", children:[]};
-        names["EFD2"] = { text: "End flow/Dash2", shape:box, group:"terminal", children:[]};
+        // names["EFD2"] = { text: "End flow/Dash2", shape:box, group:"terminal", children:[]};
+        names["RR"] = { text: "Reprint required", shape:diamond, group:"terminal", children:[]};
         names["RRN"] = { text: "Reprint required notice", shape:box, group:"terminal", children:[]};
         names["CaoNC"] = { text: "Citizen and/or name change", shape:diamond, group:"terminal", children:[]};
+        names["LF"] = { text: "Location Finder", shape:box, group:scheduler, children:[]};
+        names["LN"] = { text: "Legal Name", shape:box, group:biodata, children:[]};
+        names["BaC"] = { text: "Birth and Citizenship", shape:box, group:biodata, children:[]};
+        names["Eligibility"] = { text: "Eligibility", shape:box, group:biodata, children:[]};
+        names["Enrollment"] = { text: "Enrollment?", shape:diamond, group:other, children:[]};
+        names["Address"] = { text: "Address?", shape:diamond, group:biodata, children:[]};
+        names["Attributes"] = { text: "Attributes", shape:diamond, group:biodata, children:[]};
+        names["OR"] = { text: "Online renewal", shape:diamond, group:other, children:[]};
 
 
         names["home"].children = [{id:"disclosures", mood:neutral}];
@@ -88,8 +96,26 @@
         names["EtR"].children = [{id:"EFD", mood:negative},{id:"PFR", mood:positive}]
         names["PFR"].children = [{id:"EFD", mood:negative}, {id:"RR", mood:positive}]
         names["AES"].children = [{id:"PEC", mood:positive}]
-        names["PEC"].children = [{id:"CfLSEF", mood:negative},{id:"EFD2", mood:positive}]
+        // names["PEC"].children = [{id:"CfLSEF", mood:negative},{id:"EFD2", mood:positive}]
+        names["PEC"].children = [{id:"CfLSEF", mood:negative},{id:"EFD", mood:positive}]
         names["RR"].children = [{id:"RRN", mood:positive}, {id:"CaoNC", mood:negative}]
+        names["RRN"].children = [{id:"LF", mood:neutral}]
+        names["CaoNC"].children = [{id:"LF", mood:positive}]
+        names["LF"].children = [{id:"LN", mood:neutral}]
+        names["LN"].children = [{id:"BaC", mood:neutral}]
+        names["BaC"].children = [{id:"Eligibility", mood:neutral}]
+        names["Eligibility"].children = [{id:"Enrollment", mood:neutral}]
+        names["Enrollment"].children = [{id:"Address", mood:negative},{id:"Attributes", mood:positive}]
+        names["Attributes"].children = [{id:"Address", mood:neutral}]
+        names["Address"].children = [{id:"OR", mood:neutral}]
+
+
+
+
+
+        
+        
+
 
 
         
