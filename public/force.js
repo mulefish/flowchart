@@ -107,6 +107,7 @@ for (const key in names) {
     const nodeData = names[key];
     nodeMap[key] = {
         id: key,
+        letter: nodeData.letter,
         text: nodeData.text,
         group: nodeData.group,
         shape: nodeData.shape || 'circle', // Default to circle if shape is not defined
@@ -231,31 +232,98 @@ function updateSimulation() {
     }
 }
 
-// Draw nodes based on shape
+// // Draw nodes based on shape
+// function drawNode(ctx, node) {
+
+//     let clr = "lightgray"
+//     if ( node.selected ) {
+//         clr = "yellow"
+//     } else if ( node.group === 'biodata') {
+//         clr = "pink"
+//     } else if ( node.group === "docselection") {
+
+//     } else if ( node.group === "scheduler") {
+
+//     } else if ( node.group === "payment") {
+
+//     } else if ( node.group === "terminal") {
+//         clr = "lightgreen"
+//     }
+
+//     ctx.fillStyle = clr
+//     ctx.strokeStyle = 'lightgray';
+
+//     switch (node.shape) {
+//         case 'circle':
+//             ctx.beginPath();
+//             ctx.arc(node.x, node.y, 1, 0, 2 * Math.PI);
+//             ctx.fill();
+//             ctx.stroke();
+//             break;
+//         case 'box':
+//             ctx.beginPath();
+//             ctx.rect(node.x - 15, node.y - 15, 30, 30);
+//             ctx.fill();
+//             ctx.stroke();
+//             break;
+//         case 'diamond':
+//             ctx.beginPath();
+//             ctx.moveTo(node.x, node.y - 15);
+//             ctx.lineTo(node.x + 15, node.y);
+//             ctx.lineTo(node.x, node.y + 15);
+//             ctx.lineTo(node.x - 15, node.y);
+//             ctx.closePath();
+//             ctx.fill();
+//             ctx.stroke();
+//             break;
+//         default:
+//             console.warn(`Unknown shape: ${node.shape}`);
+//     }
+
+//     // Draw node text
+//     ctx.fillStyle = 'black';
+//     ctx.textAlign = 'center';
+//     ctx.textBaseline = 'middle';
+//     ctx.font = '11px Arial'; 
+//     ctx.fillText(node.text, node.x, node.y);
+// }
+
+
+// Global variable to toggle between 'letter' and 'text'
+let showLetters = false; // Default to showing 'text'
+
+// Toggle display button logic
+document.getElementById('toggleDisplay').addEventListener('click', () => {
+    showLetters = !showLetters; // Toggle the display mode
+    drawGraph(); // Redraw the graph with the updated mode
+});
+
+// Update the drawNode function to respect 'showLetters'
 function drawNode(ctx, node) {
-
-    let clr = "lightgray"
-    if ( node.selected ) {
-        clr = "yellow"
-    } else if ( node.group === 'biodata') {
+    let clr = "lightgray";
+    if (node.selected) {
+        clr = "red";
+    } else if ( node.group === 'user') {
         clr = "pink"
-    } else if ( node.group === "docselection") {
-
-    } else if ( node.group === "scheduler") {
-
-    } else if ( node.group === "payment") {
-
-    } else if ( node.group === "terminal") {
+    } else if (node.group === 'biodata') {
+        clr = "yellow";
+    } else if (node.group === "docselection") {
+        clr = "lightblue"
+    } else if (node.group === "scheduler") {
         clr = "lightgreen"
+    } else if (node.group === "payment") {
+        clr = "#C8C3E3" // light purple
+    } else if (node.group === "terminal") {
+        clr = "brown";
     }
 
-    ctx.fillStyle = clr
+    ctx.fillStyle = clr;
     ctx.strokeStyle = 'lightgray';
 
     switch (node.shape) {
         case 'circle':
             ctx.beginPath();
-            ctx.arc(node.x, node.y, 1, 0, 2 * Math.PI);
+            ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI); // Increased radius for clarity
             ctx.fill();
             ctx.stroke();
             break;
@@ -279,13 +347,14 @@ function drawNode(ctx, node) {
             console.warn(`Unknown shape: ${node.shape}`);
     }
 
-    // Draw node text
+    // Draw node text or letter based on showLetters
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '11px Arial'; 
-    ctx.fillText(node.text, node.x, node.y);
+    ctx.font = '11px Arial';
+    ctx.fillText(showLetters ? node.letter : node.text, node.x, node.y);
 }
+
 
 // Draw the graph
 function drawGraph() {

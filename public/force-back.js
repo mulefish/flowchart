@@ -1,3 +1,99 @@
+let draggedNode = null; // Track the currently dragged node
+
+// Mouse event handlers
+canvas.addEventListener('mousedown', (event) => {
+    const mouseX = event.offsetX;
+    const mouseY = event.offsetY;
+
+    for (const node of nodes) {
+        if (distance(node, { x: mouseX, y: mouseY }) < 15) {
+            draggedNode = node; // Start dragging this node
+            node.vx = 0; // Stop any existing velocity
+            node.vy = 0;
+            break;
+        }
+    }
+});
+
+canvas.addEventListener('mousemove', (event) => {
+    if (draggedNode) {
+        // Update node position to follow mouse
+        draggedNode.x = event.offsetX;
+        draggedNode.y = event.offsetY;
+    }
+});
+
+canvas.addEventListener('mouseup', () => {
+    if (draggedNode) {
+        draggedNode = null; // Stop dragging
+    }
+});
+
+// Update simulation logic
+function updateSimulation() {
+    // Repulsion between nodes
+    for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+            const nodeA = nodes[i];
+            const nodeB = nodes[j];
+            const dist = distance(nodeA, nodeB);
+            if (dist === 0) continue;
+
+            const force = REPULSION_STRENGTH / (dist * dist);
+            const dx = nodeA.x - nodeB.x;
+            const dy = nodeA.y - nodeB.y;
+            const fx = (dx / dist) * force;
+            const fy = (dy / dist) * force;
+
+            if (nodeA !== draggedNode) {
+                nodeA.vx += fx;
+                nodeA.vy += fy;
+            }
+            if (nodeB !== draggedNode) {
+                nodeB.vx -= fx;
+                nodeB.vy -= fy;
+            }
+        }
+    }
+
+    // Spring forces
+    for (const link of links) {
+        const { source, target } = link;
+        const dist = distance(source, target);
+        const delta = dist - SPRING_LENGTH;
+        const force = SPRING_STRENGTH * delta;
+        const dx = target.x - source.x;
+        const dy = target.y - source.y;
+
+        const fx = (dx / dist) * force;
+        const fy = (dy / dist) * force;
+
+        if (source !== draggedNode) {
+            source.vx += fx;
+            source.vy += fy;
+        }
+        if (target !== draggedNode) {
+            target.vx -= fx;
+            target.vy -= fy;
+        }
+    }
+
+    // Update positions and enforce boundaries
+    for (const node of nodes) {
+        if (node !== draggedNode) { // Skip dragged node
+            node.vx *= DAMPING;
+            node.vy *= DAMPING;
+
+            node.x += node.vx;
+            node.y += node.vy;
+
+            node.x = Math.max(10, Math.min(canvas.width - 10, node.x));
+            node.y = Math.max(10, Math.min(canvas.height - 10, node.y));
+        }
+    }
+}
+
+/////////
 // Create nodes and links
 let nodes = [];
 let links = [];
@@ -40,9 +136,9 @@ for (const key in names) {
 }
 
 // Simulation Parameters
-const SPRING_LENGTH = 150;
+const SPRING_LENGTH = 100;
 const SPRING_STRENGTH = 0.05;
-const REPULSION_STRENGTH = 800;
+const REPULSION_STRENGTH = 500;
 const DAMPING = 0.8;
 
 // Utility to calculate distance
@@ -159,7 +255,7 @@ function drawNode(ctx, node) {
     switch (node.shape) {
         case 'circle':
             ctx.beginPath();
-            ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI);
+            ctx.arc(node.x, node.y, 1, 0, 2 * Math.PI);
             ctx.fill();
             ctx.stroke();
             break;
@@ -187,43 +283,10 @@ function drawNode(ctx, node) {
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '16px Arial'; 
+    ctx.font = '11px Arial'; 
     ctx.fillText(node.text, node.x, node.y);
 }
 
-// // Draw the graph
-// function drawGraph() {
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-//     // Draw links
-//     for (const link of links) {
-//         const shortened = shortenLine(
-//             link.source.x,
-//             link.source.y,
-//             link.target.x,
-//             link.target.y,
-//             20
-//         );
-
-//         const color = link.mood === 'positive' ? 'green' :
-//                       link.mood === 'negative' ? 'red' : 'gray';
-
-//         ctx.strokeStyle = color;
-//         ctx.lineWidth = 2;
-
-//         ctx.beginPath();
-//         ctx.moveTo(shortened.x1, shortened.y1);
-//         ctx.lineTo(shortened.x2, shortened.y2);
-//         ctx.stroke();
-
-//         drawArrowhead(ctx, shortened.x1, shortened.y1, shortened.x2, shortened.y2, color);
-//     }
-
-//     // Draw nodes
-//     for (const node of nodes) {
-//         drawNode(ctx, node);
-//     }
-// }
 // Draw the graph
 function drawGraph() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -346,3 +409,4 @@ function loadState() {
     }
 }
 tick();
+

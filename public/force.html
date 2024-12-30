@@ -24,6 +24,8 @@
     <hr/>
     <button onclick="stopAnimation()">Stop Animation</button>
     <button onclick="loadState()">Load State</button>
+    <button id="toggleDisplay">Toggle Node Display</button>
+
     <script>
         const canvas = document.getElementById('graphCanvas');
         const ctx = canvas.getContext('2d');
@@ -42,6 +44,7 @@
         const neutral = "neutral"
         const dashed = 'dashed'
         const other = "other"
+        const user = "user"
         const biodata = "biodata"
         const docselection="docselection"
         const scheduler="scheduler"
@@ -54,25 +57,25 @@
         const names = {};
         names["home"] = { letter:"a", text: "Home/Landing Page", shape:box, group:other, children: [] };
         names["disclosures"] = { letter:"b", text: "Disclosures", shape:box, group:other,children: [] };
-        names["signin"] = { letter:"c", text: "Sign In",  shape:box, group:biodata,children: [] };
-        names["password"] = { letter:"d", text: "Password Reset", shape:box,  group:"terminal",children: [] };
-        names["MFA"] = { letter:"e", text: "MFA",  shape:box, group:biodata,children: [] };
-        names["signup"] = { letter:"f", text: "Sign Up",  shape:box, group:biodata,children: [] };
-        names["account"] = { letter:"g", text: "Account Details", shape:box, group:biodata, children:[]};
-        names["associate"] = { letter:"h", text: "Associate to account", shape:box, group:"terminal", children:[]};
-        names["existing"] = { letter:"i", text: "Existing enrollment in Snow?", shape:diamond, group:biodata, children:[]};
-        names["STA"] = { letter:"j", text: "STA Lookup", shape:diamond, group:"terminal", children:[]};
-        names["ARS"] = { letter:"k", text: "Active Renewal in Snow", shape:diamond, group:"terminal", children:[]};
+        names["signin"] = { letter:"c", text: "Sign In",  shape:box, group:user,children: [] };
+        names["password"] = { letter:"d", text: "Password Reset", shape:box,  group:user,children: [] };
+        names["MFA"] = { letter:"e", text: "MFA",  shape:box, group:user,children: [] };
+        names["signup"] = { letter:"f", text: "Sign Up",  shape:box, group:user,children: [] };
+        names["account"] = { letter:"g", text: "Account Details", shape:box, group:user, children:[]};
+        names["associate"] = { letter:"h", text: "Associate to account", shape:box, group:user, children:[]};
+        names["existing"] = { letter:"i", text: "Existing enrollment in Snow?", shape:diamond, group:user, children:[]};
+        names["STA"] = { letter:"j", text: "STA Lookup", shape:diamond, group:other, children:[]};
+        names["ARS"] = { letter:"k", text: "Active Renewal in Snow", shape:diamond, group:other, children:[]};
         names["AES"] = { letter:"l", text: "Active Enrollment in Snow", shape:diamond, group:other, children:[]};
-        names["EtR"] = { letter:"m", text: "Eligible to renew", shape:diamond, group:"terminal", children:[]};
-        names["CLSS"] = { letter:"n", text: "Continue from last saved step", shape:box, group:"terminal", children:[]};
-        names["EFD"] = { letter:"o", text: "End flow/dashboard", shape:box, group:"terminal", children:[]};
-        names["PFR"] = { letter:"p", text: "Prompt for renewal", shape:diamond, group:"terminal", children:[]};
-        names["PEC"] = { letter:"q", text: "Pre Enrollment Complete", shape:diamond, group:"terminal", children:[]};
-        names["CfLSEF"] = { letter:"r", text: "Continue from last saved enrollment flow", shape:box, group:"terminal", children:[]};
-        names["RR"] = { letter:"s", text: "Reprint required", shape:diamond, group:"terminal", children:[]};
-        names["RRN"] = { letter:"t", text: "Reprint required notice", shape:box, group:"terminal", children:[]};
-        names["CaoNC"] = { letter:"u", text: "Citizen and/or name change", shape:diamond, group:"terminal", children:[]};
+        names["EtR"] = { letter:"m", text: "Eligible to renew", shape:diamond, group:other, children:[]};
+        names["CLSS"] = { letter:"n", text: "Continue from last saved step", shape:box, group:other, children:[]};
+        names["EFD"] = { letter:"o", text: "End flow/dashboard", shape:box, group:other, children:[]};
+        names["PFR"] = { letter:"p", text: "Prompt for renewal", shape:diamond, group:other, children:[]};
+        names["PEC"] = { letter:"q", text: "Pre Enrollment Complete", shape:diamond, group:other, children:[]};
+        names["CfLSEF"] = { letter:"r", text: "Continue from last saved enrollment flow", shape:box, group:other, children:[]};
+        names["RR"] = { letter:"s", text: "Reprint required", shape:diamond, group:other, children:[]};
+        names["RRN"] = { letter:"t", text: "Reprint required notice", shape:box, group:other, children:[]};
+        names["CaoNC"] = { letter:"u", text: "Citizen and/or name change", shape:diamond, group:other, children:[]};
         names["LF"] = { letter:"v", text: "Location Finder", shape:box, group:scheduler, children:[]};
         names["LN"] = { letter:"x", text: "Legal Name", shape:box, group:biodata, children:[]};
         names["BaC"] = { letter:"y", text: "Birth and Citizenship", shape:box, group:biodata, children:[]};
@@ -90,11 +93,11 @@
         names["NC"] = { letter:"al", text: "Name check", shape:box, group:docselection, children:[]};
         names["PicIdMatch"] = { letter:"am", text: "Photo ID and citizenship match", shape:diamond, group:docselection, children:[]};
         names["Scheduler"] = { letter:"an", text: "Scheduler", shape:box, group:scheduler, children:[]};
-        names["ALD"] = { letter:"ao", text: "Add linking docs", shape:box, group:scheduler, children:[]};
-        names["LtENC"] = { letter:"ap", text: "Link to Enrollment Name complete?", shape:diamond, group:scheduler, children:[]};
-        names["ASP"] = { letter:"aq", text: "Appointment summary screen", shape:diamond, group:scheduler, children:[]};
-        names["EFD3"] = { letter:"ar", text: "End flow/dashboard", shape:diamond, group:scheduler, children:[]};
-        names["OSS"] = { letter:"as", text: "Online summary screen", shape:diamond, group:scheduler, children:[]};
+        names["ALD"] = { letter:"ao", text: "Add linking docs", shape:box, group:docselection, children:[]};
+        names["LtENC"] = { letter:"ap", text: "Link to Enrollment Name complete?", shape:diamond, group:docselection, children:[]};
+        names["ASP"] = { letter:"aq", text: "Appointment summary screen", shape:diamond, group:other, children:[]};
+        names["EFD3"] = { letter:"ar", text: "End flow/dashboard", shape:diamond, group:other, children:[]};
+        names["OSS"] = { letter:"as", text: "Online summary screen", shape:diamond, group:other, children:[]};
 
 
 
