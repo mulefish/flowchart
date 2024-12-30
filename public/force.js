@@ -137,9 +137,24 @@ function updateSimulation() {
 
 // Draw nodes based on shape
 function drawNode(ctx, node) {
-    ctx.fillStyle = node.selected ? 'yellow' :
-                    node.group === 'biodata' ? 'pink' : 'lightgray';
-    ctx.strokeStyle = 'darkgray';
+
+    let clr = "lightgray"
+    if ( node.selected ) {
+        clr = "yellow"
+    } else if ( node.group === 'biodata') {
+        clr = "pink"
+    } else if ( node.group === "docselection") {
+
+    } else if ( node.group === "scheduler") {
+
+    } else if ( node.group === "payment") {
+
+    } else if ( node.group === "terminal") {
+        clr = "lightgreen"
+    }
+
+    ctx.fillStyle = clr
+    ctx.strokeStyle = 'lightgray';
 
     switch (node.shape) {
         case 'circle':
@@ -172,9 +187,43 @@ function drawNode(ctx, node) {
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.font = '16px Arial'; 
     ctx.fillText(node.text, node.x, node.y);
 }
 
+// // Draw the graph
+// function drawGraph() {
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+//     // Draw links
+//     for (const link of links) {
+//         const shortened = shortenLine(
+//             link.source.x,
+//             link.source.y,
+//             link.target.x,
+//             link.target.y,
+//             20
+//         );
+
+//         const color = link.mood === 'positive' ? 'green' :
+//                       link.mood === 'negative' ? 'red' : 'gray';
+
+//         ctx.strokeStyle = color;
+//         ctx.lineWidth = 2;
+
+//         ctx.beginPath();
+//         ctx.moveTo(shortened.x1, shortened.y1);
+//         ctx.lineTo(shortened.x2, shortened.y2);
+//         ctx.stroke();
+
+//         drawArrowhead(ctx, shortened.x1, shortened.y1, shortened.x2, shortened.y2, color);
+//     }
+
+//     // Draw nodes
+//     for (const node of nodes) {
+//         drawNode(ctx, node);
+//     }
+// }
 // Draw the graph
 function drawGraph() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -190,16 +239,27 @@ function drawGraph() {
         );
 
         const color = link.mood === 'positive' ? 'green' :
-                      link.mood === 'negative' ? 'red' : 'gray';
+                      link.mood === 'negative' ? 'red' :
+                      link.mood === 'dashed' ? 'gray' : 'gray';
 
         ctx.strokeStyle = color;
         ctx.lineWidth = 2;
 
+        // Apply dashed style if mood is 'dashed'
+        if (link.mood === 'dashed') {
+            ctx.setLineDash([5, 5]); // Dashed line style
+        } else {
+            ctx.setLineDash([]); // Reset to solid line
+        }
+
+        // Draw the link
         ctx.beginPath();
         ctx.moveTo(shortened.x1, shortened.y1);
         ctx.lineTo(shortened.x2, shortened.y2);
         ctx.stroke();
 
+        // Reset to solid lines for arrowheads
+        ctx.setLineDash([]);
         drawArrowhead(ctx, shortened.x1, shortened.y1, shortened.x2, shortened.y2, color);
     }
 

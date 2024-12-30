@@ -52,55 +52,44 @@
 
         // Graph Data
         const names = {};
-        names["a"] = { text: "Home/Landing Page", shape:box, group:other, children: [] };
-        names["b"] = { text: "Disclosures", shape:box, group:other,children: [] };
-        names["c"] = { text: "Sign In",  shape:diamond, group:biodata,children: [] };
-        names["e"] = { text: "Password Reset", shape:box,  group:biodata,children: [] };
-        names["f"] = { text: "MFA",  shape:box, group:biodata,children: [] };
-        names["g"] = { text: "Sign Up",  shape:box, group:biodata,children: [] };
-        names["h"] = { text: "Account Details", shape:box, group:biodata, children:[]};
-        names["i"] = { text: "Associate to account", shape:box, group:biodata, children:[]};
-        names["j"] = { text: "Existing enrollment in snow", shape:box, group:biodata, children:[]};
-        names["k"] = { text: "STA Lookup", shape:diamond, group:other, children:[]};
-        names["l"] = { text: "Active Enrollment in Snow", shape:diamond, group:other, children:[]};
-        names["m"] = { text: "Active Renewal in Snow", shape:diamond, group:other, children:[]};
-        names["n"] = { text: "Elegible to renew?", shape:diamond, group:other, children:[]};
-        names["o"] = { text: "Continue from last renewal flow", shape:diamond, group:other, children:[]};
-
-        // 
-
-
-
-// Found (Renewal Flows)
-// Not Found (Enrollment Flow)
-// Eligible to Renew?
-// End Flow/Dashboard
-// Prompt for Renewal
-// Reprint Required?
-// Reprint Required Notice
-// Location Finder
-// Legal Names
-// Birth and Citizenship
-// Eligibility
-// Enrollment?
-// Attributes
-// Address
-// Contact Validation (Red Cross Symbol)
-// Online Renewal?
-// Citizen or LPR?
-// Photo ID (Citizen)
-// Payment
+        names["home"] = { text: "Home/Landing Page", shape:box, group:other, children: [] };
+        names["disclosures"] = { text: "Disclosures", shape:box, group:other,children: [] };
+        names["signin"] = { text: "Sign In",  shape:box, group:biodata,children: [] };
+        names["password"] = { text: "Password Reset", shape:box,  group:"terminal",children: [] };
+        names["MFA"] = { text: "MFA",  shape:box, group:biodata,children: [] };
+        names["signup"] = { text: "Sign Up",  shape:box, group:biodata,children: [] };
+        names["account"] = { text: "Account Details", shape:box, group:biodata, children:[]};
+        names["associate"] = { text: "Associate to account", shape:box, group:"terminal", children:[]};
+        names["existing"] = { text: "Existing enrollment in Snow?", shape:diamond, group:biodata, children:[]};
+        names["STA"] = { text: "STA Lookup", shape:diamond, group:"terminal", children:[]};
+        names["ARS"] = { text: "Active Renewal in Snow", shape:diamond, group:"terminal", children:[]};
+        names["AES"] = { text: "Active Enrollment in Snow", shape:diamond, group:other, children:[]};
+        names["EtR"] = { text: "Eligible to renew", shape:diamond, group:"terminal", children:[]};
+        names["CLSS"] = { text: "Continue from last saved step", shape:box, group:"terminal", children:[]};
+        names["EFD"] = { text: "End flow/dashboard", shape:box, group:"terminal", children:[]};
+        names["PFR"] = { text: "Prompt for renewal", shape:diamond, group:"terminal", children:[]};
+        names["RR"] = { text: "Reprint required", shape:diamond, group:other, children:[]};
+        names["PEC"] = { text: "Pre Enrollment Complete", shape:diamond, group:"terminal", children:[]};
+        names["CfLSEF"] = { text: "Continue from last saved enrollment flow", shape:box, group:"terminal", children:[]};
+        names["EFD2"] = { text: "End flow/Dash2", shape:box, group:"terminal", children:[]};
 
 
-        names["a"].children = [{id:"b", mood:neutral}];
-        names["b"].children = [{id:"c", mood:neutral}];
-        names["c"].children = [{id:"e", mood:neutral},{id:"f", mood:neutral},{id:"g", mood:dashed}];
-        names["g"].children = [{id:"h", mood:neutral}];
-        names["h"].children = [{id:"j", mood:neutral}];
-        names["j"].children = [{id:"i", mood:positive},{id:"c", mood:negative}];
-        names["f"].children = [{id:"k", mood:neutral}];
-        names["k"].children = [{id:"l", mood:negative}, {id:"m", mood:positive}];
-        names["m"].children = [{id:"o", mood:positive}, {id:"n", mood:negative}];
+        names["home"].children = [{id:"disclosures", mood:neutral}];
+        names["disclosures"].children = [{id:"signin", mood:neutral}];
+        names["signin"].children = [{id:"password", mood:neutral},{id:"MFA", mood:neutral},{id:"signup", mood:dashed}];
+        names["signup"].children = [{id:"account", mood:neutral}];
+        names["account"].children = [{id:"existing", mood:neutral}]
+        names["existing"].children = [{id:"signin", mood:negative}, {id:"associate", mood:positive}]
+        names["MFA"].children = [{id:"STA", mood:neutral}]
+        names["STA"].children = [{id:"ARS", mood:positive},{id:"AES", mood:negative}]
+        names["ARS"].children = [{id:"EtR", mood:negative},{id:"CLSS", mood:positive}]
+        names["EtR"].children = [{id:"EFD", mood:negative},{id:"PFR", mood:positive}]
+        names["PFR"].children = [{id:"EFD", mood:negative}, {id:"RR", mood:positive}]
+        names["AES"].children = [{id:"PEC", mood:positive}]
+        names["PEC"].children = [{id:"CfLSEF", mood:negative},{id:"EFD2", mood:positive}]
+
+
+        
         
 
 
