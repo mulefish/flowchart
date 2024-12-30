@@ -1,6 +1,6 @@
 // Create nodes and links
-const nodes = [];
-const links = [];
+let nodes = [];
+let links = [];
 
 // Map names to nodes
 const nodeMap = {};
@@ -129,7 +129,6 @@ function drawGraph() {
     for (const node of nodes) {
         ctx.beginPath();
         ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI);
-        console.log("group " + node.group )
         // Group-based colors 
         switch (node.group) {
             case 'biodata':
@@ -157,10 +156,44 @@ function tick() {
     animationId = requestAnimationFrame(tick);
 }
 
-// Stop animation
 document.getElementById('stopButton').addEventListener('click', () => {
     cancelAnimationFrame(animationId);
+    localStorage.setItem("nodes", JSON.stringify(nodes) )
+    localStorage.setItem("links", JSON.stringify(links) )
+
 });
+
+document.getElementById("loadState").addEventListener('click', () => {
+    // Load saved state from localStorage
+    const savedNodes = JSON.parse(localStorage.getItem("nodes"));
+    const savedLinks = JSON.parse(localStorage.getItem("links"));
+
+    if (savedNodes && savedLinks) {
+        // Restore nodes
+        nodes = savedNodes.map(node => ({
+            ...node,
+            vx: 0, // Reset velocity
+            vy: 0  // Reset velocity
+        }));
+
+        // Restore links with references to loaded nodes
+        const nodeMap = {};
+        nodes.forEach(node => {
+            nodeMap[node.id] = node;
+        });
+
+        links = savedLinks.map(link => ({
+            source: nodeMap[link.source.id], // Re-link nodes
+            target: nodeMap[link.target.id],
+            mood: link.mood
+        }));
+
+        console.log('State loaded successfully');
+    } else {
+        console.warn('No saved state found in localStorage');
+    }
+});
+
 
 tick();
 
