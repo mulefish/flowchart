@@ -136,9 +136,9 @@ for (const key in names) {
 }
 
 // Simulation Parameters
-const SPRING_LENGTH = 150;
+const SPRING_LENGTH = 100;
 const SPRING_STRENGTH = 0.05;
-const REPULSION_STRENGTH = 800;
+const REPULSION_STRENGTH = 500;
 const DAMPING = 0.8;
 
 // Utility to calculate distance
@@ -283,43 +283,10 @@ function drawNode(ctx, node) {
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '16px Arial'; 
+    ctx.font = '11px Arial'; 
     ctx.fillText(node.text, node.x, node.y);
 }
 
-// // Draw the graph
-// function drawGraph() {
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-//     // Draw links
-//     for (const link of links) {
-//         const shortened = shortenLine(
-//             link.source.x,
-//             link.source.y,
-//             link.target.x,
-//             link.target.y,
-//             20
-//         );
-
-//         const color = link.mood === 'positive' ? 'green' :
-//                       link.mood === 'negative' ? 'red' : 'gray';
-
-//         ctx.strokeStyle = color;
-//         ctx.lineWidth = 2;
-
-//         ctx.beginPath();
-//         ctx.moveTo(shortened.x1, shortened.y1);
-//         ctx.lineTo(shortened.x2, shortened.y2);
-//         ctx.stroke();
-
-//         drawArrowhead(ctx, shortened.x1, shortened.y1, shortened.x2, shortened.y2, color);
-//     }
-
-//     // Draw nodes
-//     for (const node of nodes) {
-//         drawNode(ctx, node);
-//     }
-// }
 // Draw the graph
 function drawGraph() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
