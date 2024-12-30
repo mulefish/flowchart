@@ -13,6 +13,7 @@ for (const key in names) {
         id: key,
         text: nodeData.text,
         group: nodeData.group,
+        shape: nodeData.shape || 'circle', // Default to circle if shape is not defined
         x: (index / (totalNodes - 1)) * (canvas.width - 100) + 50, // Even horizontal spacing
         y: Math.random() * (canvas.height - 50) + 25, // Random vertical position with margin
         vx: 0,
@@ -133,135 +134,90 @@ function updateSimulation() {
     }
 }
 
-// Draw the graph with mood-based link colors and group-based node colors
+// Draw nodes based on shape
+function drawNode(ctx, node) {
+    ctx.fillStyle = node.selected ? 'yellow' :
+                    node.group === 'biodata' ? 'pink' : 'lightgray';
+    ctx.strokeStyle = 'darkgray';
+
+    switch (node.shape) {
+        case 'circle':
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case 'box':
+            ctx.beginPath();
+            ctx.rect(node.x - 15, node.y - 15, 30, 30);
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case 'diamond':
+            ctx.beginPath();
+            ctx.moveTo(node.x, node.y - 15);
+            ctx.lineTo(node.x + 15, node.y);
+            ctx.lineTo(node.x, node.y + 15);
+            ctx.lineTo(node.x - 15, node.y);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            break;
+        default:
+            console.warn(`Unknown shape: ${node.shape}`);
+    }
+
+    // Draw node text
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(node.text, node.x, node.y);
+}
+
+// Draw the graph
 function drawGraph() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw links with arrowheads
+    // Draw links
     for (const link of links) {
-        ctx.setLineDash(link.mood === 'dashed' ? [5, 5] : []);
         ctx.strokeStyle = link.mood === 'positive' ? 'green' :
                           link.mood === 'negative' ? 'red' : 'gray';
-        ctx.fillStyle = ctx.strokeStyle;
-
         ctx.lineWidth = 2;
 
-        const shortened = shortenLine(
-            link.source.x,
-            link.source.y,
-            link.target.x,
-            link.target.y,
-            20
-        );
-
         ctx.beginPath();
-        ctx.moveTo(shortened.x1, shortened.y1);
-        ctx.lineTo(shortened.x2, shortened.y2);
+        ctx.moveTo(link.source.x, link.source.y);
+        ctx.lineTo(link.target.x, link.target.y);
         ctx.stroke();
 
-        ctx.setLineDash([]);
-        drawArrowhead(ctx, shortened.x1, shortened.y1, shortened.x2, shortened.y2);
+        drawArrowhead(ctx, link.source.x, link.source.y, link.target.x, link.target.y);
     }
 
     // Draw nodes
     for (const node of nodes) {
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI);
-        ctx.fillStyle = node.selected ? 'yellow' :
-                        node.group === 'biodata' ? 'pink' : 'lightgray';
-        ctx.fill();
-        ctx.strokeStyle = 'darkgray';
-        ctx.stroke();
-        ctx.fillStyle = 'black';
-        ctx.fillText(node.text, node.x, node.y);
+        drawNode(ctx, node);
     }
 }
 
-// Click-to-Toggle Node Color
+// Toggle node color on click
 canvas.addEventListener('click', (event) => {
     const mouseX = event.offsetX;
     const mouseY = event.offsetY;
 
     for (const node of nodes) {
         if (distance(node, { x: mouseX, y: mouseY }) < 15) {
-            console.log(node)
-            node.selected = !node.selected; // Toggle selection state
+            node.selected = !node.selected;
             break;
         }
     }
 });
 
-// Animation loop control
+// Animation loop
 let animationId;
-function tick() {
+function tick() {wd
     updateSimulation();
     drawGraph();
     animationId = requestAnimationFrame(tick);
 }
 
-// Stop the animation and save the state
-function stopAnimation() {
-    console.log("Stopping animation...");
-    cancelAnimationFrame(animationId); // Stop the animation loop
-
-    // Serialize nodes and links into localStorage
-    try {
-        localStorage.setItem("nodes", JSON.stringify(nodes));
-        localStorage.setItem("links", JSON.stringify(
-            links.map(link => ({
-                source: link.source.id,
-                target: link.target.id,
-                mood: link.mood
-            }))
-        ));
-        console.log("State saved to localStorage.");
-    } catch (error) {
-        console.error("Error saving state to localStorage:", error);
-    }
-}
-
-// Load the state and reset the animation
-function loadState() {
-    console.log("Loading state from localStorage...");
-    try {
-        const savedNodes = JSON.parse(localStorage.getItem("nodes"));
-        const savedLinks = JSON.parse(localStorage.getItem("links"));
-
-        if (savedNodes && savedLinks) {
-            // Reconstruct nodes
-            nodes = savedNodes.map(node => ({
-                ...node,
-                vx: 0, // Reset velocity
-                vy: 0  // Reset velocity
-            }));
-            
-            // Rebuild node map
-            const nodeMap = {};
-            nodes.forEach(node => {
-                nodeMap[node.id] = node;
-            });
-
-            // Reconstruct links
-            links = savedLinks.map(link => ({
-                source: nodeMap[link.source],
-                target: nodeMap[link.target],
-                mood: link.mood
-            }));
-
-            console.log("State loaded successfully.");
-
-            // Restart animation
-            if (!animationId) {
-                tick();
-            }
-        } else {
-            console.warn("No valid saved state found in localStorage.");
-        }
-    } catch (error) {
-        console.error("Error loading state from localStorage:", error);
-    }
-}
-
-
-// Start Animation
+// Start animation
 tick();

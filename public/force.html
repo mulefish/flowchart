@@ -46,18 +46,21 @@
         const docselection="docselection"
         const scheduler="scheduler"
         const payment="payment"
+        const box="box"
+        const circle="circle"
+        const diamond="diamond"
 
         // Graph Data
         const names = {};
-        names["a"] = { text: "Home/Landing Page", group:other, children: [] };
-        names["b"] = { text: "Disclosures", group:biodata,children: [] };
-        names["c"] = { text: "Sign In",  group:biodata,children: [] };
-        names["e"] = { text: "Password Reset",  group:biodata,children: [] };
-        names["f"] = { text: "MFA",  group:biodata,children: [] };
-        names["g"] = { text: "Sign Up",  group:biodata,children: [] };
-        names["h"] = { text: "Account Details", group:biodata, children:[]};
-        names["i"] = { text: "Associate to account", group:biodata, children:[]};
-        names["j"] = { text: "Existing enrollment in snow", group:biodata, children:[]};
+        names["a"] = { text: "Home/Landing Page", shape:circle, group:other, children: [] };
+        names["b"] = { text: "Disclosures", shape:box, group:other,children: [] };
+        names["c"] = { text: "Sign In",  shape:diamond, group:biodata,children: [] };
+        names["e"] = { text: "Password Reset", shape:box,  group:biodata,children: [] };
+        names["f"] = { text: "MFA",  shape:box, group:biodata,children: [] };
+        names["g"] = { text: "Sign Up",  shape:box, group:biodata,children: [] };
+        names["h"] = { text: "Account Details", shape:box, group:biodata, children:[]};
+        names["i"] = { text: "Associate to account", shape:box, group:biodata, children:[]};
+        names["j"] = { text: "Existing enrollment in snow", shape:box, group:biodata, children:[]};
 
 
 
