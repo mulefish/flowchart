@@ -232,63 +232,6 @@ function updateSimulation() {
     }
 }
 
-// // Draw nodes based on shape
-// function drawNode(ctx, node) {
-
-//     let clr = "lightgray"
-//     if ( node.selected ) {
-//         clr = "yellow"
-//     } else if ( node.group === 'biodata') {
-//         clr = "pink"
-//     } else if ( node.group === "docselection") {
-
-//     } else if ( node.group === "scheduler") {
-
-//     } else if ( node.group === "payment") {
-
-//     } else if ( node.group === "terminal") {
-//         clr = "lightgreen"
-//     }
-
-//     ctx.fillStyle = clr
-//     ctx.strokeStyle = 'lightgray';
-
-//     switch (node.shape) {
-//         case 'circle':
-//             ctx.beginPath();
-//             ctx.arc(node.x, node.y, 1, 0, 2 * Math.PI);
-//             ctx.fill();
-//             ctx.stroke();
-//             break;
-//         case 'box':
-//             ctx.beginPath();
-//             ctx.rect(node.x - 15, node.y - 15, 30, 30);
-//             ctx.fill();
-//             ctx.stroke();
-//             break;
-//         case 'diamond':
-//             ctx.beginPath();
-//             ctx.moveTo(node.x, node.y - 15);
-//             ctx.lineTo(node.x + 15, node.y);
-//             ctx.lineTo(node.x, node.y + 15);
-//             ctx.lineTo(node.x - 15, node.y);
-//             ctx.closePath();
-//             ctx.fill();
-//             ctx.stroke();
-//             break;
-//         default:
-//             console.warn(`Unknown shape: ${node.shape}`);
-//     }
-
-//     // Draw node text
-//     ctx.fillStyle = 'black';
-//     ctx.textAlign = 'center';
-//     ctx.textBaseline = 'middle';
-//     ctx.font = '11px Arial'; 
-//     ctx.fillText(node.text, node.x, node.y);
-// }
-
-
 // Global variable to toggle between 'letter' and 'text'
 let showLetters = false; // Default to showing 'text'
 
