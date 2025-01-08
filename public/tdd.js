@@ -1,45 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Force-Directed Graph with Dynamic Viewport</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-
-        #graphCanvas {
-            display: block;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-        }
-    </style>
-</head>
-
-<body>
-    <canvas id="graphCanvas"></canvas>
-    <hr/>
-    <button onclick="stopAnimation()">Stop Animation</button>
-    <button onclick="loadState()">Load State</button>
-    <button id="toggleDisplay">Toggle Node Display</button>
-
-    <script>
-        const canvas = document.getElementById('graphCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // Adjust canvas to fit the screen
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight * 0.8;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-
-        const negative = "negative"
+   const negative = "negative"
         const positive = "positive"
         const neutral = "neutral"
         const dashed = 'dashed'
@@ -53,7 +12,10 @@
         const circle="circle"
         const diamond="diamond"
 
-        // Graph Data
+
+
+
+// Graph Data
         const names = {};
         names["home"] = { letter:"a", text: "Home/Landing Page", shape:box, group:other, children: [] };
         names["disclosures"] = { letter:"b", text: "Disclosures", shape:box, group:other,children: [] };
@@ -136,7 +98,25 @@
         names["Scheduler"].children = [{id:"ASP", mood:neutral}  ]
         names["ASP"].children = [{id:"EFD3", mood:neutral}  ]
 
-    </script>
-    <script src="force.js"></script>
-</body>
-</html>
+
+// Just to get a 'sense' of this graph's complexity
+function dfs(node, visited = new Set(), counter = { count: 0 }) {
+    if (visited.has(node)) return;
+    visited.add(node);
+    counter.count++;
+    counter.count += names[node].children.length 
+    // console.log(`Node: ${node}, Children: ${names[node].children.map(child => child.id).join(', ')}`);
+    	
+    names[node].children.forEach(child => {
+        dfs(child.id, visited, counter);
+    });
+
+    return counter.count;
+}
+
+// Start DFS from the "home" node and print the totdal number of nodes visited
+let totalNodes = dfs("home");
+console.log(`Total nodes visited: ${totalNodes}`);
+
+
+
