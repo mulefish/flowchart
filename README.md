@@ -1,16 +1,12 @@
 # repo
 https://github.com/mulefish/flowchart
 
-# What is this? 
-Thinking about adding a 'debug' .vue in the header that will interogate the Pinia store for state OK/NotOk.
-
 # run the force directed graph 
 step1: node server.js   
-step2: http://localhost:3000/force.html   
+step2: http://localhost:3000/
 
-# run the svg version ( it is NOT finished nor does it use math/force)
-step1: node server.js   
-step2:  http://localhost:3000/
+# TODO: 
+Convert to SVG because svg simply looks better than CANVAS5
 
 # Screenshot - letters
 ![letters](ss_with_letters.png)
