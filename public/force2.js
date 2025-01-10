@@ -111,8 +111,9 @@ for (const key in names) {
         text: nodeData.text,
         group: nodeData.group,
         shape: nodeData.shape || 'circle', // Default to circle if shape is not defined
-        x: (index / (totalNodes - 1)) * (canvas.width - 100) + 50, // Even horizontal spacing
-        y: Math.random() * (canvas.height - 50) + 25, // Random vertical position with margin
+
+        x: nodeData.x,
+        y: nodeData.y,
         vx: 0,
         vy: 0,
         selected: false // Track selection state
@@ -296,7 +297,7 @@ function drawNode(ctx, node) {
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '11px Arial';
+    ctx.font = '15px Arial';
     ctx.fillText(showLetters ? node.letter : node.text, node.x, node.y);
 }
 

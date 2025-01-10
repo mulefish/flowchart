@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Force-Directed Graph with Dynamic Viewport</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #graphCanvas {
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="graphCanvas"></canvas>
+    <hr/>
+    <button onclick="stopAnimation()">Stop Animation</button>
+    <button onclick="loadState()">Load State</button>
+    <button id="toggleDisplay">Toggle Node Display</button>
+
+    <script>
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Adjust canvas to fit the screen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 0.8;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+
+        const negative = "negative"
+        const positive = "positive"
+        const neutral = "neutral"
+        const dashed = 'dashed'
+        const other = "other"
+        const child = "child"
+        const user = "user"
+        const biodata = "biodata"
+        const docselection="docselection"
+        const scheduler="scheduler"
+        const payment="payment"
+        const box="box"
+        const circle="circle"
+        const diamond="diamond"
+
+        // Graph Data
+        const names = {};
+        const step = 110
+        let over = 400
+        names["intro"] = { letter:"a", text: "intro", shape:box, group:other, children: [], x:over, y: 150};
+        over += step
+        names["preenrollment"] = { letter:"b", text: "pre-enrollment", shape:box, group:other,children: [], x:over, y: 150 };
+        over += step
+
+        names["disclaimer"] = { letter:"c", text: "disclaimer",  shape:box, group:other,children: [] , x:over, y: 250};
+        over += step 
+        names["identification"] = { letter:"d", text: "identification", shape:box,  group:other,children: [], x:over, y: 150 };
+        over += step 
+        names["Application"] = { letter:"e", text: "Application",  shape:box, group:other,children: [], x:over, y: 250 };
+        over += step 
+        names["Location"] = { letter:"f", text: "Location",  shape:box, group:other,children: [] , x:over, y: 150};
+        over += step 
+        names["Eligibility"] = { letter:"g", text: "Eligibility", shape:box, group:other, children:[], x:over, y: 150};
+        over += step 
+        names["PersonalInfo"] = { letter:"h", text: "Personal info", shape:box, group:other, children:[], x:over, y: 150};
+        over += step 
+        names["Documentation"] = { letter:"i", text: "Documentation", shape:box, group:other, children:[], x:over, y: 150};
+        over += step 
+        names["Appointment"] = { letter:"j", text: "Appointment", shape:box, group:other, children:[], x:over, y: 150};
+        over += step 
+        names["Dashboard"] = { letter:"k", text: "Dashboard", shape:box, group:other, children:[], x:over, y: 150};
+        over += step 
+        // main 
+        names["intro"].children = [{id:"preenrollment", mood:neutral},   ]
+        names["preenrollment"].children = [{id:"disclaimer", mood:neutral},   ]
+        names["disclaimer"].children = [{id:"identification", mood:neutral}  ]
+        names["identification"].children = [{id:"Application", mood:neutral}  ]
+        names["Application"].children = [{id:"Location", mood:neutral}  ]
+        names["Location"].children = [{id:"Eligibility", mood:neutral}  ]
+        names["Eligibility"].children = [{id:"PersonalInfo", mood:neutral}  ]
+        names["PersonalInfo"].children = [{id:"Documentation", mood:neutral}  ]
+        names["Documentation"].children = [{id:"Appointment", mood:neutral}  ]
+        names["Appointment"].children = [{id:"Dashboard", mood:neutral}  ]
+        // The children
+        // # 1 
+        names["background"] = { letter:"aa", text: "background", shape:box, group:child, children:[],x:names["intro"].x, y:200 };
+        names["purpose"] = { letter:"ab", text: "purpose", shape:box, group:child, children:[],x:names["intro"].x, y:250};
+        names["intro"].children.push({ id:"background", mood:positive })
+        names["background"].children.push({ id:"purpose", mood:positive })
+        // # 2 
+        names["compare"] = { letter:"ac", text: "compare", shape:box, group:child, children:[], x:names["preenrollment"].x, y:200};
+        names["aesthetics"] = { letter:"ad", text: "aesthetics", shape:box, group:child, children:[], x:names["preenrollment"].x, y:250};
+        names["behaviour"] = { letter:"ae", text: "behaviour", shape:box, group:child, children:[], x:names["preenrollment"].x, y:300}
+        names["preenrollment"].children.push({ id:"compare", mood:positive })        
+        names["compare"].children.push({ id:"aesthetics", mood:positive })        
+        names["aesthetics"].children.push({ id:"behaviour", mood:positive })        
+        // 4 
+        names["contactMethods"] = { letter:"af", text: "contactMethods", shape:box, group:child, children:[], x:names["identification"].x, y:200};
+        names["identification"].children.push({ id:"contactMethods", mood:positive })        
+        // 8
+        names["Attr"] = { letter:"ag", text: "Attributes", shape:box, group:child, children:[], x:names["PersonalInfo"].x, y:200};
+        names["names"] = { letter:"ah", text: "names", shape:box, group:child, children:[], x:names["PersonalInfo"].x, y:250};
+        names["addresses"] = { letter:"ai", text: "addresses", shape:box, group:child, children:[], x:names["PersonalInfo"].x, y:300};
+        // names["addy"] = { letter:"ai", text: "addy", shape:box, group:child, children:[], x:names["PersonalInfo"].x, y:200};
+        names["PersonalInfo"].children.push({ id:"Attr", mood:positive });
+        names["Attr"].children.push({ id:"names", mood:positive });
+        names["names"].children.push({ id:"addresses", mood:positive });
+
+        
+
+
+
+    </script>
+    <script src="force2.js"></script>
+</body>
+</html>
