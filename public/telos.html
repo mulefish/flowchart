@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Flowchart Canvas - Full Functionality</title>
+    <title>Flowchart Canvas - Highlight Nodes in Teal</title>
     <style>
       body,
       html {
@@ -13,78 +13,40 @@
       canvas {
         display: block;
         background-color: #e0e0e0;
-        width: 100vw;  
-        height: 600px; 
+        width: 100vw;
+        height: 300px;
       }
-      #form-container {
-        padding: 10px;
+      table {
+        border-collapse: collapse;
       }
-      label {
-        margin-right: 10px;
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
       }
-      textarea {
-        width: 100%;
-        height: 100px;
+      th {
+        background-color: #f2f2f2;
       }
-      .selected-node {
-        border: 2px solid red;
+      button {
+        padding: 5px 10px;
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
     <canvas id="flowchartCanvas"></canvas>
 
-    <div id="form-container">
-      <h3>Add Node</h3>
-      <form id="nodeForm">
-        <label for="nodeKey">Key:</label>
-        <input type="text" id="nodeKey" required />
-        <label for="nodeHuman">Label:</label>
-        <input type="text" id="nodeHuman" required />
-        <label for="nodeColor">Color:</label>
-        <input type="color" id="nodeColor" value="#ffffff" />
-        <label for="nodeType">Type:</label>
-        <select id="nodeType">
-          <option value="box">Box</option>
-          <option value="diamond">Diamond</option>
-        </select>
-        <button type="submit">Add Node</button>
-      </form>
-
-      <h3>Add Connection</h3>
-      <form id="connectionForm">
-        <label for="fromNode">From:</label>
-        <input type="text" id="fromNode" required />
-        <label for="toNode">To:</label>
-        <input type="text" id="toNode" required />
-        <label for="lineType">Line Type:</label>
-        <select id="lineType">
-          <option value="normal">Normal (Black)</option>
-          <option value="yes">Yes (Green)</option>
-          <option value="no">No (Red)</option>
-        </select>
-        <button type="submit">Add Connection</button>
-      </form>
-
-      <h3>Selected Node Details</h3>
-      <div id="selectedNodeDetails">
-        <p><strong>Key:</strong> <span id="nodeKeyDetail">None</span></p>
-        <p><strong>Label:</strong> <span id="nodeLabelDetail">None</span></p>
-        <p><strong>Color:</strong> <span id="nodeColorDetail">None</span></p>
-        <p><strong>Type:</strong> <span id="nodeTypeDetail">None</span></p>
-        <p>
-          <strong>Position:</strong>
-          <span id="nodePositionDetail">(N/A, N/A)</span>
-        </p>
-        <button id="deleteNode" disabled>🗑️ Delete Selected Node</button>
-      </div>
-
-      <button id="saveGraph">💾 Save Graph (to Textarea)</button>
-      <br /><br />
-      <h3>Load Graph</h3>
-      <textarea id="graphJson" placeholder="Paste JSON here..."></textarea>
-      <button id="loadGraph">🔄 Load Graph</button>
-    </div>
+    <h3 style="text-align: center;">Node List - Click to Highlight in Teal</h3>
+    <table id="nodeTable">
+      <thead>
+        <tr>
+          <th>Highlight</th>
+          <th>Letter</th>
+          <th>Label (Human)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
 
     <script>
       const YES = "yes";
@@ -93,34 +55,31 @@
 
       const canvas = document.getElementById("flowchartCanvas");
       canvas.width = window.innerWidth;
-      canvas.height = 600;
+      canvas.height = 300;
       const ctx = canvas.getContext("2d");
 
-      const boxWidth = 80;
-      const boxHeight = 50;
-      const diamondWidth = 80;
-      const diamondHeight = 80;
+      const boxWidth = 30;
+      const boxHeight = 30;
+      const diamondWidth = 30;
+      const diamondHeight = 30;
 
-      let selectedNode = null;
-
-      function drawBox(x, y, width, height, text, color, selected, human) {
+      function drawBox(x, y, width, height, text, color) {
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.rect(x, y, width, height);
         ctx.fill();
-        ctx.strokeStyle = selected ? "red" : "black";
-        ctx.lineWidth = selected ? 3 : 1;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
         ctx.stroke();
 
         ctx.fillStyle = "black";
-        ctx.font = "17px Arial";
+        ctx.font = "12px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        const t = text + " : " + human;
-        ctx.fillText(t, x + width / 2, y + height / 2);
+        ctx.fillText(text, x + width / 2, y + height / 2);
       }
 
-      function drawDiamond(x, y, width, height, text, color, selected, human) {
+      function drawDiamond(x, y, width, height, text, color) {
         const centerX = x + width / 2;
         const centerY = y + height / 2;
 
@@ -132,42 +91,29 @@
         ctx.lineTo(x, centerY);
         ctx.closePath();
         ctx.fill();
-        ctx.strokeStyle = selected ? "red" : "black";
-        ctx.lineWidth = selected ? 3 : 1;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
         ctx.stroke();
 
         ctx.fillStyle = "black";
-        ctx.font = "17px Arial";
+        ctx.font = "12px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        const t = text + " : " + human;
-        ctx.fillText(t, centerX, centerY);
+        ctx.fillText(text, centerX, centerY);
       }
 
-      function drawArrow_quadraticBezier(
-        fromX,
-        fromY,
-        toX,
-        toY,
-        color = "black"
-      ) {
-        const headLength = 10; // Arrowhead size
+      function drawArrow_curved(fromX, fromY, toX, toY, color = "black") {
+        const headLength = 10;
+        const controlX = (fromX + toX) / 2 + (Math.random() * 50 - 25);
+        const controlY = (fromY + toY) / 2 + (Math.random() * 50 - 25);
 
-        // Randomized control point for curve
-        const controlX = (fromX + toX) / 2 + (Math.random() * 100 - 50);
-        const controlY = (fromY + toY) / 2 + (Math.random() * 100 - 50);
-
-        // Draw the quadratic curve
         ctx.strokeStyle = color;
         ctx.beginPath();
         ctx.moveTo(fromX, fromY);
         ctx.quadraticCurveTo(controlX, controlY, toX, toY);
         ctx.stroke();
 
-        // t defines how far along the curve the arrow will be placed
         const t = 0.5;
-
-        // Calculate point on curve at t
         const curveX =
           Math.pow(1 - t, 2) * fromX +
           2 * (1 - t) * t * controlX +
@@ -177,12 +123,12 @@
           2 * (1 - t) * t * controlY +
           Math.pow(t, 2) * toY;
 
-        // Calculate the derivative for angle (direction) at t
-        const dx = 2 * (1 - t) * (controlX - fromX) + 2 * t * (toX - controlX);
-        const dy = 2 * (1 - t) * (controlY - fromY) + 2 * t * (toY - controlY);
+        const dx =
+          2 * (1 - t) * (controlX - fromX) + 2 * t * (toX - controlX);
+        const dy =
+          2 * (1 - t) * (controlY - fromY) + 2 * t * (toY - controlY);
         const angle = Math.atan2(dy, dx);
 
-        // Draw the arrowhead at the correct angle
         ctx.beginPath();
         ctx.moveTo(curveX, curveY);
         ctx.lineTo(
@@ -197,13 +143,13 @@
         ctx.closePath();
         ctx.fillStyle = color;
         ctx.fill();
-        ctx.strokeStyle = "black"; // Reset for future strokes
       }
+
       class Shape {
         constructor(letter, x, y, human, color, type = "box") {
           this.letter = letter;
-          this.x = x || Math.floor(Math.random() * (800 - 100)) + 100;
-          this.y = y || Math.floor(Math.random() * (400 - 100)) + 100;
+          this.x = x;
+          this.y = y;
           this.human = human;
           this.color = color;
           this.type = type;
@@ -216,45 +162,13 @@
 
       function addConnection(fromNode, toNode, type = NORMAL) {
         connections.push({ from: fromNode, to: toNode, type });
-        drawGraph(graph);
-      }
-
-      function deleteNode(nodeKey) {
-        graph.delete(nodeKey);
-        connections = connections.filter(
-          (conn) => conn.from !== nodeKey && conn.to !== nodeKey
-        );
-        selectedNode = null;
-        updateNodeDetails(null);
-        drawGraph(graph);
-      }
-
-      function updateNodeDetails(node) {
-        document.getElementById("nodeKeyDetail").textContent = node
-          ? node.letter
-          : "None";
-        document.getElementById("nodeLabelDetail").textContent = node
-          ? node.human
-          : "None";
-        document.getElementById("nodeColorDetail").textContent = node
-          ? node.color
-          : "None";
-        document.getElementById("nodeTypeDetail").textContent = node
-          ? node.type
-          : "None";
-        document.getElementById("nodePositionDetail").textContent = node
-          ? `(${node.x}, ${node.y})`
-          : "(N/A, N/A)";
-        document.getElementById("deleteNode").disabled = !node;
       }
 
       function drawGraph(xy) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         connections.forEach((conn) => {
           const from = xy.get(conn.from);
           const to = xy.get(conn.to);
-
           if (from && to) {
             let color = "black";
             if (conn.type === YES) color = "green";
@@ -272,7 +186,7 @@
               to.y +
               (to.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
 
-            drawArrow_quadraticBezier(
+            drawArrow_curved(
               fromCenterX,
               fromCenterY,
               toCenterX,
@@ -283,8 +197,6 @@
         });
 
         xy.forEach((shape) => {
-          const isSelected =
-            selectedNode && shape.letter === selectedNode.letter;
           if (shape.type === "diamond") {
             drawDiamond(
               shape.x,
@@ -292,9 +204,7 @@
               diamondWidth,
               diamondHeight,
               shape.letter,
-              shape.color,
-              isSelected,
-              shape.human
+              shape.color
             );
           } else {
             drawBox(
@@ -303,138 +213,62 @@
               boxWidth,
               boxHeight,
               shape.letter,
-              shape.color,
-              isSelected,
-              shape.human
+              shape.color
             );
           }
         });
       }
 
-      let draggingShape = null;
-      let offsetX, offsetY;
-
-      canvas.addEventListener("mousedown", (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        let foundNode = false;
-        graph.forEach((shape) => {
-          const width = shape.type === "diamond" ? diamondWidth : boxWidth;
-          const height = shape.type === "diamond" ? diamondHeight : boxHeight;
-
-          if (
-            mouseX >= shape.x &&
-            mouseX <= shape.x + width &&
-            mouseY >= shape.y &&
-            mouseY <= shape.y + height
-          ) {
-            draggingShape = shape;
-            offsetX = mouseX - shape.x;
-            offsetY = mouseY - shape.y;
-            selectedNode = shape;
-            foundNode = true;
-            updateNodeDetails(shape);
-          }
-        });
-
-        if (!foundNode) {
-          selectedNode = null;
-          updateNodeDetails(null);
-        }
-        drawGraph(graph);
-      });
-
-      canvas.addEventListener("mousemove", (e) => {
-        if (draggingShape) {
-          const rect = canvas.getBoundingClientRect();
-          draggingShape.x = e.clientX - rect.left - offsetX;
-          draggingShape.y = e.clientY - rect.top - offsetY;
-          updateNodeDetails(draggingShape);
+      function highlightNode(letter) {
+        const node = graph.get(letter);
+        if (node) {
+          node.color = "#008080"; // Teal
           drawGraph(graph);
         }
-      });
+      }
 
-      canvas.addEventListener("mouseup", () => (draggingShape = null));
-      canvas.addEventListener("mouseleave", () => (draggingShape = null));
+      function populateNodeTable(nodes) {
+        const tbody = document.querySelector("#nodeTable tbody");
+        tbody.innerHTML = "";
+        nodes.forEach((node) => {
+          const row = document.createElement("tr");
+          const buttonCell = document.createElement("td");
+          const btn = document.createElement("button");
+          btn.textContent = "Highlight";
+          btn.onclick = () => highlightNode(node.letter);
+          buttonCell.appendChild(btn);
 
-      document.getElementById("deleteNode").addEventListener("click", () => {
-        if (selectedNode) {
-          deleteNode(selectedNode.letter);
-        }
-      });
+          const letterCell = document.createElement("td");
+          letterCell.textContent = node.letter;
 
-      document.getElementById("nodeForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const key = document.getElementById("nodeKey").value;
-        const label = document.getElementById("nodeHuman").value;
-        const color = document.getElementById("nodeColor").value;
-        const type = document.getElementById("nodeType").value;
-        new Shape(key, null, null, label, color, type);
-        drawGraph(graph);
-        e.target.reset();
-      });
+          const humanCell = document.createElement("td");
+          humanCell.textContent = node.human;
 
-      document
-        .getElementById("connectionForm")
-        .addEventListener("submit", (e) => {
-          e.preventDefault();
-          const fromNode = document.getElementById("fromNode").value;
-          const toNode = document.getElementById("toNode").value;
-          const lineType = document.getElementById("lineType").value;
-          addConnection(fromNode, toNode, lineType);
-          e.target.reset();
+          row.appendChild(buttonCell);
+          row.appendChild(letterCell);
+          row.appendChild(humanCell);
+          tbody.appendChild(row);
+        });
+      }
+
+      function scaleNodesToFit(nodes) {
+        let minX = Infinity,
+          minY = Infinity,
+          maxX = -Infinity,
+          maxY = -Infinity;
+
+        nodes.forEach((node) => {
+          if (node.x < minX) minX = node.x;
+          if (node.y < minY) minY = node.y;
+          if (node.x > maxX) maxX = node.x;
+          if (node.y > maxY) maxY = node.y;
         });
 
-      document.getElementById("saveGraph").addEventListener("click", () => {
-        const nodes = [];
-        graph.forEach((shape) => {
-          nodes.push({
-            letter: shape.letter,
-            x: shape.x,
-            y: shape.y,
-            human: shape.human,
-            color: shape.color,
-            type: shape.type,
-          });
+        nodes.forEach((node) => {
+          node.x = 20 + ((canvas.width - 50) * node.x) / maxX;
+          node.y = 20 + ((canvas.height - 50) * node.y) / maxY;
         });
-
-        const graphData = { nodes, connections };
-        document.getElementById("graphJson").value = JSON.stringify(
-          graphData,
-          null,
-          2
-        );
-      });
-
-      document.getElementById("loadGraph").addEventListener("click", () => {
-        const jsonText = document.getElementById("graphJson").value;
-        try {
-          const { nodes, connections: loadedConnections } =
-            JSON.parse(jsonText);
-          graph.clear();
-          connections = [];
-
-          nodes.forEach((node) => {
-            new Shape(
-              node.letter,
-              node.x,
-              node.y,
-              node.human,
-              node.color,
-              node.type
-            );
-          });
-
-          loadedConnections.forEach((conn) =>
-            addConnection(conn.from, conn.to, conn.type)
-          );
-          drawGraph(graph);
-        } catch (error) {
-          alert("Invalid JSON. Please check the structure.");
-        }
-      });
+      }
 
       function main() {
         const initialData = {
@@ -1030,20 +864,17 @@
           ],
         };
 
+        scaleNodesToFit(initialData.nodes);
+
         initialData.nodes.forEach((node) => {
-          new Shape(
-            node.letter,
-            node.x,
-            node.y,
-            node.human,
-            node.color,
-            node.type
-          );
+          new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
         });
 
         initialData.connections.forEach((conn) =>
           addConnection(conn.from, conn.to, conn.type)
         );
+
+        populateNodeTable(initialData.nodes);
         drawGraph(graph);
       }
       main();
