@@ -155,9 +155,90 @@ function updateNodeDetails(node) {
   document.getElementById("deleteNode").disabled = !node;
 }
 
+const circleDiameter = 70; // Adjust as needed
+
+function drawCircle(x, y, diameter, text, color, selected, human) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  // Draw a circle centered in the rectangle defined by (x,y) and diameter
+  ctx.arc(x + diameter / 2, y + diameter / 2, diameter / 2, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.strokeStyle = selected ? "red" : "black";
+  ctx.lineWidth = selected ? 3 : 1;
+  ctx.stroke();
+
+  ctx.fillStyle = "black";
+  ctx.font = "17px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, x + diameter / 2, y + diameter / 2);
+}
+
+
+// function drawGraph(xy) {
+//   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+//   connections.forEach((conn) => {
+//     const from = xy.get(conn.from);
+//     const to = xy.get(conn.to);
+
+//     if (from && to) {
+//       let color = "black";
+//       if (conn.type === YES) color = "green";
+//       else if (conn.type === NO) color = "red";
+
+//       const fromCenterX =
+//         from.x + (from.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
+//       const fromCenterY =
+//         from.y + (from.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
+//       const toCenterX =
+//         to.x + (to.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
+//       const toCenterY =
+//         to.y + (to.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
+
+//       drawArrow_quadraticBezier(
+//         fromCenterX,
+//         fromCenterY,
+//         toCenterX,
+//         toCenterY,
+//         color
+//       );
+//     }
+//   });
+
+//   xy.forEach((shape) => {
+//     const isSelected = selectedNode && shape.letter === selectedNode.letter;
+//     if (shape.type === "diamond") {
+//       drawDiamond(
+//         shape.x,
+//         shape.y,
+//         diamondWidth,
+//         diamondHeight,
+//         shape.letter,
+//         shape.color,
+//         isSelected,
+//         shape.human
+//       );
+//     } else {
+//       drawBox(
+//         shape.x,
+//         shape.y,
+//         boxWidth,
+//         boxHeight,
+//         shape.letter,
+//         shape.color,
+//         isSelected,
+//         shape.human
+//       );
+//     }
+//   });
+// }
+
+
 function drawGraph(xy) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // Draw connections
   connections.forEach((conn) => {
     const from = xy.get(conn.from);
     const to = xy.get(conn.to);
@@ -168,13 +249,33 @@ function drawGraph(xy) {
       else if (conn.type === NO) color = "red";
 
       const fromCenterX =
-        from.x + (from.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
+        from.x +
+        (from.type === "diamond"
+          ? diamondWidth / 2
+          : from.type === "circle"
+          ? circleDiameter / 2
+          : boxWidth / 2);
       const fromCenterY =
-        from.y + (from.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
+        from.y +
+        (from.type === "diamond"
+          ? diamondHeight / 2
+          : from.type === "circle"
+          ? circleDiameter / 2
+          : boxHeight / 2);
       const toCenterX =
-        to.x + (to.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
+        to.x +
+        (to.type === "diamond"
+          ? diamondWidth / 2
+          : to.type === "circle"
+          ? circleDiameter / 2
+          : boxWidth / 2);
       const toCenterY =
-        to.y + (to.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
+        to.y +
+        (to.type === "diamond"
+          ? diamondHeight / 2
+          : to.type === "circle"
+          ? circleDiameter / 2
+          : boxHeight / 2);
 
       drawArrow_quadraticBezier(
         fromCenterX,
@@ -186,6 +287,7 @@ function drawGraph(xy) {
     }
   });
 
+  // Draw nodes/shapes
   xy.forEach((shape) => {
     const isSelected = selectedNode && shape.letter === selectedNode.letter;
     if (shape.type === "diamond") {
@@ -194,6 +296,16 @@ function drawGraph(xy) {
         shape.y,
         diamondWidth,
         diamondHeight,
+        shape.letter,
+        shape.color,
+        isSelected,
+        shape.human
+      );
+    } else if (shape.type === "circle") {
+      drawCircle(
+        shape.x,
+        shape.y,
+        circleDiameter,
         shape.letter,
         shape.color,
         isSelected,
@@ -335,9 +447,9 @@ function scaleNodesToFit() {
   const width = canvas.width;
   const height = canvas.height;
 
-  if (maxX > width || height > height) {
+//  if (maxX > width || height > height) {
     everything.nodes.forEach((node) => {
-      node.x = ((width - 50) * node.x) / maxX;
+      node.x = ((width - 50) * node.x) / maxX;  
       node.y = ((height - 30) * node.y) / maxY;
     });
 
@@ -347,10 +459,64 @@ function scaleNodesToFit() {
     });
 
     drawGraph(graph);
-  } else { 
-    console.log( " It already fits on the screen... pass.")
-  }
+  // } else { 
+  //   console.log( " It already fits on the screen... pass.")
+  // }
 } 
+document.getElementById("circleForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const fromKey = document.getElementById("fromNode2").value;
+  const circleKey = document.getElementById("circleKey").value;
+  const toKey = document.getElementById("toNode2").value;
+  const circleChoice = document.getElementById("circleChoice").value; // "yes", "no", or "none"
+
+  // Retrieve the two nodes from the graph
+  const fromShape = graph.get(fromKey);
+  const toShape = graph.get(toKey);
+
+  if (!fromShape || !toShape) {
+    alert("Invalid node keys provided. Please ensure both nodes exist.");
+    return;
+  }
+
+  // Remove the original connection between the two nodes, if it exists
+  connections = connections.filter(
+    (conn) => !(conn.from === fromKey && conn.to === toKey)
+  );
+
+  // Compute the midpoint of the two nodes for the circle's position
+  const circleX = (fromShape.x + toShape.x) / 2;
+  const circleY = (fromShape.y + toShape.y) / 2;
+
+  // Use a default color for the circle (you could extend the form to let the user choose)
+  const defaultColor = "#ffcccc";
+
+  // Create the circle node; using circleKey as both its key and label.
+  new Shape(circleKey, circleX, circleY, circleKey, defaultColor, "circle");
+
+  // Retrieve the newly created circle shape from the graph and attach the choice property
+  const circleShape = graph.get(circleKey);
+  circleShape.choice = circleChoice;
+
+  // Determine connection type based on the circle's choice:
+  // "yes" => green, "no" => red, "none" => black.
+  let connType;
+  if (circleChoice === "yes") {
+    connType = YES; // previously defined constant "yes"
+  } else if (circleChoice === "no") {
+    connType = NO; // previously defined constant "no"
+  } else {
+    connType = NORMAL; // "none" results in NORMAL which renders as black
+  }
+
+  // Add new connections so the circle appears in between the nodes using the appropriate color.
+  addConnection(fromKey, circleKey, connType);
+  addConnection(circleKey, toKey, connType);
+
+  drawGraph(graph);
+  e.target.reset();
+});
+
 
 async function main() {
   try {

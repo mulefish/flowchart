@@ -2,882 +2,113 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Flowchart Canvas - Highlight Nodes in Teal</title>
+    <title>Flowchart Canvas - Full Functionality</title>
     <style>
       body,
       html {
         margin: 0;
         padding: 0;
-        overflow: hidden;
+      }
+      /* Flexbox container to hold form and right panel side by side */
+      #main-container {
+        display: flex;
+        flex-direction: row;
+      }
+      #form-container {
+        width: 50%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      #right-panel {
+        background-color: lightblue;
+        width: 50%;
+        padding: 20px;
+        box-sizing: border-box;
       }
       canvas {
         display: block;
         background-color: #e0e0e0;
         width: 100vw;
-        height: 300px;
-      }
-      table {
-        border-collapse: collapse;
-      }
-      th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-      button {
-        padding: 5px 10px;
-        cursor: pointer;
+        height: 600px;
       }
     </style>
   </head>
   <body>
     <canvas id="flowchartCanvas"></canvas>
 
-    <h3 style="text-align: center;">Node List - Click to Highlight in Teal</h3>
-    <table id="nodeTable">
-      <thead>
-        <tr>
-          <th>Highlight</th>
-          <th>Letter</th>
-          <th>Label (Human)</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <!-- Flexbox wrapper for side-by-side layout -->
+    <div id="main-container">
+      <div id="form-container">
+        <h3>Add Nodes! : Drag stuff! Delete them! Make connections!</h3>
+        <form id="nodeForm">
+          <label for="nodeKey">Key:</label>
+          <input type="text" id="nodeKey" required />
+          <label for="nodeHuman">Label:</label>
+          <input type="text" id="nodeHuman" required />
+          <label for="nodeColor">Color:</label>
+          <input type="color" id="nodeColor" value="#ffffff" />
+          <label for="nodeType">Type:</label>
+          <select id="nodeType">
+            <option value="box">Box</option>
+            <option value="diamond">Diamond</option>
+            <!-- Optionally you could add circle here too -->
+          </select>
+          <button type="submit">Add Node</button>
+        </form>
 
-    <script>
-      const YES = "yes";
-      const NO = "no";
-      const NORMAL = "normal";
+        <h3>Add Connection (use the 'key' of 2 different nodes)</h3>
+        <form id="connectionForm">
+          <label for="fromNode">From:</label>
+          <input type="text" id="fromNode" required />
+          <label for="toNode">To:</label>
+          <input type="text" id="toNode" required />
+          <label for="lineType">Line Type:</label>
+          <select id="lineType">
+            <option value="normal">Normal (Black)</option>
+            <option value="yes">Yes (Green)</option>
+            <option value="no">No (Red)</option>
+          </select>
+          <button type="submit">Add Connection</button>
+        </form>
 
-      const canvas = document.getElementById("flowchartCanvas");
-      canvas.width = window.innerWidth;
-      canvas.height = 300;
-      const ctx = canvas.getContext("2d");
+        <h3>Add CIRCLE - this will be placed on a line IN BETWEEN two nodes</h3>
+        <form id="circleForm">
+          <label for="fromNode2">From (Node Key):</label>
+          <input type="text" id="fromNode2" required />
 
-      const boxWidth = 30;
-      const boxHeight = 30;
-      const diamondWidth = 30;
-      const diamondHeight = 30;
+          <label for="circleKey">Circle Key:</label>
+          <input type="text" id="circleKey" required />
 
-      function drawBox(x, y, width, height, text, color) {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.rect(x, y, width, height);
-        ctx.fill();
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
-        ctx.stroke();
+          <label for="toNode2">To (Node Key):</label>
+          <input type="text" id="toNode2" required />
 
-        ctx.fillStyle = "black";
-        ctx.font = "12px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(text, x + width / 2, y + height / 2);
-      }
+          <button type="submit">Insert CIRCLE</button>
+        </form>
 
-      function drawDiamond(x, y, width, height, text, color) {
-        const centerX = x + width / 2;
-        const centerY = y + height / 2;
+        <h3>Selected Node Details</h3>
+        <div id="selectedNodeDetails">
+          <strong>Key:</strong> <span id="nodeKeyDetail">None</span><br />
+          <strong>Label:</strong> <span id="nodeLabelDetail">None</span><br />
+          <strong>Color:</strong> <span id="nodeColorDetail">None</span><br />
+          <strong>Type:</strong> <span id="nodeTypeDetail">None</span><br />
+          <strong>Position:</strong> <span id="nodePositionDetail">(N/A, N/A)</span><br />
+          <button id="deleteNode" disabled>Delete Selected Node</button>
+        </div>
+        <br />
 
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(centerX, y);
-        ctx.lineTo(x + width, centerY);
-        ctx.lineTo(centerX, y + height);
-        ctx.lineTo(x, centerY);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        <button id="saveGraph">
+          Marshal graph to text area: then cut/paste to initialData.json
+        </button>
+        <button onclick="scaleNodesToFit()">Rescale to fit your screen!</button>
+        <br />
+        <textarea id="graphJson" rows="50" cols="80"></textarea>
+      </div>
 
-        ctx.fillStyle = "black";
-        ctx.font = "12px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(text, centerX, centerY);
-      }
-
-      function drawArrow_curved(fromX, fromY, toX, toY, color = "black") {
-        const headLength = 10;
-        const controlX = (fromX + toX) / 2 + (Math.random() * 50 - 25);
-        const controlY = (fromY + toY) / 2 + (Math.random() * 50 - 25);
-
-        ctx.strokeStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(fromX, fromY);
-        ctx.quadraticCurveTo(controlX, controlY, toX, toY);
-        ctx.stroke();
-
-        const t = 0.5;
-        const curveX =
-          Math.pow(1 - t, 2) * fromX +
-          2 * (1 - t) * t * controlX +
-          Math.pow(t, 2) * toX;
-        const curveY =
-          Math.pow(1 - t, 2) * fromY +
-          2 * (1 - t) * t * controlY +
-          Math.pow(t, 2) * toY;
-
-        const dx =
-          2 * (1 - t) * (controlX - fromX) + 2 * t * (toX - controlX);
-        const dy =
-          2 * (1 - t) * (controlY - fromY) + 2 * t * (toY - controlY);
-        const angle = Math.atan2(dy, dx);
-
-        ctx.beginPath();
-        ctx.moveTo(curveX, curveY);
-        ctx.lineTo(
-          curveX - headLength * Math.cos(angle - Math.PI / 6),
-          curveY - headLength * Math.sin(angle - Math.PI / 6)
-        );
-        ctx.lineTo(
-          curveX - headLength * Math.cos(angle + Math.PI / 6),
-          curveY - headLength * Math.sin(angle + Math.PI / 6)
-        );
-        ctx.lineTo(curveX, curveY);
-        ctx.closePath();
-        ctx.fillStyle = color;
-        ctx.fill();
-      }
-
-      class Shape {
-        constructor(letter, x, y, human, color, type = "box") {
-          this.letter = letter;
-          this.x = x;
-          this.y = y;
-          this.human = human;
-          this.color = color;
-          this.type = type;
-          graph.set(letter, this);
-        }
-      }
-
-      const graph = new Map();
-      let connections = [];
-
-      function addConnection(fromNode, toNode, type = NORMAL) {
-        connections.push({ from: fromNode, to: toNode, type });
-      }
-
-      function drawGraph(xy) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        connections.forEach((conn) => {
-          const from = xy.get(conn.from);
-          const to = xy.get(conn.to);
-          if (from && to) {
-            let color = "black";
-            if (conn.type === YES) color = "green";
-            else if (conn.type === NO) color = "red";
-
-            const fromCenterX =
-              from.x +
-              (from.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
-            const fromCenterY =
-              from.y +
-              (from.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
-            const toCenterX =
-              to.x + (to.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
-            const toCenterY =
-              to.y +
-              (to.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
-
-            drawArrow_curved(
-              fromCenterX,
-              fromCenterY,
-              toCenterX,
-              toCenterY,
-              color
-            );
-          }
-        });
-
-        xy.forEach((shape) => {
-          if (shape.type === "diamond") {
-            drawDiamond(
-              shape.x,
-              shape.y,
-              diamondWidth,
-              diamondHeight,
-              shape.letter,
-              shape.color
-            );
-          } else {
-            drawBox(
-              shape.x,
-              shape.y,
-              boxWidth,
-              boxHeight,
-              shape.letter,
-              shape.color
-            );
-          }
-        });
-      }
-
-      function highlightNode(letter) {
-        const node = graph.get(letter);
-        if (node) {
-          node.color = "#008080"; // Teal
-          drawGraph(graph);
-        }
-      }
-
-      function populateNodeTable(nodes) {
-        const tbody = document.querySelector("#nodeTable tbody");
-        tbody.innerHTML = "";
-        nodes.forEach((node) => {
-          const row = document.createElement("tr");
-          const buttonCell = document.createElement("td");
-          const btn = document.createElement("button");
-          btn.textContent = "Highlight";
-          btn.onclick = () => highlightNode(node.letter);
-          buttonCell.appendChild(btn);
-
-          const letterCell = document.createElement("td");
-          letterCell.textContent = node.letter;
-
-          const humanCell = document.createElement("td");
-          humanCell.textContent = node.human;
-
-          row.appendChild(buttonCell);
-          row.appendChild(letterCell);
-          row.appendChild(humanCell);
-          tbody.appendChild(row);
-        });
-      }
-
-      function scaleNodesToFit(nodes) {
-        let minX = Infinity,
-          minY = Infinity,
-          maxX = -Infinity,
-          maxY = -Infinity;
-
-        nodes.forEach((node) => {
-          if (node.x < minX) minX = node.x;
-          if (node.y < minY) minY = node.y;
-          if (node.x > maxX) maxX = node.x;
-          if (node.y > maxY) maxY = node.y;
-        });
-
-        nodes.forEach((node) => {
-          node.x = 20 + ((canvas.width - 50) * node.x) / maxX;
-          node.y = 20 + ((canvas.height - 50) * node.y) / maxY;
-        });
-      }
-
-      function main() {
-        const initialData = {
-          nodes: [
-            {
-              letter: "A",
-              x: 30,
-              y: 64,
-              human: "Home",
-              color: "white",
-              type: "box",
-            },
-            {
-              letter: "B",
-              x: 57,
-              y: 237,
-              human: "Disclosures",
-              color: "white",
-              type: "box",
-            },
-            {
-              letter: "C",
-              x: 166,
-              y: 303,
-              human: "Sign in",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "D",
-              x: 171,
-              y: 210,
-              human: "Password Reset",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "F",
-              x: 31,
-              y: 385,
-              human: "Sign up",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "G",
-              x: 96,
-              y: 479,
-              human: "Account details",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "H",
-              x: 170,
-              y: 393,
-              human: "Exiting in Snow",
-              color: "pink",
-              type: "diamond",
-            },
-            {
-              letter: "I",
-              x: 288,
-              y: 452,
-              human: "Associate to account",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "J",
-              x: 288,
-              y: 310,
-              human: "MFA",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "K",
-              x: 440,
-              y: 455,
-              human: "STA Lookup",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "L",
-              x: 720,
-              y: 492,
-              human: "Active Enrollement in Snow",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "M",
-              x: 343,
-              y: 156,
-              human: "Active Renewal in Snow",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "N",
-              x: 623,
-              y: 133,
-              human: "PreEnrollment Complete?",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "O",
-              x: 226,
-              y: -5,
-              human: "Eligible to renew",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "P",
-              x: 412,
-              y: 5,
-              human: "Prompt for renewal",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "Q",
-              x: 584,
-              y: 24,
-              human: "Reprint required?",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "R",
-              x: 520,
-              y: 235,
-              human: "End flow",
-              color: "white",
-              type: "box",
-            },
-            {
-              letter: "S",
-              x: 772,
-              y: 296,
-              human: "Continue enrollment flow",
-              color: "white",
-              type: "box",
-            },
-            {
-              letter: "T",
-              x: 513,
-              y: 361,
-              human: "Continue renewal flow",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "U",
-              x: 866,
-              y: -10,
-              human: "Citizen or Name change",
-              color: "#ffffff",
-              type: "diamond",
-            },
-            {
-              letter: "V",
-              x: 805,
-              y: 99,
-              human: "Reprint Notice Required",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "W",
-              x: 914,
-              y: 210,
-              human: "Location Finder",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "X",
-              x: 978,
-              y: 332,
-              human: "Legal Names",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "Y",
-              x: 1040,
-              y: 83,
-              human: "Eligibility",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "Z",
-              x: 1084,
-              y: 211,
-              human: "Birth and Citizenship",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "AA",
-              x: 1144,
-              y: 7,
-              human: "Enrollment?",
-              color: "#ffffff",
-              type: "diamond",
-            },
-            {
-              letter: "AB",
-              x: 1217,
-              y: 167,
-              human: "Attributes",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "AC",
-              x: 1296,
-              y: 70,
-              human: "Address",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "AD",
-              x: 1245,
-              y: 245,
-              human: "Online referral",
-              color: "#ffffff",
-              type: "diamond",
-            },
-            {
-              letter: "AE",
-              x: 1377,
-              y: 141,
-              human: "Payment",
-              color: "#867ae1",
-              type: "box",
-            },
-            {
-              letter: "AF",
-              x: 1513,
-              y: 30,
-              human: "Online Renewal Summary ",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "AG",
-              x: 1145,
-              y: 309,
-              human: "Citizen?",
-              color: "#9ec4f5",
-              type: "diamond",
-            },
-            {
-              letter: "AH",
-              x: 982,
-              y: 431,
-              human: "PhotoID ( Citizen)",
-              color: "#90b3f9",
-              type: "box",
-            },
-            {
-              letter: "AI",
-              x: 1338,
-              y: 363,
-              human: "List A?",
-              color: "#90cbf9",
-              type: "diamond",
-            },
-            {
-              letter: "AJ",
-              x: 1281,
-              y: 506,
-              human: "Citizen Docs",
-              color: "#9bdcfd",
-              type: "box",
-            },
-            {
-              letter: "AK",
-              x: 1437,
-              y: 228,
-              human: "PhotoID ( LPR )  ",
-              color: "#90d1f9",
-              type: "box",
-            },
-            {
-              letter: "AL",
-              x: 1612,
-              y: 154,
-              human: "Scheduler",
-              color: "#2aea10",
-              type: "box",
-            },
-            {
-              letter: "AM",
-              x: 1475,
-              y: 471,
-              human: "Name Check",
-              color: "#85cdf9",
-              type: "box",
-            },
-            {
-              letter: "AN",
-              x: 1601,
-              y: 345,
-              human: "PhotoID and Citizenship match?",
-              color: "#7fd4f0",
-              type: "diamond",
-            },
-            {
-              letter: "AO",
-              x: 1714,
-              y: 427,
-              human: "Add Linking Document",
-              color: "#90c3f9",
-              type: "box",
-            },
-            {
-              letter: "AP",
-              x: 1763,
-              y: 212,
-              human: "Link to Enrollment Complete?",
-              color: "#80c8f4",
-              type: "diamond",
-            },
-            {
-              letter: "AQ",
-              x: 1758,
-              y: 106,
-              human: "Appointment Schedule Summary",
-              color: "#ffffff",
-              type: "box",
-            },
-          ],
-          connections: [
-            {
-              from: "A",
-              to: "B",
-              type: "normal",
-            },
-            {
-              from: "B",
-              to: "C",
-              type: "normal",
-            },
-            {
-              from: "C",
-              to: "D",
-              type: "normal",
-            },
-            {
-              from: "C",
-              to: "F",
-              type: "normal",
-            },
-            {
-              from: "F",
-              to: "G",
-              type: "normal",
-            },
-            {
-              from: "G",
-              to: "H",
-              type: "normal",
-            },
-            {
-              from: "H",
-              to: "I",
-              type: "normal",
-            },
-            {
-              from: "C",
-              to: "J",
-              type: "normal",
-            },
-            {
-              from: "J",
-              to: "K",
-              type: "normal",
-            },
-            {
-              from: "K",
-              to: "L",
-              type: "no",
-            },
-            {
-              from: "L",
-              to: "N",
-              type: "yes",
-            },
-            {
-              from: "P",
-              to: "Q",
-              type: "yes",
-            },
-            {
-              from: "N",
-              to: "R",
-              type: "yes",
-            },
-            {
-              from: "O",
-              to: "R",
-              type: "no",
-            },
-            {
-              from: "N",
-              to: "S",
-              type: "no",
-            },
-            {
-              from: "K",
-              to: "M",
-              type: "yes",
-            },
-            {
-              from: "M",
-              to: "T",
-              type: "yes",
-            },
-            {
-              from: "M",
-              to: "O",
-              type: "no",
-            },
-            {
-              from: "O",
-              to: "P",
-              type: "yes",
-            },
-            {
-              from: "Q",
-              to: "U",
-              type: "no",
-            },
-            {
-              from: "Q",
-              to: "V",
-              type: "yes",
-            },
-            {
-              from: "V",
-              to: "W",
-              type: "normal",
-            },
-            {
-              from: "L",
-              to: "W",
-              type: "no",
-            },
-            {
-              from: "W",
-              to: "X",
-              type: "normal",
-            },
-            {
-              from: "U",
-              to: "W",
-              type: "yes",
-            },
-            {
-              from: "U",
-              to: "Y",
-              type: "normal",
-            },
-            {
-              from: "X",
-              to: "Z",
-              type: "normal",
-            },
-            {
-              from: "Z",
-              to: "Y",
-              type: "normal",
-            },
-            {
-              from: "Y",
-              to: "AA",
-              type: "normal",
-            },
-            {
-              from: "AA",
-              to: "AB",
-              type: "yes",
-            },
-            {
-              from: "AB",
-              to: "AC",
-              type: "normal",
-            },
-            {
-              from: "AC",
-              to: "AD",
-              type: "normal",
-            },
-            {
-              from: "AD",
-              to: "AE",
-              type: "yes",
-            },
-            {
-              from: "AE",
-              to: "AF",
-              type: "normal",
-            },
-            {
-              from: "AD",
-              to: "AG",
-              type: "no",
-            },
-            {
-              from: "AG",
-              to: "AH",
-              type: "yes",
-            },
-            {
-              from: "AH",
-              to: "AI",
-              type: "normal",
-            },
-            {
-              from: "AI",
-              to: "AJ",
-              type: "no",
-            },
-            {
-              from: "AG",
-              to: "AK",
-              type: "no",
-            },
-            {
-              from: "AK",
-              to: "AL",
-              type: "normal",
-            },
-            {
-              from: "AJ",
-              to: "AM",
-              type: "normal",
-            },
-            {
-              from: "AM",
-              to: "AN",
-              type: "normal",
-            },
-            {
-              from: "AN",
-              to: "AL",
-              type: "yes",
-            },
-            {
-              from: "AN",
-              to: "AO",
-              type: "no",
-            },
-            {
-              from: "AO",
-              to: "AP",
-              type: "normal",
-            },
-            {
-              from: "AP",
-              to: "AO",
-              type: "no",
-            },
-            {
-              from: "AI",
-              to: "AL",
-              type: "yes",
-            },
-            {
-              from: "AP",
-              to: "AL",
-              type: "yes",
-            },
-            {
-              from: "AP",
-              to: "AQ",
-              type: "yes",
-            },
-            {
-              from: "AQ",
-              to: "AF",
-              type: "normal",
-            },
-          ],
-        };
-
-        scaleNodesToFit(initialData.nodes);
-
-        initialData.nodes.forEach((node) => {
-          new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
-        });
-
-        initialData.connections.forEach((conn) =>
-          addConnection(conn.from, conn.to, conn.type)
-        );
-
-        populateNodeTable(initialData.nodes);
-        drawGraph(graph);
-      }
-      main();
-    </script>
+      <!-- ✅ New Right-Side Div -->
+      <div id="right-panel">
+        <h3>PINIA!</h3>
+      </div>
+    </div>
+    <script src="graph.js"></script>
   </body>
 </html>
