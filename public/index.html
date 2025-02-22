@@ -117,7 +117,7 @@
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         const t = text + " : " + human;
-        ctx.fillText(t, x + width / 2, y + height / 2);
+        ctx.fillText(text, x + width / 2, y + height / 2);
       }
 
       function drawDiamond(x, y, width, height, text, color, selected, human) {
@@ -141,7 +141,7 @@
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         const t = text + " : " + human;
-        ctx.fillText(t, centerX, centerY);
+        ctx.fillText(text, centerX, centerY);
       }
 
       function drawArrow_quadraticBezier(
@@ -438,598 +438,310 @@
 
       function main() {
         const initialData = {
-          nodes: [
-            {
-              letter: "A",
-              x: 30,
-              y: 64,
-              human: "Home",
-              color: "white",
-              type: "box",
-            },
-            {
-              letter: "B",
-              x: 57,
-              y: 237,
-              human: "Disclosures",
-              color: "white",
-              type: "box",
-            },
-            {
-              letter: "C",
-              x: 166,
-              y: 303,
-              human: "Sign in",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "D",
-              x: 171,
-              y: 210,
-              human: "Password Reset",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "F",
-              x: 31,
-              y: 385,
-              human: "Sign up",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "G",
-              x: 96,
-              y: 479,
-              human: "Account details",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "H",
-              x: 170,
-              y: 393,
-              human: "Exiting in Snow",
-              color: "pink",
-              type: "diamond",
-            },
-            {
-              letter: "I",
-              x: 288,
-              y: 452,
-              human: "Associate to account",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "J",
-              x: 288,
-              y: 310,
-              human: "MFA",
-              color: "pink",
-              type: "box",
-            },
-            {
-              letter: "K",
-              x: 440,
-              y: 455,
-              human: "STA Lookup",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "L",
-              x: 720,
-              y: 492,
-              human: "Active Enrollement in Snow",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "M",
-              x: 343,
-              y: 156,
-              human: "Active Renewal in Snow",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "N",
-              x: 623,
-              y: 133,
-              human: "PreEnrollment Complete?",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "O",
-              x: 226,
-              y: -5,
-              human: "Eligible to renew",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "P",
-              x: 412,
-              y: 5,
-              human: "Prompt for renewal",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "Q",
-              x: 584,
-              y: 24,
-              human: "Reprint required?",
-              color: "white",
-              type: "diamond",
-            },
-            {
-              letter: "R",
-              x: 520,
-              y: 235,
-              human: "End flow",
-              color: "white",
-              type: "box",
-            },
-            {
-              letter: "S",
-              x: 772,
-              y: 296,
-              human: "Continue enrollment flow",
-              color: "white",
-              type: "box",
-            },
-            {
-              letter: "T",
-              x: 513,
-              y: 361,
-              human: "Continue renewal flow",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "U",
-              x: 866,
-              y: -10,
-              human: "Citizen or Name change",
-              color: "#ffffff",
-              type: "diamond",
-            },
-            {
-              letter: "V",
-              x: 805,
-              y: 99,
-              human: "Reprint Notice Required",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "W",
-              x: 914,
-              y: 210,
-              human: "Location Finder",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "X",
-              x: 978,
-              y: 332,
-              human: "Legal Names",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "Y",
-              x: 1040,
-              y: 83,
-              human: "Eligibility",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "Z",
-              x: 1084,
-              y: 211,
-              human: "Birth and Citizenship",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "AA",
-              x: 1144,
-              y: 7,
-              human: "Enrollment?",
-              color: "#ffffff",
-              type: "diamond",
-            },
-            {
-              letter: "AB",
-              x: 1217,
-              y: 167,
-              human: "Attributes",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "AC",
-              x: 1296,
-              y: 70,
-              human: "Address",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "AD",
-              x: 1245,
-              y: 245,
-              human: "Online referral",
-              color: "#ffffff",
-              type: "diamond",
-            },
-            {
-              letter: "AE",
-              x: 1377,
-              y: 141,
-              human: "Payment",
-              color: "#867ae1",
-              type: "box",
-            },
-            {
-              letter: "AF",
-              x: 1513,
-              y: 30,
-              human: "Online Renewal Summary ",
-              color: "#ffffff",
-              type: "box",
-            },
-            {
-              letter: "AG",
-              x: 1145,
-              y: 309,
-              human: "Citizen?",
-              color: "#9ec4f5",
-              type: "diamond",
-            },
-            {
-              letter: "AH",
-              x: 982,
-              y: 431,
-              human: "PhotoID ( Citizen)",
-              color: "#90b3f9",
-              type: "box",
-            },
-            {
-              letter: "AI",
-              x: 1338,
-              y: 363,
-              human: "List A?",
-              color: "#90cbf9",
-              type: "diamond",
-            },
-            {
-              letter: "AJ",
-              x: 1281,
-              y: 506,
-              human: "Citizen Docs",
-              color: "#9bdcfd",
-              type: "box",
-            },
-            {
-              letter: "AK",
-              x: 1437,
-              y: 228,
-              human: "PhotoID ( LPR )  ",
-              color: "#90d1f9",
-              type: "box",
-            },
-            {
-              letter: "AL",
-              x: 1612,
-              y: 154,
-              human: "Scheduler",
-              color: "#2aea10",
-              type: "box",
-            },
-            {
-              letter: "AM",
-              x: 1475,
-              y: 471,
-              human: "Name Check",
-              color: "#85cdf9",
-              type: "box",
-            },
-            {
-              letter: "AN",
-              x: 1601,
-              y: 345,
-              human: "PhotoID and Citizenship match?",
-              color: "#7fd4f0",
-              type: "diamond",
-            },
-            {
-              letter: "AO",
-              x: 1714,
-              y: 427,
-              human: "Add Linking Document",
-              color: "#90c3f9",
-              type: "box",
-            },
-            {
-              letter: "AP",
-              x: 1763,
-              y: 212,
-              human: "Link to Enrollment Complete?",
-              color: "#80c8f4",
-              type: "diamond",
-            },
-            {
-              letter: "AQ",
-              x: 1758,
-              y: 106,
-              human: "Appointment Schedule Summary",
-              color: "#ffffff",
-              type: "box",
-            },
-          ],
-          connections: [
-            {
-              from: "A",
-              to: "B",
-              type: "normal",
-            },
-            {
-              from: "B",
-              to: "C",
-              type: "normal",
-            },
-            {
-              from: "C",
-              to: "D",
-              type: "normal",
-            },
-            {
-              from: "C",
-              to: "F",
-              type: "normal",
-            },
-            {
-              from: "F",
-              to: "G",
-              type: "normal",
-            },
-            {
-              from: "G",
-              to: "H",
-              type: "normal",
-            },
-            {
-              from: "H",
-              to: "I",
-              type: "normal",
-            },
-            {
-              from: "C",
-              to: "J",
-              type: "normal",
-            },
-            {
-              from: "J",
-              to: "K",
-              type: "normal",
-            },
-            {
-              from: "K",
-              to: "L",
-              type: "no",
-            },
-            {
-              from: "L",
-              to: "N",
-              type: "yes",
-            },
-            {
-              from: "P",
-              to: "Q",
-              type: "yes",
-            },
-            {
-              from: "N",
-              to: "R",
-              type: "yes",
-            },
-            {
-              from: "O",
-              to: "R",
-              type: "no",
-            },
-            {
-              from: "N",
-              to: "S",
-              type: "no",
-            },
-            {
-              from: "K",
-              to: "M",
-              type: "yes",
-            },
-            {
-              from: "M",
-              to: "T",
-              type: "yes",
-            },
-            {
-              from: "M",
-              to: "O",
-              type: "no",
-            },
-            {
-              from: "O",
-              to: "P",
-              type: "yes",
-            },
-            {
-              from: "Q",
-              to: "U",
-              type: "no",
-            },
-            {
-              from: "Q",
-              to: "V",
-              type: "yes",
-            },
-            {
-              from: "V",
-              to: "W",
-              type: "normal",
-            },
-            {
-              from: "L",
-              to: "W",
-              type: "no",
-            },
-            {
-              from: "W",
-              to: "X",
-              type: "normal",
-            },
-            {
-              from: "U",
-              to: "W",
-              type: "yes",
-            },
-            {
-              from: "U",
-              to: "Y",
-              type: "normal",
-            },
-            {
-              from: "X",
-              to: "Z",
-              type: "normal",
-            },
-            {
-              from: "Z",
-              to: "Y",
-              type: "normal",
-            },
-            {
-              from: "Y",
-              to: "AA",
-              type: "normal",
-            },
-            {
-              from: "AA",
-              to: "AB",
-              type: "yes",
-            },
-            {
-              from: "AB",
-              to: "AC",
-              type: "normal",
-            },
-            {
-              from: "AC",
-              to: "AD",
-              type: "normal",
-            },
-            {
-              from: "AD",
-              to: "AE",
-              type: "yes",
-            },
-            {
-              from: "AE",
-              to: "AF",
-              type: "normal",
-            },
-            {
-              from: "AD",
-              to: "AG",
-              type: "no",
-            },
-            {
-              from: "AG",
-              to: "AH",
-              type: "yes",
-            },
-            {
-              from: "AH",
-              to: "AI",
-              type: "normal",
-            },
-            {
-              from: "AI",
-              to: "AJ",
-              type: "no",
-            },
-            {
-              from: "AG",
-              to: "AK",
-              type: "no",
-            },
-            {
-              from: "AK",
-              to: "AL",
-              type: "normal",
-            },
-            {
-              from: "AJ",
-              to: "AM",
-              type: "normal",
-            },
-            {
-              from: "AM",
-              to: "AN",
-              type: "normal",
-            },
-            {
-              from: "AN",
-              to: "AL",
-              type: "yes",
-            },
-            {
-              from: "AN",
-              to: "AO",
-              type: "no",
-            },
-            {
-              from: "AO",
-              to: "AP",
-              type: "normal",
-            },
-            {
-              from: "AP",
-              to: "AO",
-              type: "no",
-            },
-            {
-              from: "AI",
-              to: "AL",
-              type: "yes",
-            },
-            {
-              from: "AP",
-              to: "AL",
-              type: "yes",
-            },
-            {
-              from: "AP",
-              to: "AQ",
-              type: "yes",
-            },
-            {
-              from: "AQ",
-              to: "AF",
-              type: "normal",
-            },
-          ],
-        };
-
+  "nodes": [
+    {
+      "letter": "signup",
+      "x": 49,
+      "y": 434,
+      "human": "signup",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "location",
+      "x": 28,
+      "y": 304,
+      "human": "location",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "legal_names",
+      "x": 114,
+      "y": 202,
+      "human": "legal_names",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "birth_and_citizenship",
+      "x": 289,
+      "y": 127,
+      "human": "birth_and_citizenship",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "eligibility",
+      "x": 197,
+      "y": 348,
+      "human": "eligibility",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "attributes",
+      "x": 480,
+      "y": 54,
+      "human": "attributes",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "addresses",
+      "x": 373,
+      "y": 333,
+      "human": "addresses",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "photo_id",
+      "x": 767,
+      "y": 57,
+      "human": "photo_id",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "name_match",
+      "x": 1119,
+      "y": 453,
+      "human": "name_match",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "scheduler",
+      "x": 1250,
+      "y": 318,
+      "human": "scheduler",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "summary",
+      "x": 1239,
+      "y": 30,
+      "human": "summary",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "online_renew_summary",
+      "x": 1451,
+      "y": 124,
+      "human": "online_renew_summary",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "payment",
+      "x": 1058,
+      "y": 166,
+      "human": "payment",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "dashboard_renewal_pending",
+      "x": 1872,
+      "y": 259,
+      "human": "dashboard_renewal_pending",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "dashboard_preenrollment_complete",
+      "x": 1855,
+      "y": 70,
+      "human": "dashboard_preenrollment_complete",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "dashboard_renew_appointment",
+      "x": 1652,
+      "y": 404,
+      "human": "dashboard_renew_appointment",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "renewal",
+      "x": 99,
+      "y": 65,
+      "human": "renewal",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "test1",
+      "x": 540,
+      "y": 512,
+      "human": "test1",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "citizenship_doc",
+      "x": 648,
+      "y": 176,
+      "human": "citizenship_doc",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "test_no",
+      "x": 667,
+      "y": 374,
+      "human": "test_no",
+      "color": "#ddeda1",
+      "type": "diamond"
+    },
+    {
+      "letter": "test_yes",
+      "x": 823,
+      "y": 487,
+      "human": "test_yes",
+      "color": "#a6ec98",
+      "type": "diamond"
+    },
+    {
+      "letter": "test2",
+      "x": 541,
+      "y": 339,
+      "human": "test2",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "test3",
+      "x": 870,
+      "y": 361,
+      "human": "test3",
+      "color": "#ffffff",
+      "type": "box"
+    }
+  ],
+  "connections": [
+    {
+      "from": "signup",
+      "to": "location",
+      "type": "normal"
+    },
+    {
+      "from": "location",
+      "to": "legal_names",
+      "type": "normal"
+    },
+    {
+      "from": "legal_names",
+      "to": "renewal",
+      "type": "normal"
+    },
+    {
+      "from": "renewal",
+      "to": "birth_and_citizenship",
+      "type": "normal"
+    },
+    {
+      "from": "birth_and_citizenship",
+      "to": "eligibility",
+      "type": "normal"
+    },
+    {
+      "from": "eligibility",
+      "to": "attributes",
+      "type": "normal"
+    },
+    {
+      "from": "attributes",
+      "to": "addresses",
+      "type": "normal"
+    },
+    {
+      "from": "photo_id",
+      "to": "name_match",
+      "type": "normal"
+    },
+    {
+      "from": "name_match",
+      "to": "scheduler",
+      "type": "normal"
+    },
+    {
+      "from": "scheduler",
+      "to": "payment",
+      "type": "normal"
+    },
+    {
+      "from": "payment",
+      "to": "summary",
+      "type": "normal"
+    },
+    {
+      "from": "summary",
+      "to": "online_renew_summary",
+      "type": "normal"
+    },
+    {
+      "from": "online_renew_summary",
+      "to": "dashboard_renew_appointment",
+      "type": "normal"
+    },
+    {
+      "from": "dashboard_renew_appointment",
+      "to": "dashboard_renewal_pending",
+      "type": "normal"
+    },
+    {
+      "from": "dashboard_renewal_pending",
+      "to": "dashboard_preenrollment_complete",
+      "type": "normal"
+    },
+    {
+      "from": "test1",
+      "to": "test_no",
+      "type": "no"
+    },
+    {
+      "from": "test1",
+      "to": "test_yes",
+      "type": "yes"
+    },
+    {
+      "from": "addresses",
+      "to": "test1",
+      "type": "normal"
+    },
+    {
+      "from": "test_no",
+      "to": "test2",
+      "type": "normal"
+    },
+    {
+      "from": "test_yes",
+      "to": "test3",
+      "type": "normal"
+    },
+    {
+      "from": "test2",
+      "to": "citizenship_doc",
+      "type": "normal"
+    },
+    {
+      "from": "test3",
+      "to": "citizenship_doc",
+      "type": "normal"
+    },
+    {
+      "from": "citizenship_doc",
+      "to": "photo_id",
+      "type": "normal"
+    }
+  ]
+}
         initialData.nodes.forEach((node) => {
           new Shape(
             node.letter,
