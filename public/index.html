@@ -8,7 +8,22 @@
       html {
         margin: 0;
         padding: 0;
-        overflow: hidden;
+      }
+      /* Flexbox container to hold form and right panel side by side */
+      #main-container {
+        display: flex;
+        flex-direction: row;
+      }
+      #form-container {
+        width: 50%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      #right-panel {
+        background-color: lightblue;
+        width: 50%;
+        padding: 20px;
+        box-sizing: border-box;
       }
       canvas {
         display: block;
@@ -16,452 +31,70 @@
         width: 100vw;
         height: 600px;
       }
-      #form-container {
-        padding: 10px;
-      }
-      label {
-        margin-right: 10px;
-      }
-      textarea {
-        width: 100%;
-        height: 100px;
-      }
-      .selected-node {
-        border: 2px solid red;
-      }
     </style>
   </head>
   <body>
     <canvas id="flowchartCanvas"></canvas>
 
-    <div id="form-container">
-      <h3>Add Node</h3>
-      <form id="nodeForm">
-        <label for="nodeKey">Key:</label>
-        <input type="text" id="nodeKey" required />
-        <label for="nodeHuman">Label:</label>
-        <input type="text" id="nodeHuman" required />
-        <label for="nodeColor">Color:</label>
-        <input type="color" id="nodeColor" value="#ffffff" />
-        <label for="nodeType">Type:</label>
-        <select id="nodeType">
-          <option value="box">Box</option>
-          <option value="diamond">Diamond</option>
-        </select>
-        <button type="submit">Add Node</button>
-      </form>
+    <!-- Flexbox wrapper for side-by-side layout -->
+    <div id="main-container">
+      <div id="form-container">
+        <h3>Add Node</h3>
+        <form id="nodeForm">
+          <label for="nodeKey">Key:</label>
+          <input type="text" id="nodeKey" required />
+          <label for="nodeHuman">Label:</label>
+          <input type="text" id="nodeHuman" required />
+          <label for="nodeColor">Color:</label>
+          <input type="color" id="nodeColor" value="#ffffff" />
+          <label for="nodeType">Type:</label>
+          <select id="nodeType">
+            <option value="box">Box</option>
+            <option value="diamond">Diamond</option>
+          </select>
+          <button type="submit">Add Node</button>
+        </form>
 
-      <h3>Add Connection</h3>
-      <form id="connectionForm">
-        <label for="fromNode">From:</label>
-        <input type="text" id="fromNode" required />
-        <label for="toNode">To:</label>
-        <input type="text" id="toNode" required />
-        <label for="lineType">Line Type:</label>
-        <select id="lineType">
-          <option value="normal">Normal (Black)</option>
-          <option value="yes">Yes (Green)</option>
-          <option value="no">No (Red)</option>
-        </select>
-        <button type="submit">Add Connection</button>
-      </form>
+        <h3>Add Connection (use the 'key' of 2 different nodes)</h3>
+        <form id="connectionForm">
+          <label for="fromNode">From:</label>
+          <input type="text" id="fromNode" required />
+          <label for="toNode">To:</label>
+          <input type="text" id="toNode" required />
+          <label for="lineType">Line Type:</label>
+          <select id="lineType">
+            <option value="normal">Normal (Black)</option>
+            <option value="yes">Yes (Green)</option>
+            <option value="no">No (Red)</option>
+          </select>
+          <button type="submit">Add Connection</button>
+        </form>
 
-      <h3>Selected Node Details</h3>
-      <div id="selectedNodeDetails">
-        <p><strong>Key:</strong> <span id="nodeKeyDetail">None</span></p>
-        <p><strong>Label:</strong> <span id="nodeLabelDetail">None</span></p>
-        <p><strong>Color:</strong> <span id="nodeColorDetail">None</span></p>
-        <p><strong>Type:</strong> <span id="nodeTypeDetail">None</span></p>
-        <p>
-          <strong>Position:</strong>
-          <span id="nodePositionDetail">(N/A, N/A)</span>
-        </p>
-        <button id="deleteNode" disabled>🗑️ Delete Selected Node</button>
+        <h3>Selected Node Details</h3>
+        <div id="selectedNodeDetails">
+          <p><strong>Key:</strong> <span id="nodeKeyDetail">None</span></p>
+          <p><strong>Label:</strong> <span id="nodeLabelDetail">None</span></p>
+          <p><strong>Color:</strong> <span id="nodeColorDetail">None</span></p>
+          <p><strong>Type:</strong> <span id="nodeTypeDetail">None</span></p>
+          <p>
+            <strong>Position:</strong>
+            <span id="nodePositionDetail">(N/A, N/A)</span>
+          </p>
+          <button id="deleteNode" disabled>Delete Selected Node</button>
+        </div>
+
+        <button id="saveGraph">Marshal graph to text area: then cut/paste to initialData.json</button>
+        <button onclick="scaleNodesToFit()">Rescale to fit your screen!</button>
+        <br />
+        <textarea id="graphJson" rows="50" cols="80"></textarea>
       </div>
 
-      <button id="saveGraph">💾 Save Graph (to Textarea)</button>
-      <br /><br />
-      <h3>Load Graph</h3>
-      <textarea id="graphJson" placeholder="Paste JSON here..."></textarea>
-      <button id="loadGraph">🔄 Load Graph</button>
+      <!-- ✅ New Right-Side Div -->
+      <div id="right-panel">
+        <h3>PINIA!</h3>
+
+      </div>
     </div>
-
-    <script>
-      const YES = "yes";
-      const NO = "no";
-      const NORMAL = "normal";
-
-      const canvas = document.getElementById("flowchartCanvas");
-      canvas.width = window.innerWidth;
-      canvas.height = 600;
-      const ctx = canvas.getContext("2d");
-
-      const boxWidth = 80;
-      const boxHeight = 50;
-      const diamondWidth = 80;
-      const diamondHeight = 80;
-
-      let selectedNode = null;
-
-      function drawBox(x, y, width, height, text, color, selected, human) {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.rect(x, y, width, height);
-        ctx.fill();
-        ctx.strokeStyle = selected ? "red" : "black";
-        ctx.lineWidth = selected ? 3 : 1;
-        ctx.stroke();
-
-        ctx.fillStyle = "black";
-        ctx.font = "17px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        const t = text + " : " + human;
-        ctx.fillText(text, x + width / 2, y + height / 2);
-      }
-
-      function drawDiamond(x, y, width, height, text, color, selected, human) {
-        const centerX = x + width / 2;
-        const centerY = y + height / 2;
-
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(centerX, y);
-        ctx.lineTo(x + width, centerY);
-        ctx.lineTo(centerX, y + height);
-        ctx.lineTo(x, centerY);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = selected ? "red" : "black";
-        ctx.lineWidth = selected ? 3 : 1;
-        ctx.stroke();
-
-        ctx.fillStyle = "black";
-        ctx.font = "17px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        const t = text + " : " + human;
-        ctx.fillText(text, centerX, centerY);
-      }
-
-      function drawArrow_quadraticBezier(
-        fromX,
-        fromY,
-        toX,
-        toY,
-        color = "black"
-      ) {
-        const headLength = 10; // Arrowhead size
-
-        // Randomized control point for curve
-        const controlX = (fromX + toX) / 2 + (Math.random() * 100 - 50);
-        const controlY = (fromY + toY) / 2 + (Math.random() * 100 - 50);
-
-        // Draw the quadratic curve
-        ctx.strokeStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(fromX, fromY);
-        ctx.quadraticCurveTo(controlX, controlY, toX, toY);
-        ctx.stroke();
-
-        // t defines how far along the curve the arrow will be placed
-        const t = 0.5;
-
-        // Calculate point on curve at t
-        const curveX =
-          Math.pow(1 - t, 2) * fromX +
-          2 * (1 - t) * t * controlX +
-          Math.pow(t, 2) * toX;
-        const curveY =
-          Math.pow(1 - t, 2) * fromY +
-          2 * (1 - t) * t * controlY +
-          Math.pow(t, 2) * toY;
-
-        // Calculate the derivative for angle (direction) at t
-        const dx = 2 * (1 - t) * (controlX - fromX) + 2 * t * (toX - controlX);
-        const dy = 2 * (1 - t) * (controlY - fromY) + 2 * t * (toY - controlY);
-        const angle = Math.atan2(dy, dx);
-
-        // Draw the arrowhead at the correct angle
-        ctx.beginPath();
-        ctx.moveTo(curveX, curveY);
-        ctx.lineTo(
-          curveX - headLength * Math.cos(angle - Math.PI / 6),
-          curveY - headLength * Math.sin(angle - Math.PI / 6)
-        );
-        ctx.lineTo(
-          curveX - headLength * Math.cos(angle + Math.PI / 6),
-          curveY - headLength * Math.sin(angle + Math.PI / 6)
-        );
-        ctx.lineTo(curveX, curveY);
-        ctx.closePath();
-        ctx.fillStyle = color;
-        ctx.fill();
-        ctx.strokeStyle = "black"; // Reset for future strokes
-      }
-      class Shape {
-        constructor(letter, x, y, human, color, type = "box") {
-          this.letter = letter;
-          this.x = x || Math.floor(Math.random() * (800 - 100)) + 100;
-          this.y = y || Math.floor(Math.random() * (400 - 100)) + 100;
-          this.human = human;
-          this.color = color;
-          this.type = type;
-          graph.set(letter, this);
-        }
-      }
-
-      const graph = new Map();
-      let connections = [];
-
-      function addConnection(fromNode, toNode, type = NORMAL) {
-        connections.push({ from: fromNode, to: toNode, type });
-        drawGraph(graph);
-      }
-
-      function deleteNode(nodeKey) {
-        graph.delete(nodeKey);
-        connections = connections.filter(
-          (conn) => conn.from !== nodeKey && conn.to !== nodeKey
-        );
-        selectedNode = null;
-        updateNodeDetails(null);
-        drawGraph(graph);
-      }
-
-      function updateNodeDetails(node) {
-        document.getElementById("nodeKeyDetail").textContent = node
-          ? node.letter
-          : "None";
-        document.getElementById("nodeLabelDetail").textContent = node
-          ? node.human
-          : "None";
-        document.getElementById("nodeColorDetail").textContent = node
-          ? node.color
-          : "None";
-        document.getElementById("nodeTypeDetail").textContent = node
-          ? node.type
-          : "None";
-        document.getElementById("nodePositionDetail").textContent = node
-          ? `(${node.x}, ${node.y})`
-          : "(N/A, N/A)";
-        document.getElementById("deleteNode").disabled = !node;
-      }
-
-      function drawGraph(xy) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        connections.forEach((conn) => {
-          const from = xy.get(conn.from);
-          const to = xy.get(conn.to);
-
-          if (from && to) {
-            let color = "black";
-            if (conn.type === YES) color = "green";
-            else if (conn.type === NO) color = "red";
-
-            const fromCenterX =
-              from.x +
-              (from.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
-            const fromCenterY =
-              from.y +
-              (from.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
-            const toCenterX =
-              to.x + (to.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
-            const toCenterY =
-              to.y +
-              (to.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
-
-            drawArrow_quadraticBezier(
-              fromCenterX,
-              fromCenterY,
-              toCenterX,
-              toCenterY,
-              color
-            );
-          }
-        });
-
-        xy.forEach((shape) => {
-          const isSelected =
-            selectedNode && shape.letter === selectedNode.letter;
-          if (shape.type === "diamond") {
-            drawDiamond(
-              shape.x,
-              shape.y,
-              diamondWidth,
-              diamondHeight,
-              shape.letter,
-              shape.color,
-              isSelected,
-              shape.human
-            );
-          } else {
-            drawBox(
-              shape.x,
-              shape.y,
-              boxWidth,
-              boxHeight,
-              shape.letter,
-              shape.color,
-              isSelected,
-              shape.human
-            );
-          }
-        });
-      }
-
-      let draggingShape = null;
-      let offsetX, offsetY;
-
-      canvas.addEventListener("mousedown", (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        let foundNode = false;
-        graph.forEach((shape) => {
-          const width = shape.type === "diamond" ? diamondWidth : boxWidth;
-          const height = shape.type === "diamond" ? diamondHeight : boxHeight;
-
-          if (
-            mouseX >= shape.x &&
-            mouseX <= shape.x + width &&
-            mouseY >= shape.y &&
-            mouseY <= shape.y + height
-          ) {
-            draggingShape = shape;
-            offsetX = mouseX - shape.x;
-            offsetY = mouseY - shape.y;
-            selectedNode = shape;
-            foundNode = true;
-            updateNodeDetails(shape);
-          }
-        });
-
-        if (!foundNode) {
-          selectedNode = null;
-          updateNodeDetails(null);
-        }
-        drawGraph(graph);
-      });
-
-      canvas.addEventListener("mousemove", (e) => {
-        if (draggingShape) {
-          const rect = canvas.getBoundingClientRect();
-          draggingShape.x = e.clientX - rect.left - offsetX;
-          draggingShape.y = e.clientY - rect.top - offsetY;
-          updateNodeDetails(draggingShape);
-          drawGraph(graph);
-        }
-      });
-
-      canvas.addEventListener("mouseup", () => (draggingShape = null));
-      canvas.addEventListener("mouseleave", () => (draggingShape = null));
-
-      document.getElementById("deleteNode").addEventListener("click", () => {
-        if (selectedNode) {
-          deleteNode(selectedNode.letter);
-        }
-      });
-
-      document.getElementById("nodeForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const key = document.getElementById("nodeKey").value;
-        const label = document.getElementById("nodeHuman").value;
-        const color = document.getElementById("nodeColor").value;
-        const type = document.getElementById("nodeType").value;
-        new Shape(key, null, null, label, color, type);
-        drawGraph(graph);
-        e.target.reset();
-      });
-
-      document
-        .getElementById("connectionForm")
-        .addEventListener("submit", (e) => {
-          e.preventDefault();
-          const fromNode = document.getElementById("fromNode").value;
-          const toNode = document.getElementById("toNode").value;
-          const lineType = document.getElementById("lineType").value;
-          addConnection(fromNode, toNode, lineType);
-          e.target.reset();
-        });
-
-      document.getElementById("saveGraph").addEventListener("click", () => {
-        const nodes = [];
-        graph.forEach((shape) => {
-          nodes.push({
-            letter: shape.letter,
-            x: shape.x,
-            y: shape.y,
-            human: shape.human,
-            color: shape.color,
-            type: shape.type,
-          });
-        });
-
-        const graphData = { nodes, connections };
-        document.getElementById("graphJson").value = JSON.stringify(
-          graphData,
-          null,
-          2
-        );
-      });
-
-      document.getElementById("loadGraph").addEventListener("click", () => {
-        const jsonText = document.getElementById("graphJson").value;
-        try {
-          const { nodes, connections: loadedConnections } =
-            JSON.parse(jsonText);
-          graph.clear();
-          connections = [];
-
-          nodes.forEach((node) => {
-            new Shape(
-              node.letter,
-              node.x,
-              node.y,
-              node.human,
-              node.color,
-              node.type
-            );
-          });
-
-          loadedConnections.forEach((conn) =>
-            addConnection(conn.from, conn.to, conn.type)
-          );
-          drawGraph(graph);
-        } catch (error) {
-          alert("Invalid JSON. Please check the structure.");
-        }
-      });
-
-      async function main() {
-        try {
-          const response = await fetch("initialData.json");
-          const initialData = await response.json();
-
-          initialData.nodes.forEach((node) => {
-            new Shape(
-              node.letter,
-              node.x,
-              node.y,
-              node.human,
-              node.color,
-              node.type
-            );
-          });
-
-          initialData.connections.forEach((conn) =>
-            addConnection(conn.from, conn.to, conn.type)
-          );
-
-          drawGraph(graph);
-        } catch (error) {
-          console.error("Failed to load initial data:", error);
-        }
-      }
-      main();
-    </script>
+    <script src="graph.js" ></script>
   </body>
 </html>

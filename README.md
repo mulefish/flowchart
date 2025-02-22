@@ -4,8 +4,7 @@ https://github.com/mulefish/flowchart
 # Create a Graph! 
 http://localhost:3000/  
 
-Make and save the JSON from the textarea
-
+Make and save the JSON from the textarea to the 'initialData.json'
 # See a graph! 
 http://localhost:3000/telos 
 
