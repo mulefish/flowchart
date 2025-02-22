@@ -137,14 +137,6 @@
         "type": "box"
       },
       {
-        "letter": "test1",
-        "x": 540,
-        "y": 512,
-        "human": "test1",
-        "color": "#ffffff",
-        "type": "box"
-      },
-      {
         "letter": "citizenship_doc",
         "x": 648,
         "y": 176,
@@ -153,36 +145,12 @@
         "type": "box"
       },
       {
-        "letter": "test_no",
-        "x": 667,
-        "y": 374,
-        "human": "test_no",
-        "color": "#ddeda1",
+        "letter": "TEST_YES_NO_1",
+        "x": 554,
+        "y": 394,
+        "human": "TEST_YES_NO_1",
+        "color": "#deecac",
         "type": "diamond"
-      },
-      {
-        "letter": "test_yes",
-        "x": 823,
-        "y": 487,
-        "human": "test_yes",
-        "color": "#a6ec98",
-        "type": "diamond"
-      },
-      {
-        "letter": "test2",
-        "x": 541,
-        "y": 339,
-        "human": "test2",
-        "color": "#ffffff",
-        "type": "box"
-      },
-      {
-        "letter": "test3",
-        "x": 870,
-        "y": 361,
-        "human": "test3",
-        "color": "#ffffff",
-        "type": "box"
       }
     ],
     "connections": [
@@ -262,44 +230,24 @@
         "type": "normal"
       },
       {
-        "from": "test1",
-        "to": "test_no",
-        "type": "no"
-      },
-      {
-        "from": "test1",
-        "to": "test_yes",
-        "type": "yes"
-      },
-      {
-        "from": "addresses",
-        "to": "test1",
-        "type": "normal"
-      },
-      {
-        "from": "test_no",
-        "to": "test2",
-        "type": "normal"
-      },
-      {
-        "from": "test_yes",
-        "to": "test3",
-        "type": "normal"
-      },
-      {
-        "from": "test2",
-        "to": "citizenship_doc",
-        "type": "normal"
-      },
-      {
-        "from": "test3",
-        "to": "citizenship_doc",
-        "type": "normal"
-      },
-      {
         "from": "citizenship_doc",
         "to": "photo_id",
         "type": "normal"
+      },
+      {
+        "from": "attributes",
+        "to": "TEST_YES_NO_1",
+        "type": "normal"
+      },
+      {
+        "from": "TEST_YES_NO_1",
+        "to": "citizenship_doc",
+        "type": "yes"
+      },
+      {
+        "from": "TEST_YES_NO_1",
+        "to": "name_match",
+        "type": "no"
       }
     ]
   }
