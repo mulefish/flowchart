@@ -39,7 +39,7 @@
     <!-- Flexbox wrapper for side-by-side layout -->
     <div id="main-container">
       <div id="form-container">
-        <h3>Add Node</h3>
+        <h3>Add Nodes! : Drag stuff! Delete them! Make connections!</h3>
         <form id="nodeForm">
           <label for="nodeKey">Key:</label>
           <input type="text" id="nodeKey" required />
@@ -52,7 +52,7 @@
             <option value="box">Box</option>
             <option value="diamond">Diamond</option>
           </select>
-          <button type="submit">Add Node</button>
+          <button type="submit">Add Nodes</button>
         </form>
 
         <h3>Add Connection (use the 'key' of 2 different nodes)</h3>
@@ -69,19 +69,15 @@
           </select>
           <button type="submit">Add Connection</button>
         </form>
-
         <h3>Selected Node Details</h3>
         <div id="selectedNodeDetails">
-          <p><strong>Key:</strong> <span id="nodeKeyDetail">None</span></p>
-          <p><strong>Label:</strong> <span id="nodeLabelDetail">None</span></p>
-          <p><strong>Color:</strong> <span id="nodeColorDetail">None</span></p>
-          <p><strong>Type:</strong> <span id="nodeTypeDetail">None</span></p>
-          <p>
-            <strong>Position:</strong>
-            <span id="nodePositionDetail">(N/A, N/A)</span>
-          </p>
+          <strong>Key:</strong> <span id="nodeKeyDetail">None</span><br/>
+          <strong>Label:</strong> <span id="nodeLabelDetail">None</span><br/>
+          <strong>Color:</strong> <span id="nodeColorDetail">None</span><br/>
+          <strong>Type:</strong> <span id="nodeTypeDetail">None</span><br/>
           <button id="deleteNode" disabled>Delete Selected Node</button>
         </div>
+        <br/>
 
         <button id="saveGraph">Marshal graph to text area: then cut/paste to initialData.json</button>
         <button onclick="scaleNodesToFit()">Rescale to fit your screen!</button>
