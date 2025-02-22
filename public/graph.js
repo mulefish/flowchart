@@ -486,28 +486,34 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   const circleX = (fromShape.x + toShape.x) / 2;
   const circleY = (fromShape.y + toShape.y) / 2;
 
-  // Use a default color for the circle (you could extend the form to let the user choose)
-  const defaultColor = "#ffcccc";
+  // Determine the circle's background color based on the selected choice.
+  // "yes" => green, "no" => red, "none" => white.
+  let circleColor = "#ffffff"; // white by default
+  if (circleChoice.toLowerCase() === "yes") {
+    circleColor = "#00ff00"; // green
+  } else if (circleChoice.toLowerCase() === "no") {
+    circleColor = "#ff0000"; // red
+  }
 
   // Create the circle node; using circleKey as both its key and label.
-  new Shape(circleKey, circleX, circleY, circleKey, defaultColor, "circle");
+  new Shape(circleKey, circleX, circleY, circleKey, circleColor, "circle");
 
-  // Retrieve the newly created circle shape from the graph and attach the choice property
+  // Retrieve the newly created circle shape from the graph and attach the choice property.
   const circleShape = graph.get(circleKey);
   circleShape.choice = circleChoice;
 
-  // Determine connection type based on the circle's choice:
+  // Determine connection color based on the circle's choice:
   // "yes" => green, "no" => red, "none" => black.
   let connType;
-  if (circleChoice === "yes") {
-    connType = YES; // previously defined constant "yes"
-  } else if (circleChoice === "no") {
-    connType = NO; // previously defined constant "no"
+  if (circleChoice.toLowerCase() === "yes") {
+    connType = YES;
+  } else if (circleChoice.toLowerCase() === "no") {
+    connType = NO;
   } else {
-    connType = NORMAL; // "none" results in NORMAL which renders as black
+    connType = NORMAL;
   }
 
-  // Add new connections so the circle appears in between the nodes using the appropriate color.
+  // Add new connections so the circle appears in between the nodes using the appropriate line color.
   addConnection(fromKey, circleKey, connType);
   addConnection(circleKey, toKey, connType);
 
@@ -515,77 +521,64 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   e.target.reset();
 });
 
-/**
- * Convert graph-maker data into a structure usable as a Pinia store state.
- *
- * Assumptions:
- * - Graph data is an object with `nodes` and `connections` arrays.
- * - Each node has: letter, type ("box", "diamond", or "circle"), and (optionally) choice.
- * - Direct connections between boxes yield a dependency with no preconditions.
- * - A connection chain box -> circle -> box yields a dependency with a precondition:
- *      { category: "diamonds", key: <circle letter>, expected: <mapped value> }
- */
 function generatePiniaStoreData(graphData) {
-  // Initialize store state with empty navigation and default values.
+  // Initialize store state with default values.
   const store = {
     lastPage: null,
     currentPath: null,
     diamonds: {},
     squares: {},
-    dependencies: {},
+    dependencies: {}
   };
 
-  // Build an index of nodes by their letter for easy lookup.
+  // Build an index of nodes by their letter.
   const nodeMap = new Map();
-  graphData.nodes.forEach((node) => {
+  graphData.nodes.forEach(node => {
     nodeMap.set(node.letter, node);
-    // For nodes that will populate diamonds and squares:
+    // Populate diamonds and squares with default status "NILL"
     if (node.type === "diamond") {
-      // Use lower-case keys (or adjust as needed)
       store.diamonds[node.letter.toLowerCase()] = "NILL";
     } else if (node.type === "box") {
       store.squares[node.letter.toLowerCase()] = "NILL";
     }
   });
 
-  // Helper: maps a circle's choice to the expected value used in the store.
+  // Helper: map a circle's dropdown choice to an expected value.
+  // If the choice is "yes", "no", or "none", return it in uppercase;
+  // otherwise, return "NILL".
   function mapCircleChoice(choice) {
-    // Assuming the form now uses "yes", "no", "none"
-    if (!choice) return "NILL";
-    const lower = choice.toLowerCase();
-    if (lower === "yes") return "YES";
-    if (lower === "no") return "NO";
+    if (choice) {
+      const lower = choice.toLowerCase();
+      if (lower === "yes") return "YES";
+      if (lower === "no") return "NO";
+      if (lower === "none") return "NONE";
+    }
     return "NILL";
   }
 
-  // We will process the connections to build the dependencies.
-  // We'll look for two types of connections:
-  // 1. Direct box -> box connection: dependency with no preconditions.
-  // 2. A chain: box -> circle -> box: dependency with a precondition.
-  // (If both exist between the same boxes, you could decide whether to merge them.)
-  graphData.connections.forEach((conn) => {
+  // Process connections to build dependencies.
+  graphData.connections.forEach(conn => {
     const fromNode = nodeMap.get(conn.from);
     const toNode = nodeMap.get(conn.to);
     if (!fromNode || !toNode) return;
 
-    // Process only if starting from a square (box).
+    // Only process dependencies starting from a box node.
     if (fromNode.type === "box") {
       if (toNode.type === "box") {
-        // Direct connection: parent = fromNode, child = toNode, no preconditions.
+        // Direct box→box connection: expected is "NILL"
         const parentKey = fromNode.letter.toLowerCase();
         const childKey = toNode.letter.toLowerCase();
         if (!store.dependencies[parentKey]) {
           store.dependencies[parentKey] = { children: [] };
         }
-        // Push dependency if not already present.
         store.dependencies[parentKey].children.push({
           url: childKey,
-          preconditions: [],
+          expected: "NILL",
+          preconditions: []
         });
       } else if (toNode.type === "circle") {
-        // For a circle, look for a subsequent connection from the circle to a box.
-        // This yields a chain: box (parent) -> circle -> box (child)
-        graphData.connections.forEach((conn2) => {
+        // For a circle node, look for its subsequent connection to a box.
+        graphData.connections.forEach(conn2 => {
           if (conn2.from === toNode.letter) {
             const childNode = nodeMap.get(conn2.to);
             if (childNode && childNode.type === "box") {
@@ -594,15 +587,17 @@ function generatePiniaStoreData(graphData) {
               if (!store.dependencies[parentKey]) {
                 store.dependencies[parentKey] = { children: [] };
               }
-              // Build the precondition from the circle node.
+              const expectedVal = mapCircleChoice(toNode.choice);
+              // Create a precondition based on the circle's value.
               const precondition = {
                 category: "diamonds",
                 key: toNode.letter.toLowerCase(),
-                expected: mapCircleChoice(toNode.choice),
+                expected: expectedVal
               };
               store.dependencies[parentKey].children.push({
                 url: childKey,
-                preconditions: [precondition],
+                expected: expectedVal,
+                preconditions: [precondition]
               });
             }
           }
@@ -616,56 +611,12 @@ function generatePiniaStoreData(graphData) {
 
 function makePiniaStore() {
   const piniaStoreData = generatePiniaStoreData(everything);
-  // console.log("Pinia Store Data:", JSON.stringify(piniaStoreData, null, 2));
   document.getElementById("graphJson").value = JSON.stringify(
     piniaStoreData,
     null,
     2
   );
 }
-
-/*
-The output (for the example above) will be an object like:
-
-{
-  "lastPage": null,
-  "currentPath": null,
-  "diamonds": {
-    "stalookup": "NILL"
-  },
-  "squares": {
-    "home": "NILL",
-    "signup": "NILL",
-    "mfa": "NILL"
-  },
-  "dependencies": {
-    "home": {
-      "children": [
-        {
-          "url": "signup",
-          "preconditions": []
-        }
-      ]
-    },
-    "signup": {
-      "children": [
-        {
-          "url": "mfa",
-          "preconditions": [
-            {
-              "category": "diamonds",
-              "key": "preenrollmentcomplete",
-              "expected": "YES"
-            }
-          ]
-        }
-      ]
-    }
-  }
-}
-
-You can then feed this generated data into your Pinia store as initial state.
-*/
 
 async function main() {
   try {

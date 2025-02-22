@@ -82,6 +82,13 @@
           <label for="toNode2">To (Node Key):</label>
           <input type="text" id="toNode2" required />
 
+          <label for="circleChoice">Choice:</label>
+          <select id="circleChoice">
+            <option value="none">NONE</option>
+            <option value="yes">YES</option>
+            <option value="no">NO</option>
+          </select>
+
           <button type="submit">Insert CIRCLE</button>
         </form>
 
@@ -91,7 +98,8 @@
           <strong>Label:</strong> <span id="nodeLabelDetail">None</span><br />
           <strong>Color:</strong> <span id="nodeColorDetail">None</span><br />
           <strong>Type:</strong> <span id="nodeTypeDetail">None</span><br />
-          <strong>Position:</strong> <span id="nodePositionDetail">(N/A, N/A)</span><br />
+          <strong>Position:</strong>
+          <span id="nodePositionDetail">(N/A, N/A)</span><br />
           <button id="deleteNode" disabled>Delete Selected Node</button>
         </div>
         <br />
@@ -100,13 +108,14 @@
           Marshal graph to text area: then cut/paste to initialData.json
         </button>
         <button onclick="scaleNodesToFit()">Rescale to fit your screen!</button>
-        <br />
-        <textarea id="graphJson" rows="50" cols="80"></textarea>
+        <button onclick="makePiniaStore()">PINIA</button>
+
       </div>
 
       <!-- ✅ New Right-Side Div -->
       <div id="right-panel">
-        <h3>PINIA!</h3>
+      <textarea id="graphJson" rows="50" cols="120"></textarea>
+      
       </div>
     </div>
     <script src="graph.js"></script>
