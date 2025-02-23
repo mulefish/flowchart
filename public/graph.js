@@ -337,7 +337,7 @@ document.getElementById("connectionForm").addEventListener("submit", (e) => {
   e.target.reset();
 });
 
-document.getElementById("saveGraph").addEventListener("click", () => {
+function saveGraph() {
   const nodes = [];
   graph.forEach((shape) => {
     nodes.push({
@@ -356,7 +356,8 @@ document.getElementById("saveGraph").addEventListener("click", () => {
     null,
     2
   );
-});
+}
+
 
 function scaleNodesToFit() {
   // 
@@ -442,18 +443,10 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   drawGraph(graph);
   e.target.reset();
 });
-function makePiniaStore() {
-  const piniaStoreData = generatePiniaStoreData(everything);
-  document.getElementById("graphJson").value = JSON.stringify(
-    piniaStoreData,
-    null,
-    2
-  );
-}
 
-async function main() {
+async function main(nameOfTheJsonFile) {
   try {
-    const response = await fetch("initialData.json");
+    const response = await fetch(nameOfTheJsonFile);
     everything = await response.json();
 
     everything.nodes.forEach((node) => {
@@ -469,4 +462,3 @@ async function main() {
     console.error("Failed to load initial data:", error);
   }
 }
-main();

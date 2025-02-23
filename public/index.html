@@ -104,8 +104,8 @@
         </div>
         <br />
 
-        <button id="saveGraph">
-          STEP4: Emit graph, as json, to textarea
+        <button onClick="saveGraph()">
+          STEP 4: Emit graph, as json, to textarea
         </button>
 
           <br/> 
@@ -120,5 +120,8 @@
       </div>
     </div>
     <script src="graph.js"></script>
+    <script>
+      main("initialData.json")
+    </script>
   </body>
 </html>
