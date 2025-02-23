@@ -114,9 +114,9 @@
 
       </div>
 
-      <!-- ✅ New Right-Side Div -->
+
       <div id="right-panel">
-      <textarea id="graphJson" rows="50" cols="120"></textarea>
+      <textarea id="graphJson" rows="50" cols="120" spellcheck="false"></textarea>
       
       </div>
     </div>
@@ -125,8 +125,8 @@
       
 function generatePiniaStoreData() {
 
-
   const nodes = [];
+  console.log( graph )
   graph.forEach((shape) => {
     nodes.push({
       letter: shape.letter,
@@ -136,89 +136,27 @@ function generatePiniaStoreData() {
       color: shape.color,
       type: shape.type,
     });
-  }); 
+  });
+
+  connections.forEach((conn)=> { 
+    let aryOfOne = nodes.filter(o=>o.letter === conn.from )
+    // console.log( conn.from + "  " + aryOfOne[0].type)
+    if ( aryOfOne.length === 1 ) {
+      conn.node_or_something = aryOfOne[0].type 
+    } else {
+      alert("SOMETHING WIERD IS AFOOT!")
+    }
+  })
+
+
   const graphData = { nodes, connections };
-  const store = {
-    lastPage: null,
-    currentPath: null,
-    diamonds: {},
-    squares: {},
-    dependencies: {}
-  };
+  document.getElementById("graphJson").value = JSON.stringify(
+    graphData,
+    null,
+    2
+  );
+  
 
-  const nodeMap = new Map();
-  graphData.nodes.forEach(node => {
-    nodeMap.set(node.letter, node);
-    if (node.type === "diamond") {
-      store.diamonds[node.letter.toLowerCase()] = "NILL";
-    } else if (node.type === "box") {
-      store.squares[node.letter.toLowerCase()] = "NILL";
-    }
-  });
-
-  // Helper: map a circle's dropdown choice to an expected value.
-  // If the choice is "yes", "no", or "none", return it in uppercase;
-  // otherwise, return "NILL".
-  function mapCircleChoice(choice) {
-    if (choice) {
-      const lower = choice.toLowerCase();
-      if (lower === "yes") return "YES";
-      if (lower === "no") return "NO";
-      if (lower === "none") return "NONE";
-    }
-    return "NILL";
-  }
-
-  // Process connections to build dependencies.
-  graphData.connections.forEach(conn => {
-    const fromNode = nodeMap.get(conn.from);
-    const toNode = nodeMap.get(conn.to);
-    if (!fromNode || !toNode) return;
-
-    // Only process dependencies starting from a box node.
-    if (fromNode.type === "box") {
-      if (toNode.type === "box") {
-        // Direct box→box connection: expected is "NILL"
-        const parentKey = fromNode.letter.toLowerCase();
-        const childKey = toNode.letter.toLowerCase();
-        if (!store.dependencies[parentKey]) {
-          store.dependencies[parentKey] = { children: [] };
-        }
-        store.dependencies[parentKey].children.push({
-          url: childKey,
-          expected: "NILL",
-          preconditions: []
-        });
-      } else if (toNode.type === "circle") {
-        // For a circle node, look for its subsequent connection to a box.
-        graphData.connections.forEach(conn2 => {
-          if (conn2.from === toNode.letter) {
-            const childNode = nodeMap.get(conn2.to);
-            if (childNode && childNode.type === "box") {
-              const parentKey = fromNode.letter.toLowerCase();
-              const childKey = childNode.letter.toLowerCase();
-              if (!store.dependencies[parentKey]) {
-                store.dependencies[parentKey] = { children: [] };
-              }
-              const expectedVal = mapCircleChoice(toNode.choice);
-              // Create a precondition based on the circle's value.
-              const precondition = {
-                category: "diamonds",
-                key: toNode.letter.toLowerCase(),
-                expected: expectedVal
-              };
-              store.dependencies[parentKey].children.push({
-                url: childKey,
-                expected: expectedVal,
-                preconditions: [precondition]
-              });
-            }
-          }
-        });
-      }
-    }
-  });
-  document.getElementById("graphJson").value = JSON.stringify( store, null, 2 )
 }
 
 

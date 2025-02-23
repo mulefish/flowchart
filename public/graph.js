@@ -1,6 +1,6 @@
 const YES = "yes";
 const NO = "no";
-const NORMAL = "normal";
+const NORMAL = "DINO";
 
 const canvas = document.getElementById("flowchartCanvas");
 canvas.width = window.innerWidth;
@@ -155,7 +155,7 @@ function updateNodeDetails(node) {
   document.getElementById("deleteNode").disabled = !node;
 }
 
-const circleDiameter = 70; // Adjust as needed
+const circleDiameter = 70;
 
 function drawCircle(x, y, diameter, text, color, selected, human) {
   ctx.fillStyle = color;
@@ -358,9 +358,8 @@ function saveGraph() {
   );
 }
 
-
 function scaleNodesToFit() {
-  // 
+  //
   if (!everything || !everything.nodes || everything.nodes.length === 0) {
     console.warn("No nodes available to scale.");
     return;
@@ -385,7 +384,6 @@ function scaleNodesToFit() {
   const width = canvas.width;
   const height = canvas.height;
 
-
   everything.nodes.forEach((node) => {
     node.x = ((width - 50) * node.x) / maxX;
     node.y = ((height - 30) * node.y) / maxY;
@@ -403,7 +401,6 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   const circleKey = document.getElementById("circleKey").value;
   const toKey = document.getElementById("toNode2").value;
   const circleChoice = document.getElementById("circleChoice").value; // "yes", "no", or "none"
-
   const fromShape = graph.get(fromKey);
   const toShape = graph.get(toKey);
 
@@ -412,11 +409,11 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
     return;
   }
 
-  // ZAP! orig connection between the two nodes, if it exists - because we are going to shove a circle in the middle 
+  // ZAP! orig connection between the two nodes, if it exists - because we are going to shove a circle in the middle
   connections = connections.filter(
     (conn) => !(conn.from === fromKey && conn.to === toKey)
   );
-   const circleX = (fromShape.x + toShape.x) / 2;
+  const circleX = (fromShape.x + toShape.x) / 2;
   const circleY = (fromShape.y + toShape.y) / 2;
 
   let circleColor = "#ffffff";
@@ -436,7 +433,7 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
     connType = NO;
   } else {
     connType = NORMAL;
-  }  
+  }
   addConnection(fromKey, circleKey, connType);
   addConnection(circleKey, toKey, connType);
 
