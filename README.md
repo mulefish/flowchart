@@ -10,3 +10,5 @@ http://localhost:3000/telos
 
 Take that JSON from the textarea and overwrite the 'const initalData' with that.
 
+# screenshot
+![Screenshot](screenshot.png)
