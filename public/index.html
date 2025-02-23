@@ -9,7 +9,7 @@
         margin: 0;
         padding: 0;
       }
-      /* Flexbox container to hold form and right panel side by side */
+
       #main-container {
         display: flex;
         flex-direction: row;
@@ -39,7 +39,7 @@
     <!-- Flexbox wrapper for side-by-side layout -->
     <div id="main-container">
       <div id="form-container">
-        <h3>Add Nodes! : Drag stuff! Delete them! Make connections!</h3>
+        <h3>STEP 1: Add a node. Give it a key and a human facing string. Drag it somewhere</h3>
         <form id="nodeForm">
           <label for="nodeKey">Key:</label>
           <input type="text" id="nodeKey" required />
@@ -56,7 +56,7 @@
           <button type="submit">Add Node</button>
         </form>
 
-        <h3>Add Connection (use the 'key' of 2 different nodes)</h3>
+        <h3>STEP2: Add a Connection to 2 nodes by their keys</h3>
         <form id="connectionForm">
           <label for="fromNode">From:</label>
           <input type="text" id="fromNode" required />
@@ -71,7 +71,7 @@
           <button type="submit">Add Connection</button>
         </form>
 
-        <h3>Add CIRCLE - this will be placed on a line IN BETWEEN two nodes</h3>
+        <h3>STEP3: Add a circle to a Connection, by their keys, and give the circle a key/value ( dropdown for color )</h3>
         <form id="circleForm">
           <label for="fromNode2">From (Node Key):</label>
           <input type="text" id="fromNode2" required />
@@ -105,14 +105,15 @@
         <br />
 
         <button id="saveGraph">
-          Marshal graph to text area: then cut/paste to initialData.json
+          STEP4: Emit graph, as json, to textarea
         </button>
-        <button onclick="scaleNodesToFit()">Rescale to fit your screen!</button>
-        <button onclick="makePiniaStore()">PINIA</button>
 
+          <br/> 
+          <hr/>
+          extras that I might delete
+        <button onclick="scaleNodesToFit()">Rescale to fit your screen!</button>
       </div>
 
-      <!-- ✅ New Right-Side Div -->
       <div id="right-panel">
       <textarea id="graphJson" rows="50" cols="120"></textarea>
       

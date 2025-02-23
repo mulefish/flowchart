@@ -39,7 +39,7 @@
     <!-- Flexbox wrapper for side-by-side layout -->
     <div id="main-container">
       <div id="form-container">
-        <h3>Add Nodes! : Drag stuff! Delete them! Make connections!</h3>
+        <h3>STEP 1: Add a node. Give it a key and a human facing string. Drag it somewhere</h3>
         <form id="nodeForm">
           <label for="nodeKey">Key:</label>
           <input type="text" id="nodeKey" required />
@@ -56,7 +56,7 @@
           <button type="submit">Add Node</button>
         </form>
 
-        <h3>Add Connection (use the 'key' of 2 different nodes)</h3>
+        <h3>STEP2: Add a Connection to 2 nodes by their keys</h3>
         <form id="connectionForm">
           <label for="fromNode">From:</label>
           <input type="text" id="fromNode" required />
@@ -71,7 +71,7 @@
           <button type="submit">Add Connection</button>
         </form>
 
-        <h3>Add CIRCLE - this will be placed on a line IN BETWEEN two nodes</h3>
+        <h3>STEP3: Add a circle to a Connection, by their keys, and give the circle a key/value ( dropdown for color )</h3>
         <form id="circleForm">
           <label for="fromNode2">From (Node Key):</label>
           <input type="text" id="fromNode2" required />
@@ -105,10 +105,14 @@
         <br />
 
         <button id="saveGraph">
-          Marshal graph to text area: then cut/paste to initialData.json
+          STEP4: Emit graph, as json, to textarea
         </button>
+
+          <br/> 
+          <hr/>
+          extras:         
         <button onclick="scaleNodesToFit()">Rescale to fit your screen!</button>
-        <button onclick="makePiniaStore()">PINIA</button>
+        <button onclick="makePiniaStore()">Emit TS of the graph to textarea (for a Pinia store)</button>
 
       </div>
 
@@ -118,6 +122,99 @@
       
       </div>
     </div>
+
+    <script>
+      
+function generatePiniaStoreData(graphData) {
+  const store = {
+    lastPage: null,
+    currentPath: null,
+    diamonds: {},
+    squares: {},
+    dependencies: {}
+  };
+
+  // Build an index of nodes by their letter.
+  const nodeMap = new Map();
+  graphData.nodes.forEach(node => {
+    nodeMap.set(node.letter, node);
+    // Populate diamonds and squares with default status "NILL"
+    if (node.type === "diamond") {
+      store.diamonds[node.letter.toLowerCase()] = "NILL";
+    } else if (node.type === "box") {
+      store.squares[node.letter.toLowerCase()] = "NILL";
+    }
+  });
+
+  // Helper: map a circle's dropdown choice to an expected value.
+  // If the choice is "yes", "no", or "none", return it in uppercase;
+  // otherwise, return "NILL".
+  function mapCircleChoice(choice) {
+    if (choice) {
+      const lower = choice.toLowerCase();
+      if (lower === "yes") return "YES";
+      if (lower === "no") return "NO";
+      if (lower === "none") return "NONE";
+    }
+    return "NILL";
+  }
+
+  // Process connections to build dependencies.
+  graphData.connections.forEach(conn => {
+    const fromNode = nodeMap.get(conn.from);
+    const toNode = nodeMap.get(conn.to);
+    if (!fromNode || !toNode) return;
+
+    // Only process dependencies starting from a box node.
+    if (fromNode.type === "box") {
+      if (toNode.type === "box") {
+        // Direct box→box connection: expected is "NILL"
+        const parentKey = fromNode.letter.toLowerCase();
+        const childKey = toNode.letter.toLowerCase();
+        if (!store.dependencies[parentKey]) {
+          store.dependencies[parentKey] = { children: [] };
+        }
+        store.dependencies[parentKey].children.push({
+          url: childKey,
+          expected: "NILL",
+          preconditions: []
+        });
+      } else if (toNode.type === "circle") {
+        // For a circle node, look for its subsequent connection to a box.
+        graphData.connections.forEach(conn2 => {
+          if (conn2.from === toNode.letter) {
+            const childNode = nodeMap.get(conn2.to);
+            if (childNode && childNode.type === "box") {
+              const parentKey = fromNode.letter.toLowerCase();
+              const childKey = childNode.letter.toLowerCase();
+              if (!store.dependencies[parentKey]) {
+                store.dependencies[parentKey] = { children: [] };
+              }
+              const expectedVal = mapCircleChoice(toNode.choice);
+              // Create a precondition based on the circle's value.
+              const precondition = {
+                category: "diamonds",
+                key: toNode.letter.toLowerCase(),
+                expected: expectedVal
+              };
+              store.dependencies[parentKey].children.push({
+                url: childKey,
+                expected: expectedVal,
+                preconditions: [precondition]
+              });
+            }
+          }
+        });
+      }
+    }
+  });
+
+  return store;
+}
+
+
+    </script>
+
     <script src="graph.js"></script>
   </body>
 </html>

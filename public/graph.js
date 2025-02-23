@@ -174,69 +174,9 @@ function drawCircle(x, y, diameter, text, color, selected, human) {
   ctx.fillText(text, x + diameter / 2, y + diameter / 2);
 }
 
-// function drawGraph(xy) {
-//   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-//   connections.forEach((conn) => {
-//     const from = xy.get(conn.from);
-//     const to = xy.get(conn.to);
-
-//     if (from && to) {
-//       let color = "black";
-//       if (conn.type === YES) color = "green";
-//       else if (conn.type === NO) color = "red";
-
-//       const fromCenterX =
-//         from.x + (from.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
-//       const fromCenterY =
-//         from.y + (from.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
-//       const toCenterX =
-//         to.x + (to.type === "diamond" ? diamondWidth / 2 : boxWidth / 2);
-//       const toCenterY =
-//         to.y + (to.type === "diamond" ? diamondHeight / 2 : boxHeight / 2);
-
-//       drawArrow_quadraticBezier(
-//         fromCenterX,
-//         fromCenterY,
-//         toCenterX,
-//         toCenterY,
-//         color
-//       );
-//     }
-//   });
-
-//   xy.forEach((shape) => {
-//     const isSelected = selectedNode && shape.letter === selectedNode.letter;
-//     if (shape.type === "diamond") {
-//       drawDiamond(
-//         shape.x,
-//         shape.y,
-//         diamondWidth,
-//         diamondHeight,
-//         shape.letter,
-//         shape.color,
-//         isSelected,
-//         shape.human
-//       );
-//     } else {
-//       drawBox(
-//         shape.x,
-//         shape.y,
-//         boxWidth,
-//         boxHeight,
-//         shape.letter,
-//         shape.color,
-//         isSelected,
-//         shape.human
-//       );
-//     }
-//   });
-// }
-
 function drawGraph(xy) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Draw connections
   connections.forEach((conn) => {
     const from = xy.get(conn.from);
     const to = xy.get(conn.to);
@@ -285,7 +225,6 @@ function drawGraph(xy) {
     }
   });
 
-  // Draw nodes/shapes
   xy.forEach((shape) => {
     const isSelected = selectedNode && shape.letter === selectedNode.letter;
     if (shape.type === "diamond") {
@@ -420,6 +359,7 @@ document.getElementById("saveGraph").addEventListener("click", () => {
 });
 
 function scaleNodesToFit() {
+  // 
   if (!everything || !everything.nodes || everything.nodes.length === 0) {
     console.warn("No nodes available to scale.");
     return;
@@ -430,7 +370,6 @@ function scaleNodesToFit() {
     maxX = -Infinity,
     maxY = -Infinity;
 
-  // Find min and max coordinates!
   everything.nodes.forEach((node) => {
     if (node.x < minX) minX = node.x;
     if (node.y < minY) minY = node.y;
@@ -445,7 +384,7 @@ function scaleNodesToFit() {
   const width = canvas.width;
   const height = canvas.height;
 
-  //  if (maxX > width || height > height) {
+
   everything.nodes.forEach((node) => {
     node.x = ((width - 50) * node.x) / maxX;
     node.y = ((height - 30) * node.y) / maxY;
@@ -455,11 +394,7 @@ function scaleNodesToFit() {
   everything.nodes.forEach((node) => {
     new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
   });
-
   drawGraph(graph);
-  // } else {
-  //   console.log( " It already fits on the screen... pass.")
-  // }
 }
 document.getElementById("circleForm").addEventListener("submit", (e) => {
   e.preventDefault();
@@ -468,7 +403,6 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   const toKey = document.getElementById("toNode2").value;
   const circleChoice = document.getElementById("circleChoice").value; // "yes", "no", or "none"
 
-  // Retrieve the two nodes from the graph
   const fromShape = graph.get(fromKey);
   const toShape = graph.get(toKey);
 
@@ -477,33 +411,23 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
     return;
   }
 
-  // Remove the original connection between the two nodes, if it exists
+  // ZAP! orig connection between the two nodes, if it exists - because we are going to shove a circle in the middle 
   connections = connections.filter(
     (conn) => !(conn.from === fromKey && conn.to === toKey)
   );
-
-  // Compute the midpoint of the two nodes for the circle's position
-  const circleX = (fromShape.x + toShape.x) / 2;
+   const circleX = (fromShape.x + toShape.x) / 2;
   const circleY = (fromShape.y + toShape.y) / 2;
 
-  // Determine the circle's background color based on the selected choice.
-  // "yes" => green, "no" => red, "none" => white.
-  let circleColor = "#ffffff"; // white by default
+  let circleColor = "#ffffff";
   if (circleChoice.toLowerCase() === "yes") {
-    circleColor = "#00ff00"; // green
+    circleColor = "#00ff00";
   } else if (circleChoice.toLowerCase() === "no") {
-    circleColor = "#ff0000"; // red
+    circleColor = "#ff0000";
   }
 
-  // Create the circle node; using circleKey as both its key and label.
   new Shape(circleKey, circleX, circleY, circleKey, circleColor, "circle");
-
-  // Retrieve the newly created circle shape from the graph and attach the choice property.
   const circleShape = graph.get(circleKey);
   circleShape.choice = circleChoice;
-
-  // Determine connection color based on the circle's choice:
-  // "yes" => green, "no" => red, "none" => black.
   let connType;
   if (circleChoice.toLowerCase() === "yes") {
     connType = YES;
@@ -511,104 +435,13 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
     connType = NO;
   } else {
     connType = NORMAL;
-  }
-
-  // Add new connections so the circle appears in between the nodes using the appropriate line color.
+  }  
   addConnection(fromKey, circleKey, connType);
   addConnection(circleKey, toKey, connType);
 
   drawGraph(graph);
   e.target.reset();
 });
-
-function generatePiniaStoreData(graphData) {
-  // Initialize store state with default values.
-  const store = {
-    lastPage: null,
-    currentPath: null,
-    diamonds: {},
-    squares: {},
-    dependencies: {}
-  };
-
-  // Build an index of nodes by their letter.
-  const nodeMap = new Map();
-  graphData.nodes.forEach(node => {
-    nodeMap.set(node.letter, node);
-    // Populate diamonds and squares with default status "NILL"
-    if (node.type === "diamond") {
-      store.diamonds[node.letter.toLowerCase()] = "NILL";
-    } else if (node.type === "box") {
-      store.squares[node.letter.toLowerCase()] = "NILL";
-    }
-  });
-
-  // Helper: map a circle's dropdown choice to an expected value.
-  // If the choice is "yes", "no", or "none", return it in uppercase;
-  // otherwise, return "NILL".
-  function mapCircleChoice(choice) {
-    if (choice) {
-      const lower = choice.toLowerCase();
-      if (lower === "yes") return "YES";
-      if (lower === "no") return "NO";
-      if (lower === "none") return "NONE";
-    }
-    return "NILL";
-  }
-
-  // Process connections to build dependencies.
-  graphData.connections.forEach(conn => {
-    const fromNode = nodeMap.get(conn.from);
-    const toNode = nodeMap.get(conn.to);
-    if (!fromNode || !toNode) return;
-
-    // Only process dependencies starting from a box node.
-    if (fromNode.type === "box") {
-      if (toNode.type === "box") {
-        // Direct box→box connection: expected is "NILL"
-        const parentKey = fromNode.letter.toLowerCase();
-        const childKey = toNode.letter.toLowerCase();
-        if (!store.dependencies[parentKey]) {
-          store.dependencies[parentKey] = { children: [] };
-        }
-        store.dependencies[parentKey].children.push({
-          url: childKey,
-          expected: "NILL",
-          preconditions: []
-        });
-      } else if (toNode.type === "circle") {
-        // For a circle node, look for its subsequent connection to a box.
-        graphData.connections.forEach(conn2 => {
-          if (conn2.from === toNode.letter) {
-            const childNode = nodeMap.get(conn2.to);
-            if (childNode && childNode.type === "box") {
-              const parentKey = fromNode.letter.toLowerCase();
-              const childKey = childNode.letter.toLowerCase();
-              if (!store.dependencies[parentKey]) {
-                store.dependencies[parentKey] = { children: [] };
-              }
-              const expectedVal = mapCircleChoice(toNode.choice);
-              // Create a precondition based on the circle's value.
-              const precondition = {
-                category: "diamonds",
-                key: toNode.letter.toLowerCase(),
-                expected: expectedVal
-              };
-              store.dependencies[parentKey].children.push({
-                url: childKey,
-                expected: expectedVal,
-                preconditions: [precondition]
-              });
-            }
-          }
-        });
-      }
-    }
-  });
-
-  return store;
-}
-
 function makePiniaStore() {
   const piniaStoreData = generatePiniaStoreData(everything);
   document.getElementById("graphJson").value = JSON.stringify(
