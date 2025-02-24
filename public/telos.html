@@ -39,7 +39,10 @@
     <!-- Flexbox wrapper for side-by-side layout -->
     <div id="main-container">
       <div id="form-container">
-        <h3>STEP 1: Add a node. Give it a key and a human facing string. Drag it somewhere</h3>
+        <h3>
+          STEP 1: Add a node. Give it a key and a human facing string. Drag it
+          somewhere
+        </h3>
         <form id="nodeForm">
           <label for="nodeKey">Key:</label>
           <input type="text" id="nodeKey" required />
@@ -71,7 +74,10 @@
           <button type="submit">Add Connection</button>
         </form>
 
-        <h3>STEP3: Add a circle to a Connection, by their keys, and give the circle a key/value ( dropdown for color )</h3>
+        <h3>
+          STEP3: Add a circle to a Connection, by their keys, and give the
+          circle a key/value ( dropdown for color )
+        </h3>
         <form id="circleForm">
           <label for="fromNode2">From (Node Key):</label>
           <input type="text" id="fromNode2" required />
@@ -108,65 +114,84 @@
           STEP 4: Emit graph, as json, to textarea!!
         </button>
 
-          <br/> 
-          <hr/>
-        <button onclick="generatePiniaStoreData()">Step 5: Emit TS of the graph to textarea (for a Pinia store)</button>
-
+        <br />
+        <hr />
+        <button onclick="generatePiniaStoreData()">
+          Step 5: Emit TS of the graph to textarea (for a Pinia store)
+        </button>
       </div>
 
-
       <div id="right-panel">
-      <textarea id="graphJson" rows="50" cols="120" spellcheck="false"></textarea>
-      
+        <textarea
+          id="graphJson"
+          rows="50"
+          cols="120"
+          spellcheck="false"
+        ></textarea>
       </div>
     </div>
 
     <script>
-      
-function generatePiniaStoreData() {
-
-  const nodes = [];
-  console.log( graph )
-  graph.forEach((shape) => {
-    nodes.push({
-      letter: shape.letter,
-      x: shape.x,
-      y: shape.y,
-      human: shape.human,
-      color: shape.color,
-      type: shape.type,
-    });
-  });
-
-  connections.forEach((conn)=> { 
-    let aryOfOne = nodes.filter(o=>o.letter === conn.from )
-    // console.log( conn.from + "  " + aryOfOne[0].type)
-    if ( aryOfOne.length === 1 ) {
-      conn.node_or_something = aryOfOne[0].type 
-    } else {
-      alert("SOMETHING WIERD IS AFOOT!")
-    }
-  })
-
-
-  const graphData = { nodes, connections };
-  document.getElementById("graphJson").value = JSON.stringify(
-    graphData,
-    null,
-    2
-  );
-  
-
-}
+      function generatePiniaStoreData() {
 
 
 
+        const nodes = {};
+        graph.forEach((shape) => {
+          nodes[shape.letter] = {
+            // letter: shape.letter,
+            // x: shape.x,
+            // y: shape.y,
+            human: shape.human,
+            // color: shape.color,
+            type: shape.type,
+          };
+        });
 
+        let deps = {}
+        for ( let k in connections ) {
+
+          let obj = connections[k] 
+          let obj2 = {} 
+          if ( nodes[obj.from].type == "circle") {
+            obj2.value="choice"
+          } else {
+            obj2.value="page"
+          }
+          obj2["to"] = obj["to"]
+          obj2["from"] = obj["from"]
+          obj2["type"] = obj["type"]
+          deps[obj.from] = obj2
+        }
+        // connections.forEach((conn) => {
+        //   let aryOfOne = nodes.filter((o) => o.letter === conn.from);
+        //   if (aryOfOne.length === 1) {
+        //     if ( aryOfOne[0].type == "circle") {
+        //       conn.action = "CHOICE";
+        //     } else {
+        //       conn.action = "PAGE";
+        //     }
+        //   } else {
+        //     alert("SOMETHING WIERD IS AFOOT!");
+        //   }
+        // });
+
+//        const graphData = { nodes, connections };
+        let info = {
+          "nodes":nodes,
+          "connections":deps
+        }
+        document.getElementById("graphJson").value = JSON.stringify(
+          info,
+          null,
+          2
+        );
+      }
     </script>
 
     <script src="graph.js"></script>
     <script>
-      main("telos.json")
+      main("telos.json");
     </script>
   </body>
 </html>
