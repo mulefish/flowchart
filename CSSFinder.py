@@ -1,25 +1,20 @@
-
-
 import os
 import re
-from collections import defaultdict
 
 def extract_css_selectors(css_content):
-    selectors = defaultdict(int)
+    selectors = []
     matches = re.findall(r'([.#]?[a-zA-Z0-9_-]+)\s*\{', css_content)
     for match in matches:
-        selectors[match] += 1
+        selectors.append(match)
     return selectors
 
 def process_vue_files(directory):
-    css_selectors_count = defaultdict(int)
-
+    css_selectors_count = {}
     for root, dirs, files in os.walk(directory):
+        if 'node_modules' in dirs:
+            dirs.remove('node_modules')
+
         for file in files:
-
-            if 'node_modules' in dirs:
-                dirs.remove('node_modules')
-
             if file.endswith(".vue"):
                 file_path = os.path.join(root, file)
                 with open(file_path, 'r', encoding='utf-8') as f:
@@ -27,20 +22,25 @@ def process_vue_files(directory):
                     style_contents = re.findall(r'<style.*?>(.*?)</style>', content, re.DOTALL)
                     for style_content in style_contents:
                         selectors = extract_css_selectors(style_content)
-                        for selector, count in selectors.items():
-                            css_selectors_count[selector] += count
+                        for selector in selectors:
+                            if selector not in css_selectors_count:
+                                css_selectors_count[selector] = []
+                            if file_path not in css_selectors_count[selector]:
+                                css_selectors_count[selector].append(file_path)
 
     return css_selectors_count
 
 def main():
-    # starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\twe\\src'
-    starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\precheck'    
+    #starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\precheck'
+    starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\twe\\src'
     css_counts = process_vue_files(starting_directory)
-    print(f"looking for css selectors is vue files starting from ${starting_directory}")
-    print("CSS Selectors Count:")
-    for selector, count in sorted(css_counts.items(), key=lambda x: x[1], reverse=False):
-        if count > 1:
-            print(f"{count} : {selector}")
-
+    for selector, files in sorted(css_counts.items(), key=lambda x: len(x[1]), reverse=False):
+        if len(files) > 1:
+            print(f"{len(files)} occurrences for selector '{selector}' in files:")
+            for file in files:
+                print(f"  - {file}")
+    print(f"Looking for CSS selectors in Vue files starting from {starting_directory}")
+    print("CSS Selectors with File References:")
+    
 if __name__ == "__main__":
-    main()  
+    main()
