@@ -115,14 +115,15 @@ class Shape {
     this.color = color;
     this.type = type;
     this.children = [];
-    graph.set(letter, this);
+    // graph.set(letter, this);
+    graph[letter] = this;
   }
   addChild(newChild) {
     this.children.push(newChild);
   }
 }
 
-const graph = new Map();
+const graph = {}; // new Map();
 let connections = [];
 
 function addConnection(fromNode, toNode, type = NORMAL) {
@@ -135,10 +136,13 @@ function deleteNode(nodeKey) {
     return children.filter((child) => child.key !== keyToRemove);
   }
 
-  for (let [key, obj] of graph) {
+  // for (let [key, obj] of graph) {
+  for (let k in graph) {
+    let obj = graph[k];
     obj.children = removeChildByKey(obj.children, nodeKey);
   }
-  graph.delete(nodeKey);
+  // graph.delete(nodeKey);
+  delete graph[nodeKey];
   connections = connections.filter(
     (conn) => conn.from !== nodeKey && conn.to !== nodeKey
   );
@@ -189,9 +193,10 @@ function drawGraph(xy) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   connections.forEach((conn) => {
-    const from = xy.get(conn.from);
-    const to = xy.get(conn.to);
-
+    // const from = xy.get(conn.from);
+    // const to = xy.get(conn.to);
+    const from = xy[conn.from];
+    const to = xy[conn.to];
     if (from && to) {
       let color = "black";
       if (conn.type === YES) color = "green";
@@ -236,7 +241,9 @@ function drawGraph(xy) {
     }
   });
 
-  xy.forEach((shape) => {
+  // xy.forEach((shape) => {
+  for (let key in xy) {
+    let shape = xy[key];
     const isSelected = selectedNode && shape.letter === selectedNode.letter;
     if (shape.type === "diamond") {
       drawDiamond(
@@ -271,7 +278,7 @@ function drawGraph(xy) {
         shape.human
       );
     }
-  });
+  }
 }
 
 let draggingShape = null;
@@ -283,7 +290,8 @@ canvas.addEventListener("mousedown", (e) => {
   const mouseY = e.clientY - rect.top;
 
   let foundNode = false;
-  graph.forEach((shape) => {
+  for (let k in graph) {
+    let shape = graph[k];
     const width = shape.type === "diamond" ? diamondWidth : boxWidth;
     const height = shape.type === "diamond" ? diamondHeight : boxHeight;
 
@@ -300,7 +308,7 @@ canvas.addEventListener("mousedown", (e) => {
       foundNode = true;
       updateNodeDetails(shape);
     }
-  });
+  }
 
   if (!foundNode) {
     selectedNode = null;
@@ -347,28 +355,13 @@ document.getElementById("connectionForm").addEventListener("submit", (e) => {
   addConnection(fromNode, toNode, lineType);
   e.target.reset();
 });
-function makePiniaStore() {
-  const nodes = [];
-  graph.forEach((shape) => {
-    nodes.push({
-      // letter: shape.letter,
-      human: shape.human,
-      children: shape.children,
-    });
-  });
 
-  const graphData = { nodes, connections };
-  document.getElementById("graphJson").value = JSON.stringify(
-    graphData,
-    null,
-    2
-  );
-}
 function saveGraph() {
   const nodes = [];
-  graph.forEach((shape) => {
+  for (let k in graph) {
+    let shape = graph[k];
     nodes.push(shape);
-  });
+  }
 
   const graphData = { nodes, connections };
   document.getElementById("graphJson").value = JSON.stringify(
@@ -422,8 +415,11 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   const toKey = document.getElementById("toNode2").value;
   const circleChoice = document.getElementById("circleChoice").value; // "yes", "no", or "none"
 
-  const fromShape = graph.get(fromKey);
-  const toShape = graph.get(toKey);
+  // const fromShape = graph.get(fromKey);
+  // const toShape = graph.get(toKey);
+  const fromShape = graph[fromKey];
+  const toShape = graph[toKey];
+
   try {
     if (circleChoice == "none") {
       circleChoice == "NILL";
@@ -453,7 +449,8 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   }
 
   new Shape(circleKey, circleX, circleY, circleKey, circleColor, "circle");
-  const circleShape = graph.get(circleKey);
+  // const circleShape = graph.get(circleKey);
+  const circleShape = graph[circleKey];
   circleShape.choice = circleChoice;
   let connType;
   if (circleChoice.toLowerCase() === "yes") {
@@ -471,20 +468,60 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
 });
 
 async function main(nameOfTheJsonFile) {
-  try {
-    const response = await fetch(nameOfTheJsonFile);
-    everything = await response.json();
+  //  try {
+  const response = await fetch(nameOfTheJsonFile);
+  everything = await response.json();
 
-    everything.nodes.forEach((node) => {
-      new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
-    });
+  everything.nodes.forEach((node) => {
+    new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
+  });
 
-    everything.connections.forEach((conn) =>
-      addConnection(conn.from, conn.to, conn.type)
-    );
+  everything.connections.forEach((conn) =>
+    addConnection(conn.from, conn.to, conn.type)
+  );
 
-    drawGraph(graph);
-  } catch (error) {
-    console.error("Failed to load initial data:", error);
+  drawGraph(graph);
+  // } catch (error) {
+  //   console.error("Failed to load initial data:", error);
+  // }
+}
+
+/// telos
+function makePiniaStore() {
+  const nodes = [];
+  const dependencies = {};
+  // step 1
+  for (let k in graph) {  
+    let node = graph[k];
+
+    if ( node.type === "circle") {
+      // ignore for now 
+    } else {
+      nodes.push({
+        letter: node.letter,
+        human: node.human,
+        children: node.children,
+      });     
+
+      for ( let k2 in connections ) {
+        if ( connections[k2].from === node.letter) {
+          dependencies[node.letter] = {} 
+        }
+      }
+    }
   }
+
+  // step 2 : find dependencies details 
+  for ( let k in connections ) {
+
+  }
+
+
+
+  const graphData = { nodes, connections, dependencies };
+  document.getElementById("graphJson").value = JSON.stringify(
+    graphData,
+    null,
+    2
+  );
 }
