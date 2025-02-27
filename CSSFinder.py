@@ -7,7 +7,7 @@ def extract_css_selectors(css_content):
     for match in matches:
         selectors.append(match)
     return selectors
-
+# https://github.com/Kozea/tinycss2
 def process_vue_files(directory):
     css_selectors_count = {}
     for root, dirs, files in os.walk(directory):

@@ -107,14 +107,14 @@ function drawArrow_quadraticBezier(fromX, fromY, toX, toY, color = "black") {
   ctx.strokeStyle = "black"; // Reset for future strokes
 }
 class Shape {
-  constructor(letter, x, y, human, color, type = "box") {
+  constructor(letter, x, y, human, color, type = "box", children=[]) {
     this.letter = letter;
     this.x = x || Math.floor(Math.random() * (800 - 100)) + 100;
     this.y = y || Math.floor(Math.random() * (400 - 100)) + 100;
     this.human = human;
     this.color = color;
     this.type = type;
-    this.children = [];
+    this.children = children;
     // graph.set(letter, this);
     graph[letter] = this;
   }
@@ -472,8 +472,9 @@ async function main(nameOfTheJsonFile) {
   const response = await fetch(nameOfTheJsonFile);
   everything = await response.json();
 
+
   everything.nodes.forEach((node) => {
-    new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
+    new Shape(node.letter, node.x, node.y, node.human, node.color, node.type, node.children);
   });
 
   everything.connections.forEach((conn) =>
