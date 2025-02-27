@@ -110,15 +110,17 @@
         </div>
         <br />
 
-        <button onClick="saveGraph()">
-          STEP 4: Emit graph, as json, to textarea!!
-        </button>
+          <h3>STEP 4: Emit graph, as json, to textarea!!</h3>
+          <button onClick="saveGraph()" >save</button>
 
-        <br />
+        <br/>
+        <h3>Step 5: Set children:</h3>
+        <button onClick="doIt()">doIt</button>
+      
+        <br/>
+
         <hr />
-        <button onclick="generatePiniaStoreData()">
-          Step 5: Emit TS of the graph to textarea (for a Pinia store)
-        </button>
+
       </div>
 
       <div id="right-panel">
@@ -132,61 +134,94 @@
     </div>
 
     <script>
-      function generatePiniaStoreData() {
 
 
+function transformData(inputJson) {
+    const diamonds = {
+        is_new: null,
+        is_list_a: null,
+        is_photoname_and_docname_match: null
+    };
 
-        const nodes = {};
-        graph.forEach((shape) => {
-          nodes[shape.letter] = {
-            // letter: shape.letter,
-            // x: shape.x,
-            // y: shape.y,
-            human: shape.human,
-            // color: shape.color,
-            type: shape.type,
-          };
-        });
-
-        let deps = {}
-        for ( let k in connections ) {
-
-          let obj = connections[k] 
-          let obj2 = {} 
-          if ( nodes[obj.from].type == "circle") {
-            obj2.value="choice"
-          } else {
-            obj2.value="page"
-          }
-          obj2["to"] = obj["to"]
-          obj2["from"] = obj["from"]
-          obj2["type"] = obj["type"]
-          deps[obj.from] = obj2
+    const squares = {};
+    inputJson.nodes.forEach(node => {
+        if (node.type === "box") {
+            squares[node.letter.toLowerCase()] = "NILL";
         }
-        // connections.forEach((conn) => {
-        //   let aryOfOne = nodes.filter((o) => o.letter === conn.from);
-        //   if (aryOfOne.length === 1) {
-        //     if ( aryOfOne[0].type == "circle") {
-        //       conn.action = "CHOICE";
-        //     } else {
-        //       conn.action = "PAGE";
-        //     }
-        //   } else {
-        //     alert("SOMETHING WIERD IS AFOOT!");
-        //   }
-        // });
+    });
 
-//        const graphData = { nodes, connections };
-        let info = {
-          "nodes":nodes,
-          "connections":deps
+    const dependencies = {};
+    inputJson.nodes.forEach(node => {
+        dependencies[node.letter.toLowerCase()] = { children: [] };
+    });
+
+    inputJson.connections.forEach(conn => {
+        const from = conn.from.toLowerCase();
+        const to = conn.to.toLowerCase();
+        const type = conn.type.toLowerCase();
+        
+        if (!dependencies[from]) {
+            dependencies[from] = { children: [] };
         }
-        document.getElementById("graphJson").value = JSON.stringify(
-          info,
-          null,
-          2
-        );
-      }
+        
+        let preconditions = [];
+        if (type === "yes" || type === "no") {
+            let key;
+            if (from === "signup" && (to === "location" || to === "eligibility")) {
+                key = "is_new";
+            } else if (from === "photoid" && (to === "scheduler" || to === "proofOfCitizenship")) {
+                key = "is_list_a";
+            } else if (from === "namematch" && (to === "scheduler" || to === "addlinkingdoc")) {
+                key = "is_photoname_and_docname_match";
+            }
+            if (key) {
+                preconditions.push({ category: "DIAMONDS", key, expected: type.toUpperCase() });
+            }
+        }
+
+        dependencies[from].children.push({ url: to, preconditions });
+    });
+
+    // Add circle nodes as children to their originating "from" node
+    inputJson.connections.forEach(conn => {
+        if (conn.type === "yes" || conn.type === "no") {
+            const from = conn.from.toLowerCase();
+            const circleNode = conn.to.toLowerCase();
+            const circleObj = inputJson.nodes.find(node => node.letter.toLowerCase() === circleNode);
+            
+            if (circleObj && circleObj.type === "circle") {
+                dependencies[from].children.push({ url: circleNode, choice: conn.type });
+            }
+        }
+    });
+
+    return { diamonds, squares, dependencies };
+}
+
+function doIt() {
+  const nodes = [];
+  graph.forEach((shape) => {
+    nodes.push({
+      letter: shape.letter,
+      x: shape.x,
+      y: shape.y,
+      human: shape.human,
+      color: shape.color,
+      type: shape.type,
+    });
+  });
+
+  const graphData = { nodes, connections };
+
+const transformedJson = transformData(graphData);
+
+document.getElementById("graphJson").value = JSON.stringify(
+  transformedJson,
+    null,
+    2
+  );
+}
+
     </script>
 
     <script src="graph.js"></script>

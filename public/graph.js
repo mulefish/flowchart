@@ -408,6 +408,7 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
     alert("Invalid node keys provided. Please ensure both nodes exist.");
     return;
   }
+  console.log("HELLO")
 
   // ZAP! orig connection between the two nodes, if it exists - because we are going to shove a circle in the middle
   connections = connections.filter(
