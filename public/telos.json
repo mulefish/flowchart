@@ -6,25 +6,15 @@
       "y": 522,
       "human": "Signup",
       "color": "#ffffff",
-      "type": "box",
-      "children": [
-        {
-          "key": "hello"
-        },
-        {
-          "key": "EEBOO",
-          "value": "no"
-        }
-      ]
+      "type": "box"
     },
     {
       "letter": "Location",
-      "x": 144,
-      "y": 195,
+      "x": 37,
+      "y": 154,
       "human": "Location",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
     },
     {
       "letter": "LegalName",
@@ -32,8 +22,7 @@
       "y": 38,
       "human": "LegalName",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
     },
     {
       "letter": "BirthAndCitizenship",
@@ -41,8 +30,7 @@
       "y": 174,
       "human": "BirthAndCitizenship",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
     },
     {
       "letter": "Eligibility",
@@ -50,8 +38,7 @@
       "y": 359,
       "human": "Eligibility",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
     },
     {
       "letter": "PhotoId",
@@ -59,8 +46,23 @@
       "y": 193,
       "human": "PhotoId",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
+    },
+    {
+      "letter": "Scheduler",
+      "x": 1128,
+      "y": 75,
+      "human": "Scheduler",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "Summary",
+      "x": 1352,
+      "y": 63,
+      "human": "Summary",
+      "color": "#ffffff",
+      "type": "box"
     },
     {
       "letter": "Renewal",
@@ -68,8 +70,23 @@
       "y": 49,
       "human": "Renewal",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
+    },
+    {
+      "letter": "ProofOfCitizenship",
+      "x": 971,
+      "y": 459,
+      "human": "ProofOfCitizenship",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "NameMatch",
+      "x": 1196,
+      "y": 501,
+      "human": "NameMatchAndLinkingDoc",
+      "color": "#ffffff",
+      "type": "box"
     },
     {
       "letter": "Dashboard",
@@ -77,8 +94,23 @@
       "y": 73,
       "human": "Dashboard",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
+    },
+    {
+      "letter": "isListA_YES",
+      "x": 811.5,
+      "y": 115.5,
+      "human": "isListA_YES",
+      "color": "#00ff00",
+      "type": "circle"
+    },
+    {
+      "letter": "isListA_NO",
+      "x": 791,
+      "y": 271,
+      "human": "isListA_NO",
+      "color": "#ff0000",
+      "type": "circle"
     },
     {
       "letter": "Address",
@@ -86,8 +118,7 @@
       "y": 315,
       "human": "Address",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
     },
     {
       "letter": "is_New_NO",
@@ -95,8 +126,31 @@
       "y": 497,
       "human": "is_New_NO",
       "color": "#ff0000",
-      "type": "circle",
-      "children": []
+      "type": "circle"
+    },
+    {
+      "letter": "isPhotoName_and_Name_match_YES",
+      "x": 1123,
+      "y": 279,
+      "human": "isPhotoName_and_Name_match_YES",
+      "color": "#00ff00",
+      "type": "circle"
+    },
+    {
+      "letter": "Addlinkingdoc",
+      "x": 1320,
+      "y": 224,
+      "human": "Addlinkingdoc",
+      "color": "#ffffff",
+      "type": "box"
+    },
+    {
+      "letter": "isPhotoName_and_Name_match_NO",
+      "x": 1334.5,
+      "y": 369,
+      "human": "isPhotoName_and_Name_match_NO",
+      "color": "#ff0000",
+      "type": "circle"
     },
     {
       "letter": "Attributes",
@@ -104,27 +158,15 @@
       "y": 428,
       "human": "Attributes",
       "color": "#ffffff",
-      "type": "box",
-      "children": []
+      "type": "box"
     },
     {
       "letter": "is_New_YES",
-      "x": 103.5,
-      "y": 312.5,
+      "x": 119.5,
+      "y": 272.5,
       "human": "is_New_YES",
       "color": "#00ff00",
-      "type": "circle",
-      "children": []
-    },
-    {
-      "letter": "EEBOO",
-      "x": 11,
-      "y": 252,
-      "human": "EEBOO",
-      "color": "#ff0000",
-      "type": "circle",
-      "children": [],
-      "choice": "no"
+      "type": "circle"
     }
   ],
   "connections": [
@@ -149,6 +191,41 @@
       "type": "normal"
     },
     {
+      "from": "ProofOfCitizenship",
+      "to": "NameMatch",
+      "type": "normal"
+    },
+    {
+      "from": "Scheduler",
+      "to": "Summary",
+      "type": "normal"
+    },
+    {
+      "from": "Summary",
+      "to": "Dashboard",
+      "type": "normal"
+    },
+    {
+      "from": "PhotoId",
+      "to": "isListA_YES",
+      "type": "yes"
+    },
+    {
+      "from": "isListA_YES",
+      "to": "Scheduler",
+      "type": "yes"
+    },
+    {
+      "from": "PhotoId",
+      "to": "isListA_NO",
+      "type": "no"
+    },
+    {
+      "from": "isListA_NO",
+      "to": "ProofOfCitizenship",
+      "type": "no"
+    },
+    {
       "from": "Signup",
       "to": "is_New_NO",
       "type": "no"
@@ -157,6 +234,31 @@
       "from": "is_New_NO",
       "to": "Eligibility",
       "type": "no"
+    },
+    {
+      "from": "NameMatch",
+      "to": "isPhotoName_and_Name_match_YES",
+      "type": "yes"
+    },
+    {
+      "from": "isPhotoName_and_Name_match_YES",
+      "to": "Scheduler",
+      "type": "yes"
+    },
+    {
+      "from": "NameMatch",
+      "to": "isPhotoName_and_Name_match_NO",
+      "type": "no"
+    },
+    {
+      "from": "isPhotoName_and_Name_match_NO",
+      "to": "Addlinkingdoc",
+      "type": "no"
+    },
+    {
+      "from": "Addlinkingdoc",
+      "to": "Scheduler",
+      "type": "normal"
     },
     {
       "from": "Eligibility",
@@ -182,16 +284,6 @@
       "from": "is_New_YES",
       "to": "Location",
       "type": "yes"
-    },
-    {
-      "from": "Signup",
-      "to": "EEBOO",
-      "type": "no"
-    },
-    {
-      "from": "EEBOO",
-      "to": "LegalName",
-      "type": "no"
     }
   ]
 }
