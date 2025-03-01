@@ -1,6 +1,6 @@
 const YES = "yes";
 const NO = "no";
-const NORMAL = "DINO";
+// const NORMAL = "SOMETHING";
 const YELLOW = "background-color:yellow;";
 const canvas = document.getElementById("flowchartCanvas");
 canvas.width = window.innerWidth;
@@ -13,14 +13,16 @@ const diamondHeight = 30;
 const circleDiameter = 30;
 let selectedNode = null;
 let everything = undefined;
-const nudge = -23; // nudge text upwards a little 
+const nudge = -23; // nudge text upwards a little
 const FROM_NODE_WIDGET = document.getElementById("fromNode");
 const FROM_NODE2_WIDGET = document.getElementById("fromNode2");
 const TO_NODE_WIDGET = document.getElementById("toNode");
 const TO_NODE2_WIDGET = document.getElementById("toNode2");
 const NODE_KEY_DETAIL_WIDGET = document.getElementById("nodeKeyDetail");
+const ANCESTOR = document.getElementById("ancestor");
 const NODE_LABEL_DETAIL_WIDGET = document.getElementById("nodeLabelDetail");
-const NODE_ANCESTOR_DETAIL_WIDGET = document.getElementById("nodeAncestorDetail");
+const NODE_ANCESTOR_DETAIL_WIDGET =
+  document.getElementById("nodeAncestorDetail");
 const DELETE_NOTE_BUTTON = document.getElementById("deleteNode");
 // ancestor
 
@@ -133,8 +135,9 @@ class Shape {
 const graph = new Map();
 let connections = [];
 
-function addConnection(fromNode, toNode, type = NORMAL) {
-  connections.push({ from: fromNode, to: toNode, type });
+function addConnection(fromNode, toNode, type, ancestor, whence) {
+  console.log("addConnection=" + whence + "|")
+  connections.push({ from: fromNode, to: toNode, type, ancestor });
   drawGraph(graph);
 }
 
@@ -144,34 +147,31 @@ function deleteNode(nodeKey) {
     (conn) => conn.from !== nodeKey && conn.to !== nodeKey
   );
   selectedNode = null;
-  // updateNodeDetails(null, "deleteNode");
-
-    FROM_NODE_WIDGET.value = "";
-    FROM_NODE2_WIDGET.value = "";
-    TO_NODE_WIDGET.value = "";
-    TO_NODE2_WIDGET.value = "";
-    NODE_KEY_DETAIL_WIDGET.textContent = "";
-    NODE_LABEL_DETAIL_WIDGET.textContent = "";
-    NODE_ANCESTOR_DETAIL_WIDGET.textContent = ""; 
-
+  FROM_NODE_WIDGET.value = "";
+  FROM_NODE2_WIDGET.value = "";
+  TO_NODE_WIDGET.value = "";
+  TO_NODE2_WIDGET.value = "";
+  NODE_KEY_DETAIL_WIDGET.value = "";
+  NODE_LABEL_DETAIL_WIDGET.value = "";
+  NODE_ANCESTOR_DETAIL_WIDGET.value = "";
+ANCESTOR.value = ""; 
 
   drawGraph(graph);
 }
-
+let count = 0 
 function updateNodeDetails(node, whence = "TBD") {
-  console.log( "updateNodeDetails %c whence " + whence, YELLOW)
-  
-  if ( FROM_NODE_WIDGET.value === "") {
+  // console.log("updateNodeDetails %c whence " + whence, YELLOW);
+  if ( count % 2 == 0 ) {
     FROM_NODE_WIDGET.value = node.letter;
-    FROM_NODE2_WIDGET.value = node.letter;
+    FROM_NODE2_WIDGET.value =  node.letter;
+    ANCESTOR.value =  node.letter; 
   } else {
     TO_NODE_WIDGET.value = node.letter;
     TO_NODE2_WIDGET.value = node.letter;
   }
-
-  NODE_KEY_DETAIL_WIDGET.textContent = node.letter;
-  NODE_LABEL_DETAIL_WIDGET.textContent = node.human;
-  NODE_ANCESTOR_DETAIL_WIDGET.textContent = node.ancestor; 
+  count++ 
+  NODE_KEY_DETAIL_WIDGET.value = node.letter;
+  NODE_LABEL_DETAIL_WIDGET.value = node.human;
 
   DELETE_NOTE_BUTTON.disabled = !node;
 }
@@ -179,7 +179,7 @@ function updateNodeDetails(node, whence = "TBD") {
 function drawCircle(x, y, diameter, text, color, selected, human) {
   ctx.fillStyle = color;
   ctx.beginPath();
-  // Draw a circle centered in the rectangle defined by (x,y) and diameter
+
   ctx.arc(x + diameter / 2, y + diameter / 2, diameter / 2, 0, 2 * Math.PI);
   ctx.fill();
   ctx.strokeStyle = selected ? "red" : "black";
@@ -312,7 +312,6 @@ canvas.addEventListener("mousedown", (e) => {
 
   if (!foundNode) {
     selectedNode = null;
-    // updateNodeDetails(null);
   }
   drawGraph(graph);
 });
@@ -342,36 +341,22 @@ function addNode() {
   const type = document.getElementById("nodeType").value;
   new Shape(key, null, null, label, color, type);
   drawGraph(graph);
+  document.getElementById("nodeKey").value = "";
+  document.getElementById("nodeHuman").value = "";
+
 }
 
 function addConnection_step0() {
   const fromNode = document.getElementById("fromNode").value;
   const toNode = document.getElementById("toNode").value;
   const lineType = document.getElementById("lineType").value;
-  addConnection(fromNode, toNode, lineType);
+  addConnection(fromNode, toNode, lineType, fromNode);
 }
-
-// document.getElementById("connectionForm").addEventListener("submit", (e) => {
-//   e.preventDefault();
-//   const fromNode = document.getElementById("fromNode").value;
-//   const toNode = document.getElementById("toNode").value;
-//   const lineType = document.getElementById("lineType").value;
-//   addConnection(fromNode, toNode, lineType);
-//   e.target.reset();
-// });
 
 function emitGraph() {
   const nodes = [];
   graph.forEach((shape) => {
     nodes.push(shape);
-    // nodes.push({
-    //   letter: shape.letter,
-    //   x: shape.x,
-    //   y: shape.y,
-    //   human: shape.human,
-    //   color: shape.color,
-    //   type: shape.type,
-    // });
   });
 
   const graphData = { nodes, connections };
@@ -424,15 +409,15 @@ function addDecisionPoint() {
   const fromKey = document.getElementById("fromNode2").value;
   const circleKey = document.getElementById("circleKey").value;
   const toKey = document.getElementById("toNode2").value;
-  const circleChoice = document.getElementById("circleChoice").value; // "yes", "no", or "none"
+  const circleChoice = document.getElementById("circleChoice").value;
   const fromShape = graph.get(fromKey);
   const toShape = graph.get(toKey);
 
-  if (!fromShape || !toShape) {
-    alert("Invalid node keys provided. Please ensure both nodes exist.");
+  if (!fromShape || !toShape || circleKey.length == 0 ) {
+    alert("Invalid node keys provided or the circleKey is missing.");
     return;
   }
-
+console.log("fromKey="+  fromKey + " circleKey=" + circleKey + " toKey=" + toKey + " circleChoice=" + circleChoice + " fromShape=" + JSON.stringify(fromShape) + " toShape=" + JSON.stringify(toShape)  )
   // ZAP! orig connection between the two nodes, if it exists - because we are going to shove a circle in the middle
   connections = connections.filter(
     (conn) => !(conn.from === fromKey && conn.to === toKey)
@@ -456,10 +441,10 @@ function addDecisionPoint() {
   } else if (circleChoice.toLowerCase() === "no") {
     connType = NO;
   } else {
-    connType = NORMAL;
+    connType = "?";
   }
-  addConnection(fromKey, circleKey, connType);
-  addConnection(circleKey, toKey, connType);
+  addConnection(fromKey, circleKey, connType, fromKey);
+  addConnection(circleKey, toKey, connType, fromKey);
 
   drawGraph(graph);
 }
@@ -474,7 +459,7 @@ async function main(nameOfTheJsonFile) {
     });
 
     everything.connections.forEach((conn) =>
-      addConnection(conn.from, conn.to, conn.type)
+      addConnection(conn.from, conn.to, conn.type, conn.ancestor)
     );
 
     drawGraph(graph);
@@ -483,5 +468,10 @@ async function main(nameOfTheJsonFile) {
   }
 }
 function copyOver(id1, id2) {
-  document.getElementById(id2).value = document.getElementById(id1).value;
+  const value1 = document.getElementById(id1).value;
+  const value2 = document.getElementById(id2).value;
+  if ( value2.length === 0 ) {
+    console.log("value1=" + value1 +" value2=" + value2 + "|" + " and len is " + value2.length )
+    document.getElementById(id2).value = value1 
+  }
 }

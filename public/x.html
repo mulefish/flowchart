@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+    window.onerror = function(msg, url, line, col, error) {
+        let  extra = !col ? '' : '\ncolumn: ' + col;
+        extra += !error ? '' : '\nerror: ' + error;
+        alert("Error: " + msg + "\nurl: " + url + "\nline: " + line + extra);
+    }
+</script>
     <meta charset="UTF-8" />
     <title>Flowchart Canvas - Full Functionality</title>
     <style>
@@ -15,13 +22,13 @@
         }
 
         #left-container {
-            /* width: 65%; */
+            /* width: 65%; */            
+            background-color: lightgray;
             padding: 20px;
             box-sizing: border-box;
         }
 
         #right-panel {
-            background-color: lightblue;
             /* width: 35%; */
             padding: 20px;
             box-sizing: border-box;
@@ -44,6 +51,9 @@
             background-color: #ffffff;
             font-size: 16px;
         }
+        .highlight { 
+            background-color: yellow;
+        }
     </style>
 </head>
 <body>
@@ -57,7 +67,7 @@
                         onmouseout="copyOver('nodeKey', 'nodeHuman')"
                         onblur="copyOver('nodeKey', 'nodeHuman')" /></td></tr>
                     <tr><td><input type="text" id="nodeHuman" required placeholder="human" /></td></tr>
-                    <tr><td><button onclick="addNode()">add node</button></td></tr>
+                    <tr><td><button class="highlight" onclick="addNode()">add node</button></td></tr>
                     <tr><td><input type="color" id="nodeColor" value="#ffffff" /></td></tr>
                     <tr><td>
                         <select id="nodeType">
@@ -71,7 +81,7 @@
                 <table border="1">
                     <tr><td><input type="text" id="fromNode" required placeholder="fromNode" /></td></tr>
                     <tr><td><input type="text" id="toNode" required placeholder="toNode" /></td></tr>
-                    <tr><td><button onclick="addConnection_step0()">add connection</button></td></tr>
+                    <tr><td><button class="highlight" onclick="addConnection_step0()">add connection</button></td></tr>
                     <tr><td>
                         <select id="lineType">
                             <option value="normal">Normal (Black)</option>
@@ -82,9 +92,9 @@
                 </table>
 
                 <table border="1">
+                    <tr><td><input type="text" id="circleKey" required placeholder="circleKey" /></td></tr>
                     <tr><td><input type="text" id="ancestor" required placeholder="ancestor" /></td></tr>
                     <tr><td><input type="text" id="fromNode2" required placeholder="fromNode2" /></td></tr>
-                    <tr><td><input type="text" id="circleKey" required placeholder="circleKey" /></td></tr>
                     <tr><td><input type="text" id="toNode2" required placeholder="toNode2" /></td></tr>
                     <tr><td>
                         <select id="circleChoice">
@@ -93,27 +103,53 @@
                             <option value="no">No</option>
                         </select>
                     </td></tr>
-                    <tr><td><button onclick="addDecisionPoint()">add decision</button></td></tr>
-                </table>
-
-                <table border="1">
-                    <tr><td><input type="text" id="nodeKeyDetail" placeholder="letter"></span></td></tr>
-                    <tr><td><input type="text" id="nodeLabelDetail" placeholder="human"></span></td></tr>
-                    <tr><td><input id="nodeAncestorDetail" placeholder="ancestor"></span></td></tr>
-                    <tr><td><button id="deleteNode" >delete</button></td></tr>
-                    <tr><td><button onClick="emitGraph()">emit</button></td></tr>
+                    <tr><td><button class="highlight" onclick="addDecisionPoint()">add decision</button></td></tr>
                 </table>
             </div>
+            <hr/>
+            <table border="1">
+                    <tr><td><input type="text" id="nodeKeyDetail" placeholder="letter"></span></td></tr>
+                    <tr><td><input type="text" id="nodeLabelDetail" placeholder="human"></span></td></tr>
+                    <tr><td><button id="deleteNode" >delete</button></td></tr>
+                    <tr><td><button onClick="emitGraph()">emit graph</button></td></tr>
+                    <tr><td><button class="highlight" onClick="emitPinia()">emit pinia</button></td></tr>
+            </table>
         </div>
 
         <div id="right-panel">
-            <textarea id="graphJson" rows="50" cols="120" spellcheck="false"></textarea>
+            <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
         </div>
     </div>
 
     <script src="complete.js"></script>
     <script>
         main("complete.json");
+
+
+
+        function emitPinia() {
+  const nodes = [];
+  graph.forEach((shape) => {
+    nodes.push(shape);
+    // nodes.push({
+    //   letter: shape.letter,
+    //   x: shape.x,
+    //   y: shape.y,
+    //   human: shape.human,
+    //   color: shape.color,
+    //   type: shape.type,
+    // });
+  });
+
+  const graphData = { nodes, connections };
+  document.getElementById("graphJson").value = " THIS IS FOR A PINIA STORE\n" +  JSON.stringify(
+    graphData,
+    null,
+    2
+  );
+}
+
+
     </script>
 </body>
 </html>
