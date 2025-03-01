@@ -1,0 +1,149 @@
+{
+    "nodes": [
+      {
+        "letter": "signup",
+        "x": 96,
+        "y": 267,
+        "human": "signup",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "dashboard",
+        "x": 612,
+        "y": 141,
+        "human": "dashboard",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "location",
+        "x": 234,
+        "y": 162,
+        "human": "location",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "legal_names",
+        "x": 846,
+        "y": 397,
+        "human": "legal_names",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "birth_and_citizenship",
+        "x": 483,
+        "y": 140,
+        "human": "birth_and_citizenship",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "eligibility",
+        "x": 575,
+        "y": 210,
+        "human": "eligibility",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "atributes",
+        "x": 526,
+        "y": 341,
+        "human": "atributes",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "payment",
+        "x": 586,
+        "y": 325,
+        "human": "payment",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "photoid_lrp",
+        "x": 1189,
+        "y": 177,
+        "human": "photoid_lrp",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "photoid_citizen",
+        "x": 1033,
+        "y": 294,
+        "human": "photoid_citizen",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "citizen_docs",
+        "x": 1337,
+        "y": 278,
+        "human": "citizen_docs",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "name_match",
+        "x": 998,
+        "y": 88,
+        "human": "name_match",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "add_linking_doc",
+        "x": 1313,
+        "y": 151,
+        "human": "add_linking_doc",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "schedule",
+        "x": 1476,
+        "y": 416,
+        "human": "schedule",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "appointment_summar",
+        "x": 1621,
+        "y": 330,
+        "human": "appointment_summar",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      },
+      {
+        "letter": "summary_online",
+        "x": 823,
+        "y": 76,
+        "human": "summary_online",
+        "color": "lightgray",
+        "type": "box",
+        "children": []
+      }
+    ],
+    "connections": []
+  }

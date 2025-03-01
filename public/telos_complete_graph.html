@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Flowchart Canvas - Full Functionality</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+      }
+      /* Flexbox container to hold form and right panel side by side */
+      #main-container {
+        display: flex;
+        flex-direction: row;
+      }
+      #form-container {
+        width: 50%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      #right-panel {
+        background-color: lightblue;
+        width: 50%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      canvas {
+        display: block;
+        background-color: #e0e0e0;
+        width: 100vw;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="flowchartCanvas"></canvas>
+
+    <!-- Flexbox wrapper for side-by-side layout -->
+    <div id="main-container">
+      <div id="form-container">
+        <h3>
+          STEP 1: Add a node. Give it a key and a human facing string. Drag it
+          somewhere
+        </h3>
+        <form id="nodeForm">
+          <label for="nodeKey">Key:</label>
+          <input type="text" id="nodeKey" required />
+          <label for="nodeHuman">Label:</label>
+          <input type="text" id="nodeHuman" required />
+          <label for="nodeColor">Color:</label>
+          <input type="color" id="nodeColor" value="#ffffff" />
+          <label for="nodeType">Type:</label>
+          <select id="nodeType">
+            <option value="box">Box</option>
+            <option value="diamond">Diamond</option>
+            <!-- Optionally you could add circle here too -->
+          </select>
+          <button type="submit">Add Node</button>
+        </form>
+
+        <h3>STEP2: Add a Connection to 2 nodes by their keys</h3>
+        <form id="connectionForm">
+          <label for="fromNode">From:</label>
+          <input type="text" id="fromNode" required />
+          <label for="toNode">To:</label>
+          <input type="text" id="toNode" required />
+          <label for="lineType">Line Type:</label>
+          <select id="lineType">
+            <option value="normal">Normal (Black)</option>
+            <option value="yes">Yes (Green)</option>
+            <option value="no">No (Red)</option>
+          </select>
+          <button type="submit">Add Connection</button>
+        </form>
+
+        <h3>
+          STEP3: Add a circle to a Connection, by their keys, and give the
+          circle a key/value ( dropdown for color )
+        </h3>
+        <form id="circleForm">
+          <label for="fromNode2">From (Node Key):</label>
+          <input type="text" id="fromNode2" required />
+
+          <label for="circleKey">Circle Key:</label>
+          <input type="text" id="circleKey" required />
+
+          <label for="toNode2">To (Node Key):</label>
+          <input type="text" id="toNode2" required />
+
+          <label for="circleChoice">Choice:</label>
+          <select id="circleChoice">
+            <option value="none">NONE</option>
+            <option value="yes">YES</option>
+            <option value="no">NO</option>
+          </select>
+
+          <button type="submit">Insert CIRCLE</button>
+        </form>
+
+        <h3>Selected Node Details</h3>
+        <div id="selectedNodeDetails">
+          <strong>Key:</strong> <span id="nodeKeyDetail">None</span><br />
+          <strong>Label:</strong> <span id="nodeLabelDetail">None</span><br />
+          <strong>Color:</strong> <span id="nodeColorDetail">None</span><br />
+          <strong>Type:</strong> <span id="nodeTypeDetail">None</span><br />
+          <strong>Position:</strong>
+          <span id="nodePositionDetail">(N/A, N/A)</span><br />
+          <button id="deleteNode" disabled>Delete Selected Node</button>
+        </div>
+        <br />
+
+          <h3>STEP 4: Emit graph, as json, to textarea!!</h3>
+          <button onClick="saveGraph()" >save</button>
+
+        <br/>
+        <h3>Step 5: Set children:</h3>
+        <button onClick="makePiniaStore()">makePiniaStore</button>
+      
+        <br/>
+
+        <hr />
+
+      </div>
+
+      <div id="right-panel">
+        <textarea
+          id="graphJson"
+          rows="50"
+          cols="120"
+          spellcheck="false"
+        ></textarea>
+      </div>
+    </div>
+
+
+    <script src="telos_complete_graph.js"></script>
+    <script>
+      main("telos_complete_graph.json");
+    </script>
+  </body>
+</html>
