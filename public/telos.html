@@ -1,142 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
+<script>
+    window.onerror = function(msg, url, line, col, error) {
+        let  extra = !col ? '' : '\ncolumn: ' + col;
+        extra += !error ? '' : '\nerror: ' + error;
+        document.getElementById("errors").innerHTML = "Error: " + msg + "<br/>line: " + line + "<br/>" + extra;
+    }
+</script>
     <meta charset="UTF-8" />
     <title>Flowchart Canvas - Full Functionality</title>
     <style>
-      body,
-      html {
-        margin: 0;
-        padding: 0;
-      }
-      /* Flexbox container to hold form and right panel side by side */
-      #main-container {
-        display: flex;
-        flex-direction: row;
-      }
-      #form-container {
-        width: 50%;
-        padding: 20px;
-        box-sizing: border-box;
-      }
-      #right-panel {
-        background-color: lightblue;
-        width: 50%;
-        padding: 20px;
-        box-sizing: border-box;
-      }
-      canvas {
-        display: block;
-        background-color: #e0e0e0;
-        width: 100vw;
-        height: 600px;
-      }
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #left-container {
+            /* width: 65%; */            
+            background-color: lightgray;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #right-panel {
+            /* width: 35%; */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            display: block;
+            background-color: #e0e0e0;
+            width: 100vw;
+            height: 600px;
+        }
+
+        #horizontal {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        input {
+            width:80px;
+            background-color: #ffffff;
+            font-size: 16px;
+        }
+        .highlight { 
+            background-color: yellow;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <canvas id="flowchartCanvas"></canvas>
 
-    <!-- Flexbox wrapper for side-by-side layout -->
     <div id="main-container">
-      <div id="form-container">
-        <h3>
-          STEP 1: Add a node. Give it a key and a human facing string. Drag it
-          somewhere
-        </h3>
-        <form id="nodeForm">
-          <label for="nodeKey">Key:</label>
-          <input type="text" id="nodeKey" required />
-          <label for="nodeHuman">Label:</label>
-          <input type="text" id="nodeHuman" required />
-          <label for="nodeColor">Color:</label>
-          <input type="color" id="nodeColor" value="#ffffff" />
-          <label for="nodeType">Type:</label>
-          <select id="nodeType">
-            <option value="box">Box</option>
-            <option value="diamond">Diamond</option>
-            <!-- Optionally you could add circle here too -->
-          </select>
-          <button type="submit">Add Node</button>
-        </form>
+        <div id="left-container">
+            <div id="horizontal">
+                <table border="1">
+                    <tr><td><input type="text" id="nodeKey" required placeholder="key"
+                        onmouseout="copyOver('nodeKey', 'nodeHuman')"
+                        onblur="copyOver('nodeKey', 'nodeHuman')" /></td></tr>
+                    <tr><td><input type="text" id="nodeHuman" required placeholder="human" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addNode()">add node</button></td></tr>
+                    <tr><td><input type="color" id="nodeColor" value="#ffffff" /></td></tr>
+                    <tr><td>
+                        <select id="nodeType">
+                            <option value="box">Box</option>
+                            <option value="diamond">Diamond</option>
+                            <option value="circle">Circle</option>
+                        </select>
+                    </td></tr>
+                </table>
 
-        <h3>STEP2: Add a Connection to 2 nodes by their keys</h3>
-        <form id="connectionForm">
-          <label for="fromNode">From:</label>
-          <input type="text" id="fromNode" required />
-          <label for="toNode">To:</label>
-          <input type="text" id="toNode" required />
-          <label for="lineType">Line Type:</label>
-          <select id="lineType">
-            <option value="normal">Normal (Black)</option>
-            <option value="yes">Yes (Green)</option>
-            <option value="no">No (Red)</option>
-          </select>
-          <button type="submit">Add Connection</button>
-        </form>
+                <table border="1">
+                    <tr><td><input type="text" id="fromNode" required placeholder="fromNode" /></td></tr>
+                    <tr><td><input type="text" id="toNode" required placeholder="toNode" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addConnection_step0()">add connection</button></td></tr>
+                    <tr><td>
+                        <select id="lineType">
+                            <option value="normal">Normal (Black)</option>
+                            <option value="yes">Yes (Green)</option>
+                            <option value="no">No (Red)</option>
+                        </select>
+                    </td></tr>
+                </table>
 
-        <h3>
-          STEP3: Add a circle to a Connection, by their keys, and give the
-          circle a key/value ( dropdown for color )
-        </h3>
-        <form id="circleForm">
-          <label for="fromNode2">From (Node Key):</label>
-          <input type="text" id="fromNode2" required />
-
-          <label for="circleKey">Circle Key:</label>
-          <input type="text" id="circleKey" required />
-
-          <label for="toNode2">To (Node Key):</label>
-          <input type="text" id="toNode2" required />
-
-          <label for="circleChoice">Choice:</label>
-          <select id="circleChoice">
-            <option value="none">NONE</option>
-            <option value="yes">YES</option>
-            <option value="no">NO</option>
-          </select>
-
-          <button type="submit">Insert CIRCLE</button>
-        </form>
-
-        <h3>Selected Node Details</h3>
-        <div id="selectedNodeDetails">
-          <strong>Key:</strong> <span id="nodeKeyDetail">None</span><br />
-          <strong>Label:</strong> <span id="nodeLabelDetail">None</span><br />
-          <strong>Color:</strong> <span id="nodeColorDetail">None</span><br />
-          <strong>Type:</strong> <span id="nodeTypeDetail">None</span><br />
-          <strong>Position:</strong>
-          <span id="nodePositionDetail">(N/A, N/A)</span><br />
-          <button id="deleteNode" disabled>Delete Selected Node</button>
+                <table border="1">
+                    <tr><td><input type="text" id="circleKey" required placeholder="circleKey" /></td></tr>
+                    <tr><td><input type="text" id="ancestor" required placeholder="ancestor" /></td></tr>
+                    <tr><td><input type="text" id="fromNode2" required placeholder="fromNode2" /></td></tr>
+                    <tr><td><input type="text" id="toNode2" required placeholder="toNode2" /></td></tr>
+                    <tr><td>
+                        <select id="circleChoice">
+                            <option value="none">None</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </td></tr>
+                    <tr><td><button class="highlight" onclick="addDecisionPoint()">add decision</button></td></tr>
+                </table>
+            </div>
+            <hr/>
+            <table border="1">
+                    <tr><td><input type="text" id="nodeKeyDetail" placeholder="letter"></span></td></tr>
+                    <tr><td><input type="text" id="nodeLabelDetail" placeholder="human"></span></td></tr>
+                    <tr><td><button id="deleteNode" >delete</button></td></tr>
+                    <tr><td><button onClick="emitGraph()">emit graph</button></td></tr>
+                    <tr><td><button class="highlight" onClick="emitPinia()">emit pinia</button></td></tr>
+            </table>
+            <hr/>
+            <div id="errors"></div>
         </div>
-        <br />
 
-          <h3>STEP 4: Emit graph, as json, to textarea!!</h3>
-          <button onClick="saveGraph()" >save</button>
-
-        <br/>
-        <h3>Step 5: Set children:</h3>
-        <button onClick="makePiniaStore()">makePiniaStore</button>
-      
-        <br/>
-
-        <hr />
-
-      </div>
-
-      <div id="right-panel">
-        <textarea
-          id="graphJson"
-          rows="50"
-          cols="120"
-          spellcheck="false"
-        ></textarea>
-      </div>
+        <div id="right-panel">
+            <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
+        </div>
     </div>
 
+<script src="telos.js"></script>
+<script>
+main("telos.json");
+function emitPinia() {
+  const nodes = [];
+  graph.forEach((shape) => {
+    nodes.push({
+      letter: shape.letter,
+      x: shape.x,
+      y: shape.y,
+      human: shape.human,
+      color: shape.color,
+      type: shape.type,
+    });
+  });
 
-    <script src="telos.js"></script>
-    <script>
-      main("telos.json");
-    </script>
-  </body>
+  const graphData = { nodes, connections };
+  document.getElementById("graphJson").value = " THIS IS FOR A PINIA STORE\n" +  JSON.stringify(
+    graphData,
+    null,
+    2
+  );
+}
+</script>
+</body>
 </html>

@@ -2,6 +2,7 @@ const YES = "yes";
 const NO = "no";
 // const NORMAL = "SOMETHING";
 const YELLOW = "background-color:yellow;";
+const LIGHTGREEN = "background-color:lightgreen";
 const canvas = document.getElementById("flowchartCanvas");
 canvas.width = window.innerWidth;
 canvas.height = 600;
@@ -124,7 +125,7 @@ class Shape {
     this.color = color;
     this.type = type;
     this.ancestor = "";
-    this.target = ""; 
+    this.target = "";
     graph.set(letter, this);
   }
   setAncestor(a) {
@@ -135,10 +136,8 @@ class Shape {
 const graph = new Map();
 let connections = [];
 let seen = {};
-function addConnection(fromNode, toNode, type, ancestor, whence) {
-console.log("fromNode=" + fromNode + " toNOde=" + toNode )
-  graph.get(fromNode).target = toNode
-
+function addConnection(fromNode, toNode, type, ancestor) {
+  graph.get(fromNode).target = toNode;
   const compoundKey = fromNode + ":" + toNode;
   if (seen.hasOwnProperty(compoundKey)) {
     seen[compoundKey]++;
@@ -147,7 +146,6 @@ console.log("fromNode=" + fromNode + " toNOde=" + toNode )
   }
   connections.push({ from: fromNode, to: toNode, type, ancestor });
   drawGraph(graph);
-  console.log(JSON.stringify(seen, null, 2));
 }
 
 function deleteNode(nodeKey) {
@@ -162,7 +160,6 @@ function deleteNode(nodeKey) {
   TO_NODE2_WIDGET.value = "";
   NODE_KEY_DETAIL_WIDGET.value = "";
   NODE_LABEL_DETAIL_WIDGET.value = "";
-  NODE_ANCESTOR_DETAIL_WIDGET.value = "";
   ANCESTOR.value = "";
 
   drawGraph(graph);
@@ -378,9 +375,8 @@ function emitGraph() {
 }
 
 function scaleNodesToFit() {
-  //
   if (!everything || !everything.nodes || everything.nodes.length === 0) {
-    console.warn("No nodes available to scale.");
+    console.log("No nodes available to scale.");
     return;
   }
 
@@ -422,15 +418,10 @@ function addDecisionPoint() {
   const circleChoice = document.getElementById("circleChoice").value;
   const fromShape = graph.get(fromKey);
   const toShape = graph.get(toKey);
-
   if (!fromShape || !toShape || circleKey.length == 0) {
     alert("Invalid node keys provided or the circleKey is missing.");
     return;
   }
-  console.log("%c len " + connections.length, YELLOW);
-  connections.forEach((thing, i) => {
-    console.log(i, thing);
-  });
 
   connections = connections.filter(
     (conn) => !(conn.from === fromKey && conn.to === toKey)

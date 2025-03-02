@@ -1,20 +1,30 @@
 const YES = "yes";
 const NO = "no";
-const NORMAL = "DINO";
-
+// const NORMAL = "SOMETHING";
+const YELLOW = "background-color:yellow;";
+const LIGHTGREEN = "background-color:lightgreen";
 const canvas = document.getElementById("flowchartCanvas");
 canvas.width = window.innerWidth;
 canvas.height = 600;
 const ctx = canvas.getContext("2d");
-
-const boxWidth = 80;
-const boxHeight = 50;
-const diamondWidth = 80;
-const diamondHeight = 80;
-
+const boxWidth = 30;
+const boxHeight = 30;
+const diamondWidth = 30;
+const diamondHeight = 30;
+const circleDiameter = 30;
 let selectedNode = null;
-
-let everything = undefined; // This is a terrible name! It should be 'everything'
+let everything = undefined;
+const nudge = -23; // nudge text upwards a little
+const FROM_NODE_WIDGET = document.getElementById("fromNode");
+const FROM_NODE2_WIDGET = document.getElementById("fromNode2");
+const TO_NODE_WIDGET = document.getElementById("toNode");
+const TO_NODE2_WIDGET = document.getElementById("toNode2");
+const NODE_KEY_DETAIL_WIDGET = document.getElementById("nodeKeyDetail");
+const ANCESTOR = document.getElementById("ancestor");
+const NODE_LABEL_DETAIL_WIDGET = document.getElementById("nodeLabelDetail");
+const NODE_ANCESTOR_DETAIL_WIDGET =
+  document.getElementById("nodeAncestorDetail");
+const DELETE_NOTE_BUTTON = document.getElementById("deleteNode");
 
 function drawBox(x, y, width, height, text, color, selected, human) {
   ctx.fillStyle = color;
@@ -30,7 +40,7 @@ function drawBox(x, y, width, height, text, color, selected, human) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   const t = text + " : " + human;
-  ctx.fillText(text, x + width / 2, y + height / 2);
+  ctx.fillText(text, x + width / 2, nudge + y + height / 2);
 }
 
 function drawDiamond(x, y, width, height, text, color, selected, human) {
@@ -54,7 +64,7 @@ function drawDiamond(x, y, width, height, text, color, selected, human) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   const t = text + " : " + human;
-  ctx.fillText(text, centerX, centerY);
+  ctx.fillText(text, centerX, nudge + centerY);
 }
 
 function drawArrow_quadraticBezier(fromX, fromY, toX, toY, color = "black") {
@@ -107,75 +117,73 @@ function drawArrow_quadraticBezier(fromX, fromY, toX, toY, color = "black") {
   ctx.strokeStyle = "black"; // Reset for future strokes
 }
 class Shape {
-  constructor(letter, x, y, human, color, type = "box", children=[]) {
+  constructor(letter, x, y, human, color, type = "box") {
     this.letter = letter;
     this.x = x || Math.floor(Math.random() * (800 - 100)) + 100;
     this.y = y || Math.floor(Math.random() * (400 - 100)) + 100;
     this.human = human;
     this.color = color;
     this.type = type;
-    this.children = children;
-    // graph.set(letter, this);
-    graph[letter] = this;
+    this.ancestor = "";
+    this.target = "";
+    graph.set(letter, this);
   }
-  addChild(newChild) {
-    this.children.push(newChild);
+  setAncestor(a) {
+    setAncestr;
   }
 }
 
-const graph = {}; // new Map();
+const graph = new Map();
 let connections = [];
-
-function addConnection(fromNode, toNode, type = NORMAL) {
-  connections.push({ from: fromNode, to: toNode, type });
+let seen = {};
+function addConnection(fromNode, toNode, type, ancestor) {
+  graph.get(fromNode).target = toNode;
+  const compoundKey = fromNode + ":" + toNode;
+  if (seen.hasOwnProperty(compoundKey)) {
+    seen[compoundKey]++;
+  } else {
+    seen[compoundKey] = 1;
+  }
+  connections.push({ from: fromNode, to: toNode, type, ancestor });
   drawGraph(graph);
 }
 
 function deleteNode(nodeKey) {
-  function removeChildByKey(children, keyToRemove) {
-    return children.filter((child) => child.key !== keyToRemove);
-  }
-
-  // for (let [key, obj] of graph) {
-  for (let k in graph) {
-    let obj = graph[k];
-    obj.children = removeChildByKey(obj.children, nodeKey);
-  }
-  // graph.delete(nodeKey);
-  delete graph[nodeKey];
+  graph.delete(nodeKey);
   connections = connections.filter(
     (conn) => conn.from !== nodeKey && conn.to !== nodeKey
   );
   selectedNode = null;
-  updateNodeDetails(null);
+  FROM_NODE_WIDGET.value = "";
+  FROM_NODE2_WIDGET.value = "";
+  TO_NODE_WIDGET.value = "";
+  TO_NODE2_WIDGET.value = "";
+  NODE_KEY_DETAIL_WIDGET.value = "";
+  NODE_LABEL_DETAIL_WIDGET.value = "";
+  ANCESTOR.value = "";
+
   drawGraph(graph);
 }
-
-function updateNodeDetails(node) {
-  document.getElementById("nodeKeyDetail").textContent = node
-    ? node.letter
-    : "None";
-  document.getElementById("nodeLabelDetail").textContent = node
-    ? node.human
-    : "None";
-  document.getElementById("nodeColorDetail").textContent = node
-    ? node.color
-    : "None";
-  document.getElementById("nodeTypeDetail").textContent = node
-    ? node.type
-    : "None";
-  document.getElementById("nodePositionDetail").textContent = node
-    ? `(${node.x}, ${node.y})`
-    : "(N/A, N/A)";
-  document.getElementById("deleteNode").disabled = !node;
+let count = 0;
+function updateNodeDetails(node, whence = "TBD") {
+  if (count % 2 == 0) {
+    FROM_NODE_WIDGET.value = node.letter;
+    FROM_NODE2_WIDGET.value = node.letter;
+    ANCESTOR.value = node.letter;
+  } else {
+    TO_NODE_WIDGET.value = node.letter;
+    TO_NODE2_WIDGET.value = node.letter;
+  }
+  count++;
+  NODE_KEY_DETAIL_WIDGET.value = node.letter;
+  NODE_LABEL_DETAIL_WIDGET.value = node.human;
+  DELETE_NOTE_BUTTON.disabled = !node;
 }
-
-const circleDiameter = 70;
 
 function drawCircle(x, y, diameter, text, color, selected, human) {
   ctx.fillStyle = color;
   ctx.beginPath();
-  // Draw a circle centered in the rectangle defined by (x,y) and diameter
+
   ctx.arc(x + diameter / 2, y + diameter / 2, diameter / 2, 0, 2 * Math.PI);
   ctx.fill();
   ctx.strokeStyle = selected ? "red" : "black";
@@ -186,17 +194,16 @@ function drawCircle(x, y, diameter, text, color, selected, human) {
   ctx.font = "17px Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(text, x + diameter / 2, y + diameter / 2);
+  ctx.fillText(text, x + diameter / 2, nudge + y + diameter / 2);
 }
 
 function drawGraph(xy) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   connections.forEach((conn) => {
-    // const from = xy.get(conn.from);
-    // const to = xy.get(conn.to);
-    const from = xy[conn.from];
-    const to = xy[conn.to];
+    const from = xy.get(conn.from);
+    const to = xy.get(conn.to);
+
     if (from && to) {
       let color = "black";
       if (conn.type === YES) color = "green";
@@ -241,9 +248,7 @@ function drawGraph(xy) {
     }
   });
 
-  // xy.forEach((shape) => {
-  for (let key in xy) {
-    let shape = xy[key];
+  xy.forEach((shape) => {
     const isSelected = selectedNode && shape.letter === selectedNode.letter;
     if (shape.type === "diamond") {
       drawDiamond(
@@ -278,7 +283,7 @@ function drawGraph(xy) {
         shape.human
       );
     }
-  }
+  });
 }
 
 let draggingShape = null;
@@ -290,8 +295,7 @@ canvas.addEventListener("mousedown", (e) => {
   const mouseY = e.clientY - rect.top;
 
   let foundNode = false;
-  for (let k in graph) {
-    let shape = graph[k];
+  graph.forEach((shape) => {
     const width = shape.type === "diamond" ? diamondWidth : boxWidth;
     const height = shape.type === "diamond" ? diamondHeight : boxHeight;
 
@@ -306,13 +310,12 @@ canvas.addEventListener("mousedown", (e) => {
       offsetY = mouseY - shape.y;
       selectedNode = shape;
       foundNode = true;
-      updateNodeDetails(shape);
+      updateNodeDetails(shape, "addEventListener");
     }
-  }
+  });
 
   if (!foundNode) {
     selectedNode = null;
-    updateNodeDetails(null);
   }
   drawGraph(graph);
 });
@@ -322,7 +325,7 @@ canvas.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
     draggingShape.x = e.clientX - rect.left - offsetX;
     draggingShape.y = e.clientY - rect.top - offsetY;
-    updateNodeDetails(draggingShape);
+    updateNodeDetails(draggingShape, "mousemove");
     drawGraph(graph);
   }
 });
@@ -335,33 +338,33 @@ document.getElementById("deleteNode").addEventListener("click", () => {
     deleteNode(selectedNode.letter);
   }
 });
-
-document.getElementById("nodeForm").addEventListener("submit", (e) => {
-  e.preventDefault();
+function addNode() {
   const key = document.getElementById("nodeKey").value;
   const label = document.getElementById("nodeHuman").value;
   const color = document.getElementById("nodeColor").value;
   const type = document.getElementById("nodeType").value;
   new Shape(key, null, null, label, color, type);
   drawGraph(graph);
-  e.target.reset();
-});
+  document.getElementById("nodeKey").value = "";
+  document.getElementById("nodeHuman").value = "";
+}
 
-document.getElementById("connectionForm").addEventListener("submit", (e) => {
-  e.preventDefault();
+function addConnection_step0() {
   const fromNode = document.getElementById("fromNode").value;
   const toNode = document.getElementById("toNode").value;
   const lineType = document.getElementById("lineType").value;
-  addConnection(fromNode, toNode, lineType);
-  e.target.reset();
-});
-
-function saveGraph() {
-  const nodes = [];
-  for (let k in graph) {
-    let shape = graph[k];
-    nodes.push(shape);
+  if (fromNode === toNode) {
+    alert("Self-calls are not permitted");
+  } else {
+    addConnection(fromNode, toNode, lineType, fromNode);
   }
+}
+
+function emitGraph() {
+  const nodes = [];
+  graph.forEach((shape) => {
+    nodes.push(shape);
+  });
 
   const graphData = { nodes, connections };
   document.getElementById("graphJson").value = JSON.stringify(
@@ -372,9 +375,8 @@ function saveGraph() {
 }
 
 function scaleNodesToFit() {
-  //
   if (!everything || !everything.nodes || everything.nodes.length === 0) {
-    console.warn("No nodes available to scale.");
+    console.log("No nodes available to scale.");
     return;
   }
 
@@ -408,33 +410,19 @@ function scaleNodesToFit() {
   });
   drawGraph(graph);
 }
-document.getElementById("circleForm").addEventListener("submit", (e) => {
-  e.preventDefault();
+
+function addDecisionPoint() {
   const fromKey = document.getElementById("fromNode2").value;
   const circleKey = document.getElementById("circleKey").value;
   const toKey = document.getElementById("toNode2").value;
-  const circleChoice = document.getElementById("circleChoice").value; // "yes", "no", or "none"
-
-  // const fromShape = graph.get(fromKey);
-  // const toShape = graph.get(toKey);
-  const fromShape = graph[fromKey];
-  const toShape = graph[toKey];
-
-  try {
-    if (circleChoice == "none") {
-      circleChoice == "NILL";
-    }
-    fromShape.addChild({ key: circleKey, value: circleChoice });
-  } catch (boom) {
-    alert("FAILBOT SAYS " + boom);
-  }
-  // toShape["children"].push({"key":circleKey, "value": circleChoice})
-  if (!fromShape || !toShape) {
-    alert("Invalid node keys provided. Please ensure both nodes exist.");
+  const circleChoice = document.getElementById("circleChoice").value;
+  const fromShape = graph.get(fromKey);
+  const toShape = graph.get(toKey);
+  if (!fromShape || !toShape || circleKey.length == 0) {
+    alert("Invalid node keys provided or the circleKey is missing.");
     return;
   }
 
-  // ZAP! orig connection between the two nodes, if it exists - because we are going to shove a circle in the middle
   connections = connections.filter(
     (conn) => !(conn.from === fromKey && conn.to === toKey)
   );
@@ -449,8 +437,7 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   }
 
   new Shape(circleKey, circleX, circleY, circleKey, circleColor, "circle");
-  // const circleShape = graph.get(circleKey);
-  const circleShape = graph[circleKey];
+  const circleShape = graph.get(circleKey);
   circleShape.choice = circleChoice;
   let connType;
   if (circleChoice.toLowerCase() === "yes") {
@@ -458,71 +445,41 @@ document.getElementById("circleForm").addEventListener("submit", (e) => {
   } else if (circleChoice.toLowerCase() === "no") {
     connType = NO;
   } else {
-    connType = NORMAL;
+    connType = "?";
   }
-  addConnection(fromKey, circleKey, connType);
-  addConnection(circleKey, toKey, connType);
+  addConnection(fromKey, circleKey, connType, fromKey);
+  addConnection(circleKey, toKey, connType, fromKey);
 
   drawGraph(graph);
-  e.target.reset();
-});
 
-async function main(nameOfTheJsonFile) {
-  //  try {
-  const response = await fetch(nameOfTheJsonFile);
-  everything = await response.json();
-
-
-  everything.nodes.forEach((node) => {
-    new Shape(node.letter, node.x, node.y, node.human, node.color, node.type, node.children);
-  });
-
-  everything.connections.forEach((conn) =>
-    addConnection(conn.from, conn.to, conn.type)
-  );
-
-  drawGraph(graph);
-  // } catch (error) {
-  //   console.error("Failed to load initial data:", error);
-  // }
+  document.getElementById("fromNode2").value = "";
+  document.getElementById("circleKey").value = "";
+  document.getElementById("toNode2").value = "";
+  document.getElementById("ancestor").value = "";
 }
 
-/// telos
-function makePiniaStore() {
-  const nodes = [];
-  const dependencies = {};
-  // step 1
-  for (let k in graph) {  
-    let node = graph[k];
+async function main(nameOfTheJsonFile) {
+  try {
+    const response = await fetch(nameOfTheJsonFile);
+    everything = await response.json();
 
-    if ( node.type === "circle") {
-      // ignore for now 
-    } else {
-      nodes.push({
-        letter: node.letter,
-        human: node.human,
-        children: node.children,
-      });     
+    everything.nodes.forEach((node) => {
+      new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
+    });
 
-      for ( let k2 in connections ) {
-        if ( connections[k2].from === node.letter) {
-          dependencies[node.letter] = {} 
-        }
-      }
-    }
+    everything.connections.forEach((conn) =>
+      addConnection(conn.from, conn.to, conn.type, conn.ancestor)
+    );
+
+    drawGraph(graph);
+  } catch (error) {
+    console.error("Failed to load initial data:", error);
   }
-
-  // step 2 : find dependencies details 
-  for ( let k in connections ) {
-
+}
+function copyOver(id1, id2) {
+  const value1 = document.getElementById(id1).value;
+  const value2 = document.getElementById(id2).value;
+  if (value2.length === 0) {
+    document.getElementById(id2).value = value1;
   }
-
-
-
-  const graphData = { nodes, connections, dependencies };
-  document.getElementById("graphJson").value = JSON.stringify(
-    graphData,
-    null,
-    2
-  );
 }
