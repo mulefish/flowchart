@@ -1,24 +1,4 @@
 {
-  "nodes": [
-    {
-      "letter": "x",
-      "x": 129,
-      "y": 167,
-      "human": "x",
-      "color": "#ffffff",
-      "type": "box",
-      "ancestor": ""
-    },
-    {
-      "letter": "y",
-      "x": 585,
-      "y": 325,
-      "human": "y",
-      "color": "#ffffff",
-      "type": "box",
-      "ancestor": ""
-    }
-  ],
-  "connections": [
-  ]
+  "nodes": [],
+  "connections": []
 }
