@@ -24,7 +24,6 @@ const NODE_LABEL_DETAIL_WIDGET = document.getElementById("nodeLabelDetail");
 const NODE_ANCESTOR_DETAIL_WIDGET =
   document.getElementById("nodeAncestorDetail");
 const DELETE_NOTE_BUTTON = document.getElementById("deleteNode");
-// ancestor
 
 function drawBox(x, y, width, height, text, color, selected, human) {
   ctx.fillStyle = color;
@@ -125,6 +124,7 @@ class Shape {
     this.color = color;
     this.type = type;
     this.ancestor = "";
+    this.target = ""; 
     graph.set(letter, this);
   }
   setAncestor(a) {
@@ -134,11 +134,20 @@ class Shape {
 
 const graph = new Map();
 let connections = [];
-
+let seen = {};
 function addConnection(fromNode, toNode, type, ancestor, whence) {
-  console.log("addConnection=" + whence + "|")
+console.log("fromNode=" + fromNode + " toNOde=" + toNode )
+  graph.get(fromNode).target = toNode
+
+  const compoundKey = fromNode + ":" + toNode;
+  if (seen.hasOwnProperty(compoundKey)) {
+    seen[compoundKey]++;
+  } else {
+    seen[compoundKey] = 1;
+  }
   connections.push({ from: fromNode, to: toNode, type, ancestor });
   drawGraph(graph);
+  console.log(JSON.stringify(seen, null, 2));
 }
 
 function deleteNode(nodeKey) {
@@ -154,25 +163,23 @@ function deleteNode(nodeKey) {
   NODE_KEY_DETAIL_WIDGET.value = "";
   NODE_LABEL_DETAIL_WIDGET.value = "";
   NODE_ANCESTOR_DETAIL_WIDGET.value = "";
-ANCESTOR.value = ""; 
+  ANCESTOR.value = "";
 
   drawGraph(graph);
 }
-let count = 0 
+let count = 0;
 function updateNodeDetails(node, whence = "TBD") {
-  // console.log("updateNodeDetails %c whence " + whence, YELLOW);
-  if ( count % 2 == 0 ) {
+  if (count % 2 == 0) {
     FROM_NODE_WIDGET.value = node.letter;
-    FROM_NODE2_WIDGET.value =  node.letter;
-    ANCESTOR.value =  node.letter; 
+    FROM_NODE2_WIDGET.value = node.letter;
+    ANCESTOR.value = node.letter;
   } else {
     TO_NODE_WIDGET.value = node.letter;
     TO_NODE2_WIDGET.value = node.letter;
   }
-  count++ 
+  count++;
   NODE_KEY_DETAIL_WIDGET.value = node.letter;
   NODE_LABEL_DETAIL_WIDGET.value = node.human;
-
   DELETE_NOTE_BUTTON.disabled = !node;
 }
 
@@ -343,14 +350,17 @@ function addNode() {
   drawGraph(graph);
   document.getElementById("nodeKey").value = "";
   document.getElementById("nodeHuman").value = "";
-
 }
 
 function addConnection_step0() {
   const fromNode = document.getElementById("fromNode").value;
   const toNode = document.getElementById("toNode").value;
   const lineType = document.getElementById("lineType").value;
-  addConnection(fromNode, toNode, lineType, fromNode);
+  if (fromNode === toNode) {
+    alert("Self-calls are not permitted");
+  } else {
+    addConnection(fromNode, toNode, lineType, fromNode);
+  }
 }
 
 function emitGraph() {
@@ -413,12 +423,15 @@ function addDecisionPoint() {
   const fromShape = graph.get(fromKey);
   const toShape = graph.get(toKey);
 
-  if (!fromShape || !toShape || circleKey.length == 0 ) {
+  if (!fromShape || !toShape || circleKey.length == 0) {
     alert("Invalid node keys provided or the circleKey is missing.");
     return;
   }
-console.log("fromKey="+  fromKey + " circleKey=" + circleKey + " toKey=" + toKey + " circleChoice=" + circleChoice + " fromShape=" + JSON.stringify(fromShape) + " toShape=" + JSON.stringify(toShape)  )
-  // ZAP! orig connection between the two nodes, if it exists - because we are going to shove a circle in the middle
+  console.log("%c len " + connections.length, YELLOW);
+  connections.forEach((thing, i) => {
+    console.log(i, thing);
+  });
+
   connections = connections.filter(
     (conn) => !(conn.from === fromKey && conn.to === toKey)
   );
@@ -447,6 +460,11 @@ console.log("fromKey="+  fromKey + " circleKey=" + circleKey + " toKey=" + toKey
   addConnection(circleKey, toKey, connType, fromKey);
 
   drawGraph(graph);
+
+  document.getElementById("fromNode2").value = "";
+  document.getElementById("circleKey").value = "";
+  document.getElementById("toNode2").value = "";
+  document.getElementById("ancestor").value = "";
 }
 
 async function main(nameOfTheJsonFile) {
@@ -470,8 +488,7 @@ async function main(nameOfTheJsonFile) {
 function copyOver(id1, id2) {
   const value1 = document.getElementById(id1).value;
   const value2 = document.getElementById(id2).value;
-  if ( value2.length === 0 ) {
-    console.log("value1=" + value1 +" value2=" + value2 + "|" + " and len is " + value2.length )
-    document.getElementById(id2).value = value1 
+  if (value2.length === 0) {
+    document.getElementById(id2).value = value1;
   }
 }
