@@ -151,8 +151,7 @@ function addConnection(fromNode, toNode, type, ancestor) {
   } else {
     seen[compoundKey] = 1;
   }
-  console.log(" 154 ancestor=" + ancestor )
-  connections.push({ from: fromNode, to: toNode, type:type, ancestor:ancestor,kittycat:'gotat' });
+  connections.push({ from: fromNode, to: toNode, type, ancestor });
   drawGraph(graph);
 }
 
@@ -190,9 +189,6 @@ function updateNodeDetails(node, whence = "TBD") {
   NODE_COLOR_DETAIL_WIDGET.value = node.color;
   
   DELETE_NOTE_BUTTON.disabled = !node;
-
-  document.getElementById("graphJson").value = JSON.stringify( node , null, 2 )
-
 }
 
 function drawCircle(x, y, diameter, text, color, selected, human) {

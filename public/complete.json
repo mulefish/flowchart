@@ -8,7 +8,7 @@
       "color": "#ff6633",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "disclose"
     },
     {
       "letter": "signin",
@@ -18,7 +18,7 @@
       "color": "#fbd5d5",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "signup"
     },
     {
       "letter": "password",
@@ -38,7 +38,7 @@
       "color": "#fbd5d5",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "account_details"
     },
     {
       "letter": "account_details",
@@ -48,7 +48,7 @@
       "color": "#fbd5d5",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "is_enroll_snow_no"
     },
     {
       "letter": "associate_to_account",
@@ -88,7 +88,7 @@
       "color": "#ffffff",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "location"
     },
     {
       "letter": "location",
@@ -98,7 +98,7 @@
       "color": "#44ee88",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "legal_names"
     },
     {
       "letter": "birth_and_citizenship",
@@ -108,7 +108,7 @@
       "color": "#d9ea57",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "eligibility"
     },
     {
       "letter": "eligibility",
@@ -118,7 +118,7 @@
       "color": "#d9ea57",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "enrollment_no"
     },
     {
       "letter": "attributes",
@@ -128,7 +128,7 @@
       "color": "#d9ea57",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "address"
     },
     {
       "letter": "payment",
@@ -138,7 +138,7 @@
       "color": "#A020F0",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "summary_online"
     },
     {
       "letter": "photo_citizen",
@@ -148,7 +148,7 @@
       "color": "#6d71f3",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "is_list_a_no"
     },
     {
       "letter": "summary_online",
@@ -158,7 +158,7 @@
       "color": "#ffffff",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "dashboard"
     },
     {
       "letter": "citizen_docs",
@@ -168,7 +168,7 @@
       "color": "#6d71f3",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "name_check"
     },
     {
       "letter": "name_check",
@@ -178,7 +178,7 @@
       "color": "#6d71f3",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "photoid_citizen_match_yes"
     },
     {
       "letter": "add_linking_doc",
@@ -188,7 +188,7 @@
       "color": "#6d71f3",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "link_complete_yes"
     },
     {
       "letter": "schedule",
@@ -198,7 +198,7 @@
       "color": "#44ee88",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "summary_appointment"
     },
     {
       "letter": "summary_appointment",
@@ -208,7 +208,7 @@
       "color": "#ffffff",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "dashboard"
     },
     {
       "letter": "mfa",
@@ -218,7 +218,7 @@
       "color": "#fbd5d5",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "sta_yes"
     },
     {
       "letter": "disclose",
@@ -228,7 +228,7 @@
       "color": "#fbd5d5",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "signin"
     },
     {
       "letter": "is_enroll_snow_yes",
@@ -238,7 +238,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "associate_to_account"
     },
     {
       "letter": "is_enroll_snow_no",
@@ -248,7 +248,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "signin"
     },
     {
       "letter": "dashboard",
@@ -268,7 +268,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "add_linking_doc"
     },
     {
       "letter": "link_complete_yes",
@@ -278,7 +278,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "schedule"
     },
     {
       "letter": "is_list_a_yes",
@@ -288,7 +288,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "schedule"
     },
     {
       "letter": "is_list_a_no",
@@ -298,7 +298,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "citizen_docs"
     },
     {
       "letter": "photo_lpr",
@@ -308,7 +308,7 @@
       "color": "#6d71f3",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "schedule"
     },
     {
       "letter": "address",
@@ -318,7 +318,7 @@
       "color": "#d0ea57",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "online_renewal_yes"
     },
     {
       "letter": "online_renewal_yes",
@@ -328,7 +328,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "is_citizen_yes"
     },
     {
       "letter": "is_citizen_no",
@@ -338,7 +338,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "photo_lpr"
     },
     {
       "letter": "is_citizen_yes",
@@ -348,7 +348,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "photo_citizen"
     },
     {
       "letter": "photoid_citizen_match_yes",
@@ -358,7 +358,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "schedule"
     },
     {
       "letter": "enrollment_yes",
@@ -368,7 +368,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "attributes"
     },
     {
       "letter": "enrollment_no",
@@ -378,7 +378,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "address"
     },
     {
       "letter": "legal_names",
@@ -388,7 +388,7 @@
       "color": "#d9ea57",
       "type": "box",
       "ancestor": "",
-      "target": ""
+      "target": "birth_and_citizenship"
     },
     {
       "letter": "sta_no",
@@ -398,7 +398,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "active_enrollment_in_snow_yes"
     },
     {
       "letter": "active_enrollment_in_snow_no",
@@ -408,7 +408,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "location"
     },
     {
       "letter": "active_enrollment_in_snow_yes",
@@ -418,7 +418,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "pre_enrollment_complete_no"
     },
     {
       "letter": "pre_enrollment_complete_yes",
@@ -428,7 +428,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "dashboard"
     },
     {
       "letter": "pre_enrollment_complete_no",
@@ -438,7 +438,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "continue_enrollment_flow"
     },
     {
       "letter": "sta_yes",
@@ -448,7 +448,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "active_renewal_in_snow_yes"
     },
     {
       "letter": "active_renewal_in_snow_no",
@@ -458,7 +458,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "eligible_to_renew_no"
     },
     {
       "letter": "eligible_to_renew_no",
@@ -468,7 +468,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "prompt_for_renewal_yes"
     },
     {
       "letter": "active_renewal_in_snow_yes",
@@ -478,7 +478,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "continue_renewal_flow"
     },
     {
       "letter": "prompt_for_renewal_yes",
@@ -488,7 +488,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "reprint_required_no"
     },
     {
       "letter": "reprint_required_yes",
@@ -498,7 +498,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "reprint_notice"
     },
     {
       "letter": "reprint_required_no",
@@ -508,7 +508,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "citizenship_or_name_change_no"
     },
     {
       "letter": "citizenship_or_name_change_yes",
@@ -518,7 +518,7 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "location"
     },
     {
       "letter": "citizenship_or_name_change_no",
@@ -528,7 +528,7 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": ""
+      "target": "eligibility"
     }
   ],
   "connections": [
