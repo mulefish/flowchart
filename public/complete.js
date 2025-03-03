@@ -189,6 +189,7 @@ function updateNodeDetails(node, whence = "TBD") {
   NODE_COLOR_DETAIL_WIDGET.value = node.color;
   
   DELETE_NOTE_BUTTON.disabled = !node;
+  document.getElementById("graphJson").value = JSON.stringify(node, null, 2 )
 }
 
 function drawCircle(x, y, diameter, text, color, selected, human) {

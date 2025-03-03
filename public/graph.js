@@ -3,18 +3,23 @@ const NO = "no";
 // const NORMAL = "SOMETHING";
 const YELLOW = "background-color:yellow;";
 const LIGHTGREEN = "background-color:lightgreen";
+const CHARCOAL = "rgba(0, 0, 0, 0.9)"; 
+// const SAD = "rgba(255, 200, 130, 1.0)"; // a kind of orange -- too pale
+// const HAPPY = "rgba(144, 238, 144, 1.0)"; // a sort of green  -- too pale
+const HAPPY = "green";
+const SAD = "red"
 const canvas = document.getElementById("flowchartCanvas");
 canvas.width = window.innerWidth;
-canvas.height = 600;
+canvas.height = 600; //// 600;
 const ctx = canvas.getContext("2d");
-const boxWidth = 30;
-const boxHeight = 30;
-const diamondWidth = 30;
-const diamondHeight = 30;
-const circleDiameter = 30;
+const boxWidth = 15;
+const boxHeight = 15;
+const diamondWidth = 40;
+const diamondHeight = 40;
+const circleDiameter = 15;
 let selectedNode = null;
 let everything = undefined;
-const nudge = -23; // nudge text upwards a little
+const nudge = -18; // nudge text upwards a little
 const FROM_NODE_WIDGET = document.getElementById("fromNode");
 const FROM_NODE2_WIDGET = document.getElementById("fromNode2");
 const TO_NODE_WIDGET = document.getElementById("toNode");
@@ -22,6 +27,8 @@ const TO_NODE2_WIDGET = document.getElementById("toNode2");
 const NODE_KEY_DETAIL_WIDGET = document.getElementById("nodeKeyDetail");
 const ANCESTOR = document.getElementById("ancestor");
 const NODE_LABEL_DETAIL_WIDGET = document.getElementById("nodeLabelDetail");
+const NODE_COLOR_DETAIL_WIDGET = document.getElementById("nodeColorDetail");
+
 const NODE_ANCESTOR_DETAIL_WIDGET =
   document.getElementById("nodeAncestorDetail");
 const DELETE_NOTE_BUTTON = document.getElementById("deleteNode");
@@ -31,7 +38,7 @@ function drawBox(x, y, width, height, text, color, selected, human) {
   ctx.beginPath();
   ctx.rect(x, y, width, height);
   ctx.fill();
-  ctx.strokeStyle = selected ? "red" : "black";
+  ctx.strokeStyle = selected ? "orange" : "black";
   ctx.lineWidth = selected ? 3 : 1;
   ctx.stroke();
 
@@ -160,6 +167,8 @@ function deleteNode(nodeKey) {
   TO_NODE2_WIDGET.value = "";
   NODE_KEY_DETAIL_WIDGET.value = "";
   NODE_LABEL_DETAIL_WIDGET.value = "";
+  NODE_COLOR_DETAIL_WIDGET.value = "";
+
   ANCESTOR.value = "";
 
   drawGraph(graph);
@@ -177,7 +186,10 @@ function updateNodeDetails(node, whence = "TBD") {
   count++;
   NODE_KEY_DETAIL_WIDGET.value = node.letter;
   NODE_LABEL_DETAIL_WIDGET.value = node.human;
+  NODE_COLOR_DETAIL_WIDGET.value = node.color;
+  
   DELETE_NOTE_BUTTON.disabled = !node;
+  document.getElementById("graphJson").value = JSON.stringify(node, null, 2 )
 }
 
 function drawCircle(x, y, diameter, text, color, selected, human) {
@@ -190,8 +202,8 @@ function drawCircle(x, y, diameter, text, color, selected, human) {
   ctx.lineWidth = selected ? 3 : 1;
   ctx.stroke();
 
-  ctx.fillStyle = "black";
-  ctx.font = "17px Arial";
+  ctx.fillStyle = "gray";
+  ctx.font = "12px Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(text, x + diameter / 2, nudge + y + diameter / 2);
@@ -205,9 +217,12 @@ function drawGraph(xy) {
     const to = xy.get(conn.to);
 
     if (from && to) {
-      let color = "black";
-      if (conn.type === YES) color = "green";
-      else if (conn.type === NO) color = "red";
+      // let color = "black";
+      // if (conn.type === YES) color = "green";
+      // else if (conn.type === NO) color = "red";
+      let color = CHARCOAL
+      if (conn.type === YES) color = HAPPY
+      else if (conn.type === NO) color = SAD
 
       const fromCenterX =
         from.x +
