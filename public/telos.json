@@ -118,7 +118,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "eligibility"
+      "target": "eligibility",
+      "choice":"no"
     },
     {
       "letter": "location",
@@ -158,7 +159,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "location"
+      "target": "location",
+      "choice":"yes"
     },
     {
       "letter": "is_list_a_no",
@@ -168,7 +170,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "proofcitizenship"
+      "target": "proofcitizenship",
+      "choice":"no"
     },
     {
       "letter": "is_list_a_yes",
