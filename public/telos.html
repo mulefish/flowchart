@@ -47,7 +47,7 @@
             gap: 20px;
         }
         input {
-            width:80px;
+            width:200px;
             background-color: #ffffff;
             font-size: 16px;
         }
@@ -110,7 +110,9 @@
             <table border="1">
                     <tr><td><input type="text" id="nodeKeyDetail" placeholder="letter"></span></td></tr>
                     <tr><td><input type="text" id="nodeLabelDetail" placeholder="human"></span></td></tr>
+                    <tr><td><input type="text" id="nodeColorDetail" placeholder="color"></span></td></tr>
                     <tr><td><button id="deleteNode" >delete</button></td></tr>
+                    <tr><td><button onclick="scaleNodesToFit()" >scale</button></td></tr>
                     <tr><td><button onClick="emitGraph()">emit graph</button></td></tr>
                     <tr><td><button class="highlight" onClick="emitPinia()">emit pinia</button></td></tr>
             </table>
