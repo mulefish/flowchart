@@ -150,7 +150,7 @@ function emitPinia() {
 //     null,
 //     2
 //   );
-  let result =  depthFirstSearch( graphData)
+  let result =  bfs( graphData)
     document.getElementById("graphJson").value = " THIS IS FOR A PINIA STORE\n" +  JSON.stringify(
     result,
     null,
@@ -159,23 +159,29 @@ function emitPinia() {
 
 }
 
-function depthFirstSearch(graph) {
-// 1. Build an adjacency list
-const adjacency = {};
+function bfs(graph) {
+
+// 1) Map each letter to its node object
+const nodeByLetter = {};
 graph.nodes.forEach((node) => {
-  adjacency[node.letter] = [];
+  nodeByLetter[node.letter] = node;
 });
 
-graph.connections.forEach((connection) => {
-  // Push the 'to' into the adjacency list of 'from'
-  adjacency[connection.from].push(connection.to);
+// 2) Build a *reverse* adjacency list (for "looking upwards")
+//    For each connection (from -> to), we do reverseAdj[to].push(from).
+const reverseAdj = {};
+graph.nodes.forEach((node) => {
+  reverseAdj[node.letter] = [];
+});
+graph.connections.forEach(({ from, to }) => {
+  reverseAdj[to].push(from);
 });
 
-// 2. Collect all box nodes in a dictionary for easy lookup later
+// 3) We only care about "box" nodes in the final output, 
+//    each with a list of "circle" dependencies
 const boxes = {};
 graph.nodes.forEach((node) => {
   if (node.type === "box") {
-    // Copy the node info and add a dependencies array
     boxes[node.letter] = {
       ...node,
       dependencies: [],
@@ -183,35 +189,53 @@ graph.nodes.forEach((node) => {
   }
 });
 
-// 3. Define a DFS function to collect descendants
-function getDescendants(letter, visited = new Set()) {
-  let result = [];
-  const children = adjacency[letter] || [];
-  
-  for (const child of children) {
-    if (!visited.has(child)) {
-      visited.add(child);
-      result.push(child);
-      // Recurse to collect the child's descendants
-      result = result.concat(getDescendants(child, visited));
+// 4) For a given box node, gather the circle-type nodes that are *upstream*
+//    BUT if we ever hit another "box", we stop that branch of the search.
+function getCircleAncestorsForBox(startLetter) {
+  const visited = new Set();
+  const resultCircles = new Set();
+
+  // We'll do a BFS, moving upward from this box
+  const queue = [startLetter];
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+
+    // Check all parents of `current` in the reverse adjacency
+    const parents = reverseAdj[current] || [];
+    for (const p of parents) {
+      if (!visited.has(p)) {
+        visited.add(p);
+        const parentNode = nodeByLetter[p];
+
+        if (parentNode.type === "circle") {
+          // It's a circle, so it’s a dependency
+          resultCircles.add(p);
+          // Keep going upward from this circle:
+          queue.push(p);
+        } else if (parentNode.type === "box") {
+          // We stop *this* path here—no further upward search.
+          // i.e. do NOT enqueue `p`.
+        } else {
+          // If it's neither circle nor box (e.g. diamond?), keep searching
+          queue.push(p);
+        }
+      }
     }
   }
-  return result;
+
+  return [...resultCircles];
 }
 
-// 4. For each box, get all descendants in the graph, 
-//    optionally filter only box-type nodes
-for (let k in boxes) {
-  // Grab all reachable letters
-  const allDescendants = getDescendants(k);
-  // If you only want other 'box' nodes in dependencies:
-  boxes[k].dependencies = allDescendants.filter((desc) => boxes[desc]);
-  // If you want *all* node types, you can skip the filter:
-  // boxes[k].dependencies = allDescendants;
+// 5) Populate each box’s .dependencies array
+for (const letter in boxes) {
+  boxes[letter].dependencies = getCircleAncestorsForBox(letter);
 }
 
-// Now `boxes` has a `dependencies` array for each box node
-return boxes
+// Now boxes[letter].dependencies holds only circle nodes that occur 
+// upstream—stopping if we ever hit another box.
+
+return boxes 
 } 
 
 </script>
