@@ -136,26 +136,16 @@ function emitPinia() {
   graph.forEach((shape) => {
     nodes.push({
       letter: shape.letter,
-    //   x: shape.x,
-    //   y: shape.y,
       human: shape.human,
-    //   color: shape.color,
       type: shape.type,
     });
   });
 
   const graphData = { nodes, connections };
 
-
-  let result =  downstreamCirclesBetweenBoxes( graphData)
-    document.getElementById("graphJson").value = JSON.stringify(
-    result,
-    null,
-    2
-  );
-
+  const theData = downstreamCirclesBetweenBoxes(graphData);
+  document.getElementById("graphJson").value = JSON.stringify(theData, null, 2 )
 }
-
 function downstreamCirclesBetweenBoxes(graph) {
   // 1) Create a lookup from letter -> node object
   const nodeByLetter = {};
@@ -259,6 +249,70 @@ function downstreamCirclesBetweenBoxes(graph) {
 
   return boxes;
 }
+
+// Example usage:
+function testDownstream() {
+  const results = downstreamCirclesBetweenBoxes(bigBallOfJson);
+  console.dir(results["attributes"], { depth: null });
+  /*
+    You might see something like:
+    {
+      letter: 'attributes',
+      ...
+      downstream: [
+        {
+          box: 'address',
+          circles: [ { letter: 'is_match_good_no', choice: 'no' }, ... ]
+        },
+        ...
+      ]
+    }
+  */
+}
+
+
+
+function getDependencies() {
+  const raw = downstreamCirclesBetweenBoxes(bigBallOfJson);
+  const dependencies = {} 
+  for ( let k in raw ) {
+    const obj = convertShape( raw[k].letter,  raw[k].downstream)
+    dependencies[k]=obj
+  }
+  const squares = {}
+  const diamonds = {}
+  for ( let i in bigBallOfJson.nodes ) { 
+    const letter = bigBallOfJson.nodes[i].letter
+    const type = bigBallOfJson.nodes[i].type
+    if ( type === "circle" ) { 
+      diamonds[letter]="NILL"
+    } else {
+      squares[letter]="NILL"
+    }
+  }
+  return {diamonds, squares, dependencies}
+ 
+}
+
+function convertShape(letter, downstream) {
+  let obj = {} 
+  obj["url"] = letter 
+  obj["preconditions"] = []
+  let neededThings = [] 
+  downstream.forEach((obj2)=>{
+    const precognition = []
+    obj2.circles.forEach((thing)=> { 
+     const x = {
+        "category":"diamonds",
+        "key":thing.letter,
+        "expected": thing.choice     
+      }
+      obj["preconditions"].push(x)
+    })
+  })
+  return obj
+}
+
 
 
 

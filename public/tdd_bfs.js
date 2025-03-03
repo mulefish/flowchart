@@ -124,4 +124,50 @@ function testDownstream() {
   */
 }
 
-testDownstream();
+
+
+function getDependencies(raw) {
+  const dependencies = {} 
+  for ( let k in raw ) {
+    const obj = convertShape( raw[k].letter,  raw[k].downstream)
+    dependencies[k]=obj
+  }
+  const squares = {}
+  const diamonds = {}
+  for ( let i in bigBallOfJson.nodes ) { 
+    const letter = bigBallOfJson.nodes[i].letter
+    const type = bigBallOfJson.nodes[i].type
+    if ( type === "circle" ) { 
+      diamonds[letter]="NILL"
+    } else {
+      squares[letter]="NILL"
+    }
+  }
+  return {diamonds, squares, dependencies}
+ 
+}
+
+function convertShape(letter, downstream) {
+  let obj = {} 
+  obj["url"] = letter 
+  obj["preconditions"] = []
+  let neededThings = [] 
+  downstream.forEach((obj2)=>{
+    const precognition = []
+    obj2.circles.forEach((thing)=> { 
+     const x = {
+        "category":"diamonds",
+        "key":thing.letter,
+        "expected": thing.choice     
+      }
+      obj["preconditions"].push(x)
+    })
+  })
+  return obj
+}
+
+
+const theData = downstreamCirclesBetweenBoxes(bigBallOfJson);
+
+const everything = getDependencies(theData)
+console.log( everything )
