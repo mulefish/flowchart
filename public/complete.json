@@ -1,4 +1,914 @@
 {
-  "nodes": [],
-  "connections": []
+  "nodes": [
+    {
+      "letter": "home",
+      "x": 43.728955442864,
+      "y": 41.97388176852627,
+      "human": "home",
+      "color": "#ff6633",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "signin",
+      "x": 45.77281477891497,
+      "y": 147.3586835947188,
+      "human": "signin",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "password",
+      "x": 181.8790100628693,
+      "y": 77.2140209191248,
+      "human": "password",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "signup",
+      "x": 44.601329434942585,
+      "y": 245.96731213284116,
+      "human": "signup",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "account_details",
+      "x": 91.08828083874756,
+      "y": 402.29982534275086,
+      "human": "account_details",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "associate_to_account",
+      "x": 95.41355323635841,
+      "y": 555.7033900655576,
+      "human": "associate_to_account",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "continue_enrollment_flow",
+      "x": 629.5124610354916,
+      "y": 272.1451299437784,
+      "human": "continue_enrollment_flow",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "continue_renewal_flow",
+      "x": 278.81702026979406,
+      "y": 556.9999930800996,
+      "human": "continue_renewal_flow",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "reprint_notice",
+      "x": 399.99530650871196,
+      "y": 157.2432281402999,
+      "human": "reprint_notice",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "location",
+      "x": 463.27877222015115,
+      "y": 108.56954179780811,
+      "human": "location",
+      "color": "#44ee88",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "birth_and_citizenship",
+      "x": 571.3884020216125,
+      "y": 152.887060771463,
+      "human": "birth_and_citizenship",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "eligibility",
+      "x": 692.9750532984942,
+      "y": 198.56895567244212,
+      "human": "eligibility",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "attributes",
+      "x": 925.2368500752426,
+      "y": 53.839833251284475,
+      "human": "attributes",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "payment",
+      "x": 1022.541729908294,
+      "y": 242.805994073198,
+      "human": "payment",
+      "color": "#A020F0",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "photo_citizen",
+      "x": 1317.5291654721304,
+      "y": 106.83951531279807,
+      "human": "photo_citizen",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "summary_online",
+      "x": 965.1260035715592,
+      "y": 369.39176417079443,
+      "human": "summary_online",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "citizen_docs",
+      "x": 1166.897306781196,
+      "y": 183.78572786347647,
+      "human": "citizen_docs",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "name_check",
+      "x": 1090.817917541287,
+      "y": 288.3320131334537,
+      "human": "name_check",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "add_linking_doc",
+      "x": 1220.5825998042094,
+      "y": 433.87774738434535,
+      "human": "add_linking_doc",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "schedule",
+      "x": 1390.1072279051637,
+      "y": 492.97988328164513,
+      "human": "schedule",
+      "color": "#44ee88",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "summary_appointment",
+      "x": 1053.1960924414468,
+      "y": 529.5935980513966,
+      "human": "summary_appointment",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "mfa",
+      "x": 222.6059539692239,
+      "y": 269.43055283772844,
+      "human": "mfa",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "disclose",
+      "x": 42.73459433698644,
+      "y": 95.60236599916247,
+      "human": "disclose",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "is_enroll_snow_yes",
+      "x": 26.07512842516284,
+      "y": 450.0323477026351,
+      "human": "is_enroll_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "is_enroll_snow_no",
+      "x": 130.73143295708746,
+      "y": 288.72733824851133,
+      "human": "is_enroll_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "dashboard",
+      "x": 768.7620217924078,
+      "y": 517.1729705135308,
+      "human": "dashboard",
+      "color": "#ffff00",
+      "type": "diamond",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "photoid_citizen_match_no",
+      "x": 1147.9140739834495,
+      "y": 354.7162351777358,
+      "human": "photoid_citizen_match_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "link_complete_yes",
+      "x": 1296.8845336889133,
+      "y": 370.31389064293063,
+      "human": "link_complete_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "is_list_a_yes",
+      "x": 1394.1081791885351,
+      "y": 207.7304669483816,
+      "human": "is_list_a_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "is_list_a_no",
+      "x": 1323.126333922454,
+      "y": 161.9473899717953,
+      "human": "is_list_a_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "photo_lpr",
+      "x": 1374.9999892552423,
+      "y": 43.1438882977974,
+      "human": "photo_lpr",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "address",
+      "x": 1003.3799530472688,
+      "y": 112.59551876114428,
+      "human": "address",
+      "color": "#d0ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "online_renewal_yes",
+      "x": 1136.850647310343,
+      "y": 107.5193407021249,
+      "human": "online_renewal_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "is_citizen_no",
+      "x": 1120.064775813247,
+      "y": 35.89371651120008,
+      "human": "is_citizen_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "is_citizen_yes",
+      "x": 1254.5004867574419,
+      "y": 94.97894710917406,
+      "human": "is_citizen_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "photoid_citizen_match_yes",
+      "x": 1321.8343665892328,
+      "y": 306.55513217831367,
+      "human": "photoid_citizen_match_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "enrollment_yes",
+      "x": 829.4688711839143,
+      "y": 105.5714127320249,
+      "human": "enrollment_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "enrollment_no",
+      "x": 920.4219661102512,
+      "y": 205.81445341791985,
+      "human": "enrollment_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "legal_names",
+      "x": 569.5844160938054,
+      "y": 65.51798230211027,
+      "human": "legal_names",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "sta_no",
+      "x": 392.98700788981796,
+      "y": 243.56687876830443,
+      "human": "sta_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "active_enrollment_in_snow_no",
+      "x": 459.78916487867565,
+      "y": 203.9684621944937,
+      "human": "active_enrollment_in_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "active_enrollment_in_snow_yes",
+      "x": 617.4768527561854,
+      "y": 364.1479303001049,
+      "human": "active_enrollment_in_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "pre_enrollment_complete_yes",
+      "x": 712.8709479341795,
+      "y": 450.65961127840967,
+      "human": "pre_enrollment_complete_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "pre_enrollment_complete_no",
+      "x": 692.2791478517258,
+      "y": 325.3502928760496,
+      "human": "pre_enrollment_complete_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "sta_yes",
+      "x": 163.57007562794178,
+      "y": 376.0218964061834,
+      "human": "sta_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "active_renewal_in_snow_no",
+      "x": 274.427583616205,
+      "y": 470.0358195682756,
+      "human": "active_renewal_in_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "eligible_to_renew_no",
+      "x": 401.16264082575367,
+      "y": 438.85340486808053,
+      "human": "eligible_to_renew_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "active_renewal_in_snow_yes",
+      "x": 151.5838598043167,
+      "y": 503.7212560809545,
+      "human": "active_renewal_in_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "prompt_for_renewal_yes",
+      "x": 204.70297568930962,
+      "y": 164.1324810157925,
+      "human": "prompt_for_renewal_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "reprint_required_yes",
+      "x": 326.4707223348463,
+      "y": 203.23783789692413,
+      "human": "reprint_required_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "reprint_required_no",
+      "x": 264.5335001921457,
+      "y": 18.221899807869253,
+      "human": "reprint_required_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "citizenship_or_name_change_yes",
+      "x": 387.9074391542335,
+      "y": 58.291368661714266,
+      "human": "citizenship_or_name_change_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "citizenship_or_name_change_no",
+      "x": 686.7789337678936,
+      "y": 17.907520934899846,
+      "human": "citizenship_or_name_change_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": ""
+    }
+  ],
+  "connections": [
+    {
+      "from": "home",
+      "to": "disclose",
+      "type": "normal",
+      "ancestor": "home"
+    },
+    {
+      "from": "disclose",
+      "to": "signin",
+      "type": "normal",
+      "ancestor": "disclose"
+    },
+    {
+      "from": "signin",
+      "to": "password",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signin",
+      "to": "mfa",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signin",
+      "to": "signup",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signup",
+      "to": "account_details",
+      "type": "normal",
+      "ancestor": "signup"
+    },
+    {
+      "from": "reprint_notice",
+      "to": "location",
+      "type": "normal",
+      "ancestor": "reprint_notice"
+    },
+    {
+      "from": "account_details",
+      "to": "is_enroll_snow_yes",
+      "type": "yes",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "is_enroll_snow_yes",
+      "to": "associate_to_account",
+      "type": "yes",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "account_details",
+      "to": "is_enroll_snow_no",
+      "type": "no",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "is_enroll_snow_no",
+      "to": "signin",
+      "type": "no",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "name_check",
+      "to": "photoid_citizen_match_no",
+      "type": "no",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "photoid_citizen_match_no",
+      "to": "add_linking_doc",
+      "type": "no",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "add_linking_doc",
+      "to": "link_complete_yes",
+      "type": "yes",
+      "ancestor": "add_linking_doc"
+    },
+    {
+      "from": "link_complete_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "add_linking_doc"
+    },
+    {
+      "from": "citizen_docs",
+      "to": "name_check",
+      "type": "normal",
+      "ancestor": "citizen_docs"
+    },
+    {
+      "from": "photo_citizen",
+      "to": "is_list_a_yes",
+      "type": "yes",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "is_list_a_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "photo_citizen",
+      "to": "is_list_a_no",
+      "type": "no",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "is_list_a_no",
+      "to": "citizen_docs",
+      "type": "no",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "address",
+      "to": "online_renewal_yes",
+      "type": "yes",
+      "ancestor": "address"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "payment",
+      "type": "yes",
+      "ancestor": "address"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "is_citizen_no",
+      "type": "no",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "is_citizen_no",
+      "to": "photo_lpr",
+      "type": "no",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "is_citizen_yes",
+      "type": "yes",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "is_citizen_yes",
+      "to": "photo_citizen",
+      "type": "yes",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "payment",
+      "to": "summary_online",
+      "type": "normal",
+      "ancestor": "payment"
+    },
+    {
+      "from": "summary_online",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "summary_online"
+    },
+    {
+      "from": "photo_lpr",
+      "to": "schedule",
+      "type": "normal",
+      "ancestor": "photo_lpr"
+    },
+    {
+      "from": "schedule",
+      "to": "summary_appointment",
+      "type": "normal",
+      "ancestor": "schedule"
+    },
+    {
+      "from": "summary_appointment",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "summary_appointment"
+    },
+    {
+      "from": "name_check",
+      "to": "photoid_citizen_match_yes",
+      "type": "yes",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "photoid_citizen_match_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "eligibility",
+      "to": "enrollment_yes",
+      "type": "yes",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "enrollment_yes",
+      "to": "attributes",
+      "type": "yes",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "eligibility",
+      "to": "enrollment_no",
+      "type": "no",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "enrollment_no",
+      "to": "address",
+      "type": "no",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "attributes",
+      "to": "address",
+      "type": "normal",
+      "ancestor": "attributes"
+    },
+    {
+      "from": "birth_and_citizenship",
+      "to": "eligibility",
+      "type": "normal",
+      "ancestor": "birth_and_citizenship"
+    },
+    {
+      "from": "legal_names",
+      "to": "birth_and_citizenship",
+      "type": "normal",
+      "ancestor": "legal_names"
+    },
+    {
+      "from": "location",
+      "to": "legal_names",
+      "type": "normal",
+      "ancestor": "location"
+    },
+    {
+      "from": "mfa",
+      "to": "sta_no",
+      "type": "no",
+      "ancestor": "mfa"
+    },
+    {
+      "from": "sta_no",
+      "to": "active_enrollment_in_snow_no",
+      "type": "no",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "active_enrollment_in_snow_no",
+      "to": "location",
+      "type": "no",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "sta_no",
+      "to": "active_enrollment_in_snow_yes",
+      "type": "yes",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "active_enrollment_in_snow_yes",
+      "to": "pre_enrollment_complete_yes",
+      "type": "yes",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "pre_enrollment_complete_yes",
+      "to": "dashboard",
+      "type": "yes",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "active_enrollment_in_snow_yes",
+      "to": "pre_enrollment_complete_no",
+      "type": "no",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "pre_enrollment_complete_no",
+      "to": "continue_enrollment_flow",
+      "type": "no",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "mfa",
+      "to": "sta_yes",
+      "type": "yes",
+      "ancestor": "mfa"
+    },
+    {
+      "from": "sta_yes",
+      "to": "active_renewal_in_snow_no",
+      "type": "no",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "active_renewal_in_snow_no",
+      "to": "eligible_to_renew_no",
+      "type": "no",
+      "ancestor": "active_renewal_in_snow_no"
+    },
+    {
+      "from": "eligible_to_renew_no",
+      "to": "dashboard",
+      "type": "no",
+      "ancestor": "active_renewal_in_snow_no"
+    },
+    {
+      "from": "sta_yes",
+      "to": "active_renewal_in_snow_yes",
+      "type": "yes",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "active_renewal_in_snow_yes",
+      "to": "continue_renewal_flow",
+      "type": "yes",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "eligible_to_renew_no",
+      "to": "prompt_for_renewal_yes",
+      "type": "yes",
+      "ancestor": "eligible_to_renew_no"
+    },
+    {
+      "from": "prompt_for_renewal_yes",
+      "to": "reprint_required_yes",
+      "type": "yes",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "reprint_required_yes",
+      "to": "reprint_notice",
+      "type": "yes",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "prompt_for_renewal_yes",
+      "to": "reprint_required_no",
+      "type": "no",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "reprint_required_no",
+      "to": "citizenship_or_name_change_yes",
+      "type": "yes",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "citizenship_or_name_change_yes",
+      "to": "location",
+      "type": "yes",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "reprint_required_no",
+      "to": "citizenship_or_name_change_no",
+      "type": "no",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "citizenship_or_name_change_no",
+      "to": "eligibility",
+      "type": "no",
+      "ancestor": "reprint_required_no"
+    }
+  ]
 }
