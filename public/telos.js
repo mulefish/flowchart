@@ -124,7 +124,7 @@ function drawArrow_quadraticBezier(fromX, fromY, toX, toY, color = "black") {
   ctx.strokeStyle = "black"; // Reset for future strokes
 }
 class Shape {
-  constructor(letter, x, y, human, color, type = "box") {
+  constructor(letter, x, y, human, color, type, choice) {
     this.letter = letter;
     this.x = x || Math.floor(Math.random() * (800 - 100)) + 100;
     this.y = y || Math.floor(Math.random() * (400 - 100)) + 100;
@@ -133,6 +133,7 @@ class Shape {
     this.type = type;
     this.ancestor = "";
     this.target = "";
+    this.choice = choice 
     graph.set(letter, this);
   }
   setAncestor(a) {
@@ -358,7 +359,7 @@ function addNode() {
   const label = document.getElementById("nodeHuman").value;
   const color = document.getElementById("nodeColor").value;
   const type = document.getElementById("nodeType").value;
-  new Shape(key, null, null, label, color, type);
+  new Shape(key, null, null, label, color, type, "TBD");
   drawGraph(graph);
   document.getElementById("nodeKey").value = "";
   document.getElementById("nodeHuman").value = "";
@@ -421,7 +422,8 @@ function scaleNodesToFit() {
 
   graph.clear();
   everything.nodes.forEach((node) => {
-    new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
+    console.log( node )
+    new Shape(node.letter, node.x, node.y, node.human, node.color, node.type, node.choice);
   });
   drawGraph(graph);
 }
@@ -442,6 +444,7 @@ function addDecisionPoint() {
     (conn) => !(conn.from === fromKey && conn.to === toKey)
   );
   const circleX = (fromShape.x + toShape.x) / 2;
+
   const circleY = (fromShape.y + toShape.y) / 2;
 
   let circleColor = "#ffffff";
@@ -451,9 +454,10 @@ function addDecisionPoint() {
     circleColor = "#ff0000";
   }
 
-  new Shape(circleKey, circleX, circleY, circleKey, circleColor, "circle");
+  new Shape(circleKey, circleX, circleY, circleKey, circleColor, "circle", circleChoice);
   const circleShape = graph.get(circleKey);
   circleShape.choice = circleChoice;
+  console.log("CHOICE " + circleShape.choice ) 
   let connType;
   if (circleChoice.toLowerCase() === "yes") {
     connType = YES;
@@ -479,7 +483,7 @@ async function main(nameOfTheJsonFile) {
     everything = await response.json();
 
     everything.nodes.forEach((node) => {
-      new Shape(node.letter, node.x, node.y, node.human, node.color, node.type);
+      new Shape(node.letter, node.x, node.y, node.human, node.color, node.type, node.choice);
     });
 
     everything.connections.forEach((conn) =>

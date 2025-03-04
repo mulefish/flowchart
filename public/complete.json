@@ -238,7 +238,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "associate_to_account"
+      "target": "associate_to_account",
+      "choice":"yes"
     },
     {
       "letter": "is_enroll_snow_no",
@@ -248,7 +249,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "signin"
+      "target": "signin",
+      "choice":"no"
     },
     {
       "letter": "dashboard",
@@ -268,7 +270,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "add_linking_doc"
+      "target": "add_linking_doc",
+      "choice":"no"
     },
     {
       "letter": "link_complete_yes",
@@ -278,7 +281,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "schedule"
+      "target": "schedule",
+      "choice":"yes"
     },
     {
       "letter": "is_list_a_yes",
@@ -288,7 +292,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "schedule"
+      "target": "schedule",
+      "choice":"yes"
     },
     {
       "letter": "is_list_a_no",
@@ -298,7 +303,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "citizen_docs"
+      "target": "citizen_docs",
+      "choice":"no"
     },
     {
       "letter": "photo_lpr",
@@ -328,7 +334,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "is_citizen_yes"
+      "target": "is_citizen_yes",
+      "choice":"yes"
     },
     {
       "letter": "is_citizen_no",
@@ -338,7 +345,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "photo_lpr"
+      "target": "photo_lpr",
+      "choice":"no"
     },
     {
       "letter": "is_citizen_yes",
@@ -348,7 +356,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "photo_citizen"
+      "target": "photo_citizen",
+      "choice":"yes"
     },
     {
       "letter": "photoid_citizen_match_yes",
@@ -358,7 +367,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "schedule"
+      "target": "schedule",
+      "choice":"yes"
     },
     {
       "letter": "enrollment_yes",
@@ -368,7 +378,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "attributes"
+      "target": "attributes",
+      "choice":"yes"
     },
     {
       "letter": "enrollment_no",
@@ -378,7 +389,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "address"
+      "target": "address",
+      "choice":"no"
     },
     {
       "letter": "legal_names",
@@ -398,7 +410,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "active_enrollment_in_snow_yes"
+      "target": "active_enrollment_in_snow_yes",
+      "choice":"no"
     },
     {
       "letter": "active_enrollment_in_snow_no",
@@ -408,7 +421,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "location"
+      "target": "location",
+      "choice":"no"
     },
     {
       "letter": "active_enrollment_in_snow_yes",
@@ -418,7 +432,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "pre_enrollment_complete_no"
+      "target": "pre_enrollment_complete_no",
+      "choice":"yes"
     },
     {
       "letter": "pre_enrollment_complete_yes",
@@ -428,7 +443,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "dashboard"
+      "target": "dashboard",
+      "choice":"yes"
     },
     {
       "letter": "pre_enrollment_complete_no",
@@ -438,7 +454,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "continue_enrollment_flow"
+      "target": "continue_enrollment_flow",
+      "choice":"no"
     },
     {
       "letter": "sta_yes",
@@ -448,7 +465,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "active_renewal_in_snow_yes"
+      "target": "active_renewal_in_snow_yes",
+      "choice":"yes"
     },
     {
       "letter": "active_renewal_in_snow_no",
@@ -458,7 +476,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "eligible_to_renew_no"
+      "target": "eligible_to_renew_no",
+      "choice":"no"
     },
     {
       "letter": "eligible_to_renew_no",
@@ -468,7 +487,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "prompt_for_renewal_yes"
+      "target": "prompt_for_renewal_yes",
+      "choice":"no"
     },
     {
       "letter": "active_renewal_in_snow_yes",
@@ -478,7 +498,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "continue_renewal_flow"
+      "target": "continue_renewal_flow",
+      "choice":"yes"
     },
     {
       "letter": "prompt_for_renewal_yes",
@@ -488,7 +509,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "reprint_required_no"
+      "target": "reprint_required_no",
+      "choice":"yes"
     },
     {
       "letter": "reprint_required_yes",
@@ -498,7 +520,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "reprint_notice"
+      "target": "reprint_notice",
+      "choice":"yes"
     },
     {
       "letter": "reprint_required_no",
@@ -508,7 +531,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "citizenship_or_name_change_no"
+      "target": "citizenship_or_name_change_no",
+      "choice":"no"
     },
     {
       "letter": "citizenship_or_name_change_yes",
@@ -518,7 +542,8 @@
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
-      "target": "location"
+      "target": "location",
+      "choice":"yes"
     },
     {
       "letter": "citizenship_or_name_change_no",
@@ -528,7 +553,8 @@
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
-      "target": "eligibility"
+      "target": "eligibility",
+      "choice":"no"
     }
   ],
   "connections": [
