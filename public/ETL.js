@@ -35,7 +35,7 @@ function emitPinia() {
     // 3) Gather all "box" nodes. We'll add .downstream to store results.
     const boxes = {};
     graph.nodes.forEach((node) => {
-      if (node.type === "box") {
+      if (node.type === "box" || node.type === "diamond") {
         boxes[node.letter] = {
           ...node,
           // We'll have objects like:
@@ -86,7 +86,7 @@ function emitPinia() {
             }
   
             // If the child is a *different* box, we've reached the next box
-            if (childNode.type === "box" && childLetter !== startBoxLetter) {
+            if ( ( childNode.type === "box" || childNode.type === "diamond" ) && childLetter !== startBoxLetter) {
               // Merge these circles into whatever we had for that box
               const existingMap = boxToCirclesMap.get(childLetter) || new Map();
               const combined = unionCircleMaps(existingMap, newCircles);
@@ -118,27 +118,6 @@ function emitPinia() {
   
     return boxes;
   }
-  
-  // Example usage:
-  function testDownstream() {
-    const results = downstreamCirclesBetweenBoxes(bigBallOfJson);
-    console.dir(results["attributes"], { depth: null });
-    /*
-      You might see something like:
-      {
-        letter: 'attributes',
-        ...
-        downstream: [
-          {
-            box: 'address',
-            circles: [ { letter: 'is_match_good_no', choice: 'no' }, ... ]
-          },
-          ...
-        ]
-      }
-    */
-  }
-  
   
   
   function getDependencies() {

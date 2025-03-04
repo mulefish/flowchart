@@ -20,7 +20,7 @@ function downstreamCirclesBetweenBoxes(graph) {
   // 3) Gather all "box" nodes. We'll add .downstream to store results.
   const boxes = {};
   graph.nodes.forEach((node) => {
-    if (node.type === "box") {
+    if (node.type === "box" || node.type === "diamond") {
       boxes[node.letter] = {
         ...node,
         // We'll have objects like:
@@ -71,7 +71,7 @@ function downstreamCirclesBetweenBoxes(graph) {
           }
 
           // If the child is a *different* box, we've reached the next box
-          if (childNode.type === "box" && childLetter !== startBoxLetter) {
+          if ( ( childNode.type === "box" || childNode.type === "diamond" ) && childLetter !== startBoxLetter) {
             // Merge these circles into whatever we had for that box
             const existingMap = boxToCirclesMap.get(childLetter) || new Map();
             const combined = unionCircleMaps(existingMap, newCircles);
@@ -170,4 +170,4 @@ function convertShape(letter, downstream) {
 const theData = downstreamCirclesBetweenBoxes(bigBallOfJson);
 
 const everything = getDependencies(theData)
-console.log( everything )
+console.log( JSON.stringify( everything, null, 2 )  )
