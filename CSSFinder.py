@@ -69,7 +69,7 @@ def main():
     # starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\twe\\src'
     vue_css_counts = process_vue_files(starting_directory)
     css_file_counts = process_css_files(starting_directory)
-    
+     
     combined_counts = {**vue_css_counts}
     for selector, files in css_file_counts.items():
         if selector in combined_counts:
