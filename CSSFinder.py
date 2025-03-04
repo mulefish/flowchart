@@ -1,14 +1,27 @@
 import os
 import re
+import tinycss2
+"""
+THIS script uses tinycss2
+https://github.com/Kozea/tinycss2
+pip install tinycss2 
+"""
 
 def extract_css_selectors(css_content):
+    """THis func is the heart of the script"""
     selectors = []
-    matches = re.findall(r'([.#]?[a-zA-Z0-9_-]+)\s*\{', css_content)
-    for match in matches:
-        selectors.append(match)
+    rules = tinycss2.parse_stylesheet(css_content, skip_whitespace=True)
+    
+    for rule in rules:
+        if rule.type == 'qualified-rule':
+            prelude = tinycss2.serialize(rule.prelude).strip()
+            if prelude:
+                selectors.append(prelude)
+    
     return selectors
-# https://github.com/Kozea/tinycss2
+
 def process_vue_files(directory):
+    """Look at .vue files and avoid recursing into node_modules"""
     css_selectors_count = {}
     for root, dirs, files in os.walk(directory):
         if 'node_modules' in dirs:
@@ -27,20 +40,54 @@ def process_vue_files(directory):
                                 css_selectors_count[selector] = []
                             if file_path not in css_selectors_count[selector]:
                                 css_selectors_count[selector].append(file_path)
+    
+    return css_selectors_count
 
+def process_css_files(directory):
+    """Look at .css files and avoid recursing into node_modules"""
+    css_selectors_count = {}
+    for root, dirs, files in os.walk(directory):
+        if 'node_modules' in dirs:
+            dirs.remove('node_modules')
+
+        for file in files:
+            if file.endswith(".css"):
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    selectors = extract_css_selectors(content)
+                    for selector in selectors:
+                        if selector not in css_selectors_count:
+                            css_selectors_count[selector] = []
+                        if file_path not in css_selectors_count[selector]:
+                            css_selectors_count[selector].append(file_path)
+    
     return css_selectors_count
 
 def main():
-    #starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\precheck'
-    starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\twe\\src'
-    css_counts = process_vue_files(starting_directory)
-    for selector, files in sorted(css_counts.items(), key=lambda x: len(x[1]), reverse=False):
+    starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\precheck\\src'
+    # starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\twe\\src'
+    vue_css_counts = process_vue_files(starting_directory)
+    css_file_counts = process_css_files(starting_directory)
+    
+    combined_counts = {**vue_css_counts}
+    for selector, files in css_file_counts.items():
+        if selector in combined_counts:
+            combined_counts[selector].extend(files)
+        else:
+            combined_counts[selector] = files
+    count = 0 
+    for selector, files in sorted(combined_counts.items(), key=lambda x: len(x[1]), reverse=False):
         if len(files) > 1:
-            print(f"{len(files)} occurrences for selector '{selector}' in files:")
+
+            count += 1
+            print(f"{count} : {len(files)} occurrences for selector '{selector}' in files:")
             for file in files:
                 print(f"  - {file}")
-    print(f"Looking for CSS selectors in Vue files starting from {starting_directory}")
-    print("CSS Selectors with File References:")
+        # else 1 is good! 
+
+
+    print(f"Looking for CSS selectors in Vue and CSS files starting from {starting_directory}")
     
 if __name__ == "__main__":
     main()

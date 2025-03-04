@@ -94,7 +94,7 @@ function createDependencyGraph(graph) {
 // A small test function to demonstrate
 function test_createDependencyGraph() {
   const results = createDependencyGraph(bigBallOfJson);
-  console.log(JSON.stringify(results["scheduler"], null, 2));
+  console.log(JSON.stringify(results["signup"], null, 2));
 }
 
 test_createDependencyGraph();
