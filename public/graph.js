@@ -141,7 +141,7 @@ class Shape {
   }
 }
 
-const graph = new Map();
+let graph = new Map();
 let connections = [];
 let seen = {};
 function addConnection(fromNode, toNode, type, ancestor) {
@@ -389,6 +389,50 @@ function emitGraph() {
     2
   );
 }
+
+function save(key) {
+  const nodes = [];
+  graph.forEach((shape) => {
+    nodes.push(shape);
+  });
+  const graphData = { nodes, connections };
+  const graphData_asString =  JSON.stringify( graphData  );
+  document.getElementById("graphJson").value = graphData_asString
+  localStorage.setItem(key, graphData_asString);
+}
+
+function load(key) {
+
+  graph = new Map();
+  connections = [];
+  seen = {};
+  count = 0 
+
+  const graphData_asString = localStorage.getItem(key);
+  document.getElementById("graphJson").value = "Loaded " + graphData_asString.length + " bytes"
+
+  try {
+    everything = JSON.parse(graphData_asString)
+
+    everything.nodes.forEach((node) => {
+      new Shape(node.letter, node.x, node.y, node.human, node.color, node.type, node.choice);
+    });
+
+    everything.connections.forEach((conn) =>
+      addConnection(conn.from, conn.to, conn.type, conn.ancestor)
+    );
+
+    drawGraph(graph);
+  } catch (error) {
+    console.error("Failed to load initial data:", error);
+  }
+
+
+
+}
+
+
+
 
 function scaleNodesToFit() {
   if (!everything || !everything.nodes || everything.nodes.length === 0) {
