@@ -1,289 +1,344 @@
 {
   "nodes": [
     {
-      "letter": "Signup",
-      "x": 36,
-      "y": 522,
-      "human": "Signup",
+      "letter": "signup",
+      "x": 107,
+      "y": 431,
+      "human": "signup",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "is_new_yes"
     },
     {
-      "letter": "Location",
-      "x": 37,
-      "y": 154,
-      "human": "Location",
+      "letter": "renewal",
+      "x": 236,
+      "y": 88,
+      "human": "renewal",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "birthcitizenship"
     },
     {
-      "letter": "LegalName",
-      "x": 94,
-      "y": 38,
-      "human": "LegalName",
+      "letter": "birthcitizenship",
+      "x": 434,
+      "y": 110,
+      "human": "birthcitizenship",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "eligibility"
     },
     {
-      "letter": "BirthAndCitizenship",
-      "x": 318,
-      "y": 174,
-      "human": "BirthAndCitizenship",
+      "letter": "eligibility",
+      "x": 491,
+      "y": 243,
+      "human": "eligibility",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "attributes"
     },
     {
-      "letter": "Eligibility",
-      "x": 272,
-      "y": 359,
-      "human": "Eligibility",
+      "letter": "attributes",
+      "x": 634,
+      "y": 186,
+      "human": "attributes",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "address"
     },
     {
-      "letter": "PhotoId",
-      "x": 635,
-      "y": 193,
-      "human": "PhotoId",
+      "letter": "photoid",
+      "x": 789,
+      "y": 306,
+      "human": "photoid",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "is_list_a_yes"
     },
     {
-      "letter": "Scheduler",
-      "x": 1128,
-      "y": 75,
-      "human": "Scheduler",
+      "letter": "proofcitizenship",
+      "x": 836,
+      "y": 549,
+      "human": "proofcitizenship",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "namematch"
     },
     {
-      "letter": "Summary",
-      "x": 1352,
-      "y": 63,
-      "human": "Summary",
+      "letter": "namematch",
+      "x": 1058,
+      "y": 426,
+      "human": "namematch",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "is_match_good_yes"
     },
     {
-      "letter": "Renewal",
-      "x": 271,
-      "y": 49,
-      "human": "Renewal",
+      "letter": "scheduler",
+      "x": 1180,
+      "y": 188,
+      "human": "scheduler",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "dashboard"
     },
     {
-      "letter": "ProofOfCitizenship",
-      "x": 971,
-      "y": 459,
-      "human": "ProofOfCitizenship",
+      "letter": "adddocuments",
+      "x": 1260,
+      "y": 294,
+      "human": "adddocuments",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "scheduler"
     },
     {
-      "letter": "NameMatch",
-      "x": 1196,
-      "y": 501,
-      "human": "NameMatchAndLinkingDoc",
-      "color": "#ffffff",
-      "type": "box"
+      "letter": "dashboard",
+      "x": 1393,
+      "y": 139,
+      "human": "dashboard",
+      "color": "#c8ea1f",
+      "type": "diamond",
+      "ancestor": "",
+      "target": ""
     },
     {
-      "letter": "Dashboard",
-      "x": 1576,
-      "y": 73,
-      "human": "Dashboard",
-      "color": "#ffffff",
-      "type": "box"
-    },
-    {
-      "letter": "isListA_YES",
-      "x": 811.5,
-      "y": 115.5,
-      "human": "isListA_YES",
-      "color": "#00ff00",
-      "type": "circle"
-    },
-    {
-      "letter": "isListA_NO",
-      "x": 791,
-      "y": 271,
-      "human": "isListA_NO",
+      "letter": "is_new_no",
+      "x": 271.5,
+      "y": 386.5,
+      "human": "is_new_no",
       "color": "#ff0000",
-      "type": "circle"
+      "type": "circle",
+      "ancestor": "",
+      "target": "eligibility",
+      "choice":"no"
     },
     {
-      "letter": "Address",
-      "x": 526,
-      "y": 315,
-      "human": "Address",
+      "letter": "location",
+      "x": 157,
+      "y": 294,
+      "human": "location",
       "color": "#ffffff",
-      "type": "box"
+      "type": "box",
+      "ancestor": "",
+      "target": "legalname"
     },
     {
-      "letter": "is_New_NO",
-      "x": 145.5,
-      "y": 497,
-      "human": "is_New_NO",
-      "color": "#ff0000",
-      "type": "circle"
+      "letter": "legalname",
+      "x": 180,
+      "y": 220,
+      "human": "legalname",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "renewal"
     },
     {
-      "letter": "isPhotoName_and_Name_match_YES",
-      "x": 1123,
-      "y": 279,
-      "human": "isPhotoName_and_Name_match_YES",
+      "letter": "address",
+      "x": 710,
+      "y": 240,
+      "human": "address",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "photoid"
+    },
+    {
+      "letter": "is_new_yes",
+      "x": 72.5,
+      "y": 372.5,
+      "human": "is_new_yes",
       "color": "#00ff00",
-      "type": "circle"
+      "type": "circle",
+      "ancestor": "",
+      "target": "location",
+      "choice":"yes"
     },
     {
-      "letter": "Addlinkingdoc",
-      "x": 1320,
-      "y": 224,
-      "human": "Addlinkingdoc",
-      "color": "#ffffff",
-      "type": "box"
-    },
-    {
-      "letter": "isPhotoName_and_Name_match_NO",
-      "x": 1334.5,
-      "y": 369,
-      "human": "isPhotoName_and_Name_match_NO",
+      "letter": "is_list_a_no",
+      "x": 778.5,
+      "y": 426,
+      "human": "is_list_a_no",
       "color": "#ff0000",
-      "type": "circle"
+      "type": "circle",
+      "ancestor": "",
+      "target": "proofcitizenship",
+      "choice":"no"
     },
     {
-      "letter": "Attributes",
-      "x": 443,
-      "y": 428,
-      "human": "Attributes",
-      "color": "#ffffff",
-      "type": "box"
-    },
-    {
-      "letter": "is_New_YES",
-      "x": 119.5,
-      "y": 272.5,
-      "human": "is_New_YES",
+      "letter": "is_list_a_yes",
+      "x": 916,
+      "y": 111.5,
+      "human": "is_list_a_yes",
       "color": "#00ff00",
-      "type": "circle"
+      "type": "circle",
+      "ancestor": "",
+      "target": "scheduler",
+      "choice": "yes"
+    },
+    {
+      "letter": "is_match_good_no",
+      "x": 1260.5,
+      "y": 361.5,
+      "human": "is_match_good_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "adddocuments",
+      "choice": "no"
+    },
+    {
+      "letter": "is_match_good_yes",
+      "x": 1136.5,
+      "y": 316.5,
+      "human": "is_match_good_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "scheduler",
+      "choice": "yes"
     }
   ],
   "connections": [
     {
-      "from": "Location",
-      "to": "LegalName",
-      "type": "normal"
+      "from": "signup",
+      "to": "is_new_no",
+      "type": "no",
+      "ancestor": "signup"
     },
     {
-      "from": "LegalName",
-      "to": "Renewal",
-      "type": "normal"
+      "from": "is_new_no",
+      "to": "eligibility",
+      "type": "no",
+      "ancestor": "signup"
     },
     {
-      "from": "Renewal",
-      "to": "BirthAndCitizenship",
-      "type": "normal"
+      "from": "signup",
+      "to": "is_new_yes",
+      "type": "yes",
+      "ancestor": "signup"
     },
     {
-      "from": "BirthAndCitizenship",
-      "to": "Eligibility",
-      "type": "normal"
+      "from": "is_new_yes",
+      "to": "location",
+      "type": "yes",
+      "ancestor": "signup"
     },
     {
-      "from": "ProofOfCitizenship",
-      "to": "NameMatch",
-      "type": "normal"
+      "from": "location",
+      "to": "legalname",
+      "type": "normal",
+      "ancestor": "location"
     },
     {
-      "from": "Scheduler",
-      "to": "Summary",
-      "type": "normal"
+      "from": "photoid",
+      "to": "is_list_a_no",
+      "type": "no",
+      "ancestor": "photoid"
     },
     {
-      "from": "Summary",
-      "to": "Dashboard",
-      "type": "normal"
+      "from": "is_list_a_no",
+      "to": "proofcitizenship",
+      "type": "no",
+      "ancestor": "photoid"
     },
     {
-      "from": "PhotoId",
-      "to": "isListA_YES",
-      "type": "yes"
+      "from": "photoid",
+      "to": "is_list_a_yes",
+      "type": "yes",
+      "ancestor": "photoid"
     },
     {
-      "from": "isListA_YES",
-      "to": "Scheduler",
-      "type": "yes"
+      "from": "is_list_a_yes",
+      "to": "scheduler",
+      "type": "yes",
+      "ancestor": "photoid"
     },
     {
-      "from": "PhotoId",
-      "to": "isListA_NO",
-      "type": "no"
+      "from": "namematch",
+      "to": "is_match_good_no",
+      "type": "no",
+      "ancestor": "namematch"
     },
     {
-      "from": "isListA_NO",
-      "to": "ProofOfCitizenship",
-      "type": "no"
+      "from": "is_match_good_no",
+      "to": "adddocuments",
+      "type": "no",
+      "ancestor": "namematch"
     },
     {
-      "from": "Signup",
-      "to": "is_New_NO",
-      "type": "no"
+      "from": "namematch",
+      "to": "is_match_good_yes",
+      "type": "yes",
+      "ancestor": "namematch"
     },
     {
-      "from": "is_New_NO",
-      "to": "Eligibility",
-      "type": "no"
+      "from": "is_match_good_yes",
+      "to": "scheduler",
+      "type": "yes",
+      "ancestor": "namematch"
     },
     {
-      "from": "NameMatch",
-      "to": "isPhotoName_and_Name_match_YES",
-      "type": "yes"
+      "from": "adddocuments",
+      "to": "scheduler",
+      "type": "normal",
+      "ancestor": "adddocuments"
     },
     {
-      "from": "isPhotoName_and_Name_match_YES",
-      "to": "Scheduler",
-      "type": "yes"
+      "from": "proofcitizenship",
+      "to": "namematch",
+      "type": "normal",
+      "ancestor": "proofcitizenship"
     },
     {
-      "from": "NameMatch",
-      "to": "isPhotoName_and_Name_match_NO",
-      "type": "no"
+      "from": "scheduler",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "scheduler"
     },
     {
-      "from": "isPhotoName_and_Name_match_NO",
-      "to": "Addlinkingdoc",
-      "type": "no"
+      "from": "legalname",
+      "to": "renewal",
+      "type": "normal",
+      "ancestor": "legalname"
     },
     {
-      "from": "Addlinkingdoc",
-      "to": "Scheduler",
-      "type": "normal"
+      "from": "renewal",
+      "to": "birthcitizenship",
+      "type": "normal",
+      "ancestor": "renewal"
     },
     {
-      "from": "Eligibility",
-      "to": "Attributes",
-      "type": "normal"
+      "from": "birthcitizenship",
+      "to": "eligibility",
+      "type": "normal",
+      "ancestor": "birthcitizenship"
     },
     {
-      "from": "Attributes",
-      "to": "Address",
-      "type": "normal"
+      "from": "eligibility",
+      "to": "attributes",
+      "type": "normal",
+      "ancestor": "eligibility"
     },
     {
-      "from": "Address",
-      "to": "PhotoId",
-      "type": "normal"
+      "from": "attributes",
+      "to": "address",
+      "type": "normal",
+      "ancestor": "attributes"
     },
     {
-      "from": "Signup",
-      "to": "is_New_YES",
-      "type": "yes"
-    },
-    {
-      "from": "is_New_YES",
-      "to": "Location",
-      "type": "yes"
+      "from": "address",
+      "to": "photoid",
+      "type": "normal",
+      "ancestor": "address"
     }
   ]
 }
