@@ -2,7 +2,11 @@ import os
 import re
 import tinycss2
 """
-THIS script uses tinycss2
+GOAL: 
+Find duplicated CSS selectors in a project
+
+NOTE:
+This script uses tinycss2
 https://github.com/Kozea/tinycss2
 pip install tinycss2 
 """
