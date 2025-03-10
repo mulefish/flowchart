@@ -85,9 +85,10 @@ def main():
         if len(files) > 1:
 
             count += 1
-            print(f"{count} : {len(files)} occurrences for selector '{selector}' in files:")
+            print(f"i={count} : count={len(files)} : found '{selector}':")
             for file in files:
-                print(f"  - {file}")
+                pretty_path = file.replace(starting_directory, "")
+                print(f"  - {pretty_path}")
         # else 1 is good! 
 
 
