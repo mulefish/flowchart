@@ -19,6 +19,9 @@ app.get('/telos', (req, res) => {
 app.get('/chart', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'chart.html'));
 });
+app.get('/1661', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', '1661.html'));
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

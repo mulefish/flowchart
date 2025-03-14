@@ -58,9 +58,6 @@
 </head>
 <body>
     <canvas id="flowchartCanvas"></canvas>
-    <a href="http://localhost:3000/telos">telos</a>
-    <a href="http://localhost:3000/complete">complete</a>
-    <a href="http://localhost:3000/1661">1661</a>
 
     <div id="main-container">
         <div id="left-container">
@@ -124,15 +121,15 @@
         </div>
 
         <div id="right-panel">
-            <button onclick="save('core')">save</button>
-            <button onclick="load('core')">load</button>
+            <button onclick="save('telos')">save</button>
+            <button onclick="load('telos')">load</button>
             <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
         </div>
     </div>
 <script src="ETL.js"></script>
 <script src="graph.js"></script>
 <script>
-main("initialData.json");
+main("1661.json");
 
 
 
