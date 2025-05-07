@@ -10,6 +10,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/endpoints', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'endpoints.html'));
+}); 
+
 app.get('/complete', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'complete.html'));
 });

@@ -61,8 +61,8 @@ def analyze_vue_file(file_path):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python script.py <path_to_vue_file>")
-        print(r"Usage: python script.py C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src\views\LegalName.vue")
+        print("Usage: python CSSKruft.py <path_to_vue_file>")
+        print(r"Usage: python CSSKrufty.py C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src\views\WebAttributes.vue")
         sys.exit(1)
 
     vue_file = sys.argv[1]

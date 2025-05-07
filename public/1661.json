@@ -52,28 +52,28 @@
     },
     {
       "letter": "photoid",
-      "x": 789,
-      "y": 306,
+      "x": 691,
+      "y": 286,
       "human": "photoid",
-      "color": "#ffffff",
+      "color": "blue",
       "type": "box",
       "ancestor": "",
       "target": "is_list_a_yes"
     },
     {
       "letter": "proofcitizenship",
-      "x": 836,
-      "y": 549,
+      "x": 785,
+      "y": 518,
       "human": "proofcitizenship",
-      "color": "#ffffff",
+      "color": "blue",
       "type": "box",
       "ancestor": "",
       "target": "namematch"
     },
     {
       "letter": "namematch",
-      "x": 1058,
-      "y": 426,
+      "x": 967,
+      "y": 444,
       "human": "namematch",
       "color": "#ffffff",
       "type": "box",
@@ -82,33 +82,23 @@
     },
     {
       "letter": "scheduler",
-      "x": 1180,
-      "y": 188,
+      "x": 1054,
+      "y": 65,
       "human": "scheduler",
       "color": "#ffffff",
       "type": "box",
       "ancestor": "",
-      "target": "dashboard"
+      "target": "summary"
     },
     {
       "letter": "adddocuments",
-      "x": 1260,
-      "y": 294,
+      "x": 1223,
+      "y": 276,
       "human": "adddocuments",
       "color": "#ffffff",
       "type": "box",
       "ancestor": "",
       "target": "scheduler"
-    },
-    {
-      "letter": "dashboard",
-      "x": 1393,
-      "y": 139,
-      "human": "dashboard",
-      "color": "#c8ea1f",
-      "type": "diamond",
-      "ancestor": "",
-      "target": ""
     },
     {
       "letter": "is_new_no",
@@ -119,7 +109,7 @@
       "type": "circle",
       "ancestor": "",
       "target": "eligibility",
-      "choice":"no"
+      "choice": "no"
     },
     {
       "letter": "location",
@@ -133,8 +123,8 @@
     },
     {
       "letter": "legalname",
-      "x": 180,
-      "y": 220,
+      "x": 209,
+      "y": 131,
       "human": "legalname",
       "color": "blue",
       "type": "box",
@@ -143,8 +133,8 @@
     },
     {
       "letter": "address",
-      "x": 710,
-      "y": 240,
+      "x": 805,
+      "y": 124,
       "human": "address",
       "color": "#ffffff",
       "type": "box",
@@ -160,23 +150,23 @@
       "type": "circle",
       "ancestor": "",
       "target": "location",
-      "choice":"yes"
+      "choice": "yes"
     },
     {
       "letter": "is_list_a_no",
-      "x": 778.5,
-      "y": 426,
+      "x": 576.5,
+      "y": 429,
       "human": "is_list_a_no",
       "color": "#ff0000",
       "type": "circle",
       "ancestor": "",
       "target": "proofcitizenship",
-      "choice":"no"
+      "choice": "no"
     },
     {
       "letter": "is_list_a_yes",
-      "x": 916,
-      "y": 111.5,
+      "x": 869,
+      "y": 238.5,
       "human": "is_list_a_yes",
       "color": "#00ff00",
       "type": "circle",
@@ -186,8 +176,8 @@
     },
     {
       "letter": "is_match_good_no",
-      "x": 1260.5,
-      "y": 361.5,
+      "x": 1153.5,
+      "y": 480.5,
       "human": "is_match_good_no",
       "color": "#ff0000",
       "type": "circle",
@@ -197,14 +187,47 @@
     },
     {
       "letter": "is_match_good_yes",
-      "x": 1136.5,
-      "y": 316.5,
+      "x": 1072.5,
+      "y": 306.5,
       "human": "is_match_good_yes",
       "color": "#00ff00",
       "type": "circle",
       "ancestor": "",
       "target": "scheduler",
       "choice": "yes"
+    },
+    {
+      "letter": "dashboard",
+      "x": 1486,
+      "y": 102,
+      "human": "dashboard",
+      "color": "#ffffff",
+      "type": "diamond",
+      "ancestor": "",
+      "target": "",
+      "choice": "TBD"
+    },
+    {
+      "letter": "summary",
+      "x": 969,
+      "y": 52,
+      "human": "summary",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "",
+      "choice": "TBD"
+    },
+    {
+      "letter": "payment",
+      "x": 1016,
+      "y": 167,
+      "human": "payment",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "",
+      "choice": "TBD"
     }
   ],
   "connections": [
@@ -297,12 +320,6 @@
       "to": "namematch",
       "type": "normal",
       "ancestor": "proofcitizenship"
-    },
-    {
-      "from": "scheduler",
-      "to": "dashboard",
-      "type": "normal",
-      "ancestor": "scheduler"
     },
     {
       "from": "legalname",

@@ -1,0 +1,75 @@
+<html>
+  <body>
+    <script>
+
+      function getLocationsFlat() {
+        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations")
+      }
+
+      function getLocationsLimited() {
+        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations?limit=19")
+      }
+
+      function getLocationsPages() {
+        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/paged")
+      }
+
+      
+
+      function getLocationByLocationId() { 
+//         doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/f90b5d600a0a0b91001d8bf44240ad32")
+        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/f90b5d600a0a0b91001d8bf44240ad32")
+      }
+
+      
+      function doIt(url) {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append(
+          "Authorization",
+          "Basic ZW5yb2xsbWVudF9hcGlfdXNlcjpBRjQyb1lOci50aXJ2cjxdK2FDR05fQURoTWV9V0VWYi5eS2F3TWJGd3RHY14qZWVdbFFsWVZPRFhOZ1FkXTU2b29WaC1LaV9GJGJrNVhkSWJsM1B3bnAxbXAjeCwrTFsqOVk+"
+        );
+
+        const raw = JSON.stringify({
+          firstName: "fname",
+          lastName: "lname",
+          countryOfBirth: "US",
+          dateOfBirth: "2000-01-01",
+        });
+
+        const requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+          redirect: "follow",
+        };
+
+        fetch(
+          url,
+          requestOptions
+        )
+          .then((response) => response.text())
+          .then((result) => {
+            console.log( result )
+            const locations = JSON.parse( result )
+            const x = url + "\nlen(" + locations.length + ") \n " + JSON.stringify( locations[0] , null, 2 )
+            document.getElementById("output").value = x 
+          })
+          .catch((error) => console.error(error));
+      }
+    </script>
+    <a href="https://enrollment-swagger.telosid.com/">Swagger</a>
+    <br/>
+    <button onclick="getLocationsFlat()">flat</button>
+    <br/>
+    <button onclick="getLocationsLimited()">limited</button>
+    <br/>
+    <button onclick="getLocationsPages()">paged</button>
+    <br/>
+    <button onclick="getLocationByLocationId()">getLocationByLocationId</button>
+    <br/>
+
+
+    
+    <textarea id="output" rows="100" cols="100"> </textarea>
+  </body>
+</html>
