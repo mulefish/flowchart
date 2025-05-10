@@ -1,9 +1,20 @@
 import os
 import shutil
 from pathlib import Path
+# Working in a mono-repo can be a pain. This script is to help avleaviate some of that pain. 
+# This will copy a filetree from location X to location Y - thus allowing graceful cross-branch comparisoning. 
+# 
+# Save you current TELOS repo from SOURCE_DIR into TARGET_DIR. 
+# TARGET_DIR is outside of the project and I will name my targets whatever their 
+# github repo branch name is. 
 
-# Fixed source and target directories
-TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\PCKN-1799_legal_names_style_bitrot_v4")
+# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\PCKN-1799_legal_names_style_bitrot_v4")
+# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\master")
+# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\pmontgomery\PCHK-1788_observability_v1")
+# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\pmontgomery\PCKN-1799_legal_names_style_v2")
+# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\pmontgomery\PCKN-legal_names_redux_v1")
+TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\pmontgomery\PCKN-1801_style_birth_citizenship_v4")
+
 SOURCE_DIR = Path(r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src")
 
 EXCLUDED_DIRS = {'__tests__', 'node_modules'}
@@ -34,12 +45,12 @@ def copy_selected_files(src_dir, dest_dir, extensions=None):
                 src_file_path = current_dir / file
                 dest_file_path = target_dir / file
                 shutil.copy2(src_file_path, dest_file_path)
-                print(f"Copied: {src_file_path} -> {dest_file_path}")
+                # print(f"Copied: {src_file_path} -> {dest_file_path}")
 
 def main():
     copy_selected_files(SOURCE_DIR, TARGET_DIR)
-    print(f"FROM {TARGET_DIR}")
-    print(f"TO {SOURCE_DIR}")
+    print(f"TO {TARGET_DIR}")
+    print(f"FrOM {SOURCE_DIR}")
 
 if __name__ == "__main__":
     main()
