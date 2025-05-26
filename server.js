@@ -9,7 +9,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
+app.get('datepicker', (req, res) => { 
+	res.sendFile(path.join(__dirname, 'public','datepicker.html'));
+} ); 
 app.get('/endpoints', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'endpoints.html'));
 }); 

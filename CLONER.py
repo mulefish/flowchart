@@ -8,14 +8,9 @@ from pathlib import Path
 # TARGET_DIR is outside of the project and I will name my targets whatever their 
 # github repo branch name is. 
 
-# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\PCKN-1799_legal_names_style_bitrot_v4")
-# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\master")
-# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\pmontgomery\PCHK-1788_observability_v1")
-# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\pmontgomery\PCKN-1799_legal_names_style_v2")
-# TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\pmontgomery\PCKN-legal_names_redux_v1")
-TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\pmontgomery\PCKN-1801_style_birth_citizenship_v4")
-
-SOURCE_DIR = Path(r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src")
+TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\PCKN-1933_1913_1797_composite_v1_shared")
+# SOURCE_DIR = Path(r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe")
+SOURCE_DIR = Path(r"C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib")
 
 EXCLUDED_DIRS = {'__tests__', 'node_modules'}
 
