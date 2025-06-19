@@ -14,8 +14,10 @@ import { useDocumentStore } from '@telos/shared-lib'
 import { useApplicantInfoStore } from '@telos/shared-lib'
 
 type FlatObject = Record<string, any>
-
 let globalBaseline: FlatObject | null = null
+const orange = 'color: orange; font-weight: bold;'
+const charcoal = 'color: darkgray; font-weight: bold;'
+const red = 'color: red; font-weight: bold;'
 
 function flattener(obj: any, prefix = '', result: FlatObject = {}): FlatObject {
   for (const key in obj) {
@@ -47,7 +49,7 @@ function getBackground() {
 
   const allStores = { nav, signup, appointment, location, document, applicant }
   globalBaseline = flattener(allStores)
-  console.log('[Background set]')
+  console.log('%c[Delta] Background set', orange)
 }
 
 function getForeground() {
@@ -68,20 +70,18 @@ function getForeground() {
 
   const seenKeys: Set<string> = new Set()
 
-  console.log('%c[Delta Report]', 'color: orange; font-weight: bold;')
-
   for (const k in current) {
     seenKeys.add(k)
     if (!(k in globalBaseline)) {
-      console.log(`[DELTA] %cA ${k} : ${JSON.stringify(current[k])}`, 'color: yellow;')
+      console.log(`[DELTA] %cADDED ${JSON.stringify(current[k])} ${k}`, orange)
     } else if (current[k] !== globalBaseline[k]) {
-      console.log(`[DELTA] %cC ${k}} : ${JSON.stringify(current[k])}`, 'color: darkgray;')
+      console.log(`[DELTA] %cCHANGED ${JSON.stringify(current[k])} ${k}`, charcoal)
     }
   }
 
   for (const k in globalBaseline) {
     if (!seenKeys.has(k) && !(k in current)) {
-      console.log(`[DELTA] %cM ${k} (was |${JSON.stringify(globalBaseline[k])})|`, 'color: pink;')
+      console.log(`[DELTA] %cREMOVED ${JSON.stringify(globalBaseline[k])} ${k}`, red)
     }
   }
   globalBaseline = current
