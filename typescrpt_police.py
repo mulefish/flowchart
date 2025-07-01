@@ -120,9 +120,15 @@ def walk_and_collect_declarations():
                     process_file(os.path.join(root, file))
 
 def show_findings():
-    print("+ ------------------------------ Type/Interface Findings -------------+ ")
+    print("\n=== Type/Interface Usage Report ===\n")
 
-    for name in sorted(set(list(type_usage_counts.keys()) + list(declaration_locations.keys()))):
+    all_names = sorted(
+        set(list(type_usage_counts.keys()) + list(declaration_locations.keys())),
+        key=lambda name: type_usage_counts.get(name, 0),
+        reverse=True
+    )
+
+    for idx, name in enumerate(all_names, start=1):
         if name in ignore:
             continue
 
@@ -133,6 +139,9 @@ def show_findings():
         if not decl_files:
             continue
 
+        print(f"+++++++++++++++++++++++++++++++++++++")
+        print(f"#{idx} uses {uses} | {name} ")
+
         short_paths = []
         for full_path in decl_files:
             short = full_path
@@ -140,21 +149,22 @@ def show_findings():
                 short = short.replace(base, "").lstrip("\\/")
             short_paths.append(short)
 
-        print(f"+++++++++++++++++++++++++++++++++++++\nuses {uses} | {name} ")
+        print(f"{name:<30} | Total Uses: {uses:<4} | Declared in:")
         for i, sp in enumerate(short_paths):
             line = decl_lines[i] if i < len(decl_lines) else '?'
-            print(f"Declared in: {sp} (line {line})")
+            print(f"    - {sp} (line {line})")
 
         if len(decl_files) > 1:
-            print("  TSK! TSK!: Shadowing is bad!")
+            print("  TSK! TSK! Type shadowing is bad!")
 
         used_files = usage_locations.get(name, [])
         if used_files:
+            print("  Used in:")
             for f in sorted(used_files):
                 short_file = f
                 for base in paths:
                     short_file = short_file.replace(base, "").lstrip("\\/")
-                print(f"Used in: {short_file}")
+                print(f"    - {short_file}")
 
 if __name__ == "__main__":
     walk_and_collect_declarations()
