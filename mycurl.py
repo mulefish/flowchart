@@ -2,7 +2,7 @@ import requests
 import json
 
 url = (
-    "https://enrollment-proxy-api.dev.telos-tsa-precheck.com/"
+    "https://enrollment-proxy-api.dev.xxxxx-tsa-precheck.com/"
     "locations/a23af7cc1ba61950f1cced7bbc4bcbaf"
 )
 params = {"include": "schedule"}

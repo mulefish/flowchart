@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // ✅ STARTING POINT - your project root
-const rootDir = path.resolve("C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\twe\\src");
+const rootDir = path.resolve("C:\\Users\\squar\\xxxxx\\project.desktop\\xxxxx\\apps\\twe\\src");
 
 // Entry points to exclude from orphan detection
 const entryFiles = ['main.js', 'main.ts', 'App.vue'];

@@ -1,6 +1,6 @@
 
 
-===== C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\services\BlankObject.service.ts =====
+===== C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-lib\src\lib\services\BlankObject.service.ts =====
 import {
   DocumentKeyFieldDescriptor,
   EnrollmentAddress,
@@ -31,7 +31,7 @@ import {
   DocumentsSexParse,
   DocSexParse,
   DocumentCleanNameParse
-} from '@telos/shared-types'
+} from '@xxxxx/shared-types'
 import { LinkingDocName, LinkingDocumentNames, LinkingDocumentOther, OtherName } from '../models/TSADocument'
 import { ApplicationSettings } from '../config/ApplicantDataEnums'
 
@@ -604,7 +604,7 @@ export {
 }
 
 
-===== C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\composables\useApi.ts =====
+===== C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-lib\src\lib\composables\useApi.ts =====
 // useApi.ts
 
 import { ref } from 'vue'
@@ -642,17 +642,17 @@ import {
   EnrollmentDataApiFull,
   ApiResponse,
   ApiResponses
-} from '@telos/shared-types'
+} from '@xxxxx/shared-types'
 import { isAllAllowedCharsAndSame } from '../services/SharedDataCleaner.service'
 import { useApplicantInfoStore } from '../stores/useApplicantInfoStore'
 import { useErrorHandler } from './useLogHandler'
 
 // --- Configuration ---
 const apiBaseUrl: string | undefined = import.meta.env['VITE_API_BASE_URL']
-const API_BASE_URL = apiBaseUrl ? ref(apiBaseUrl) : ref('https://enrollment-proxy-api.telos-tsa-precheck.com/')
-const STA_BASE_URL = ref('https://sta-lookup.telos-tsa-precheck.com/')
+const API_BASE_URL = apiBaseUrl ? ref(apiBaseUrl) : ref('https://enrollment-proxy-api.xxxxx-tsa-precheck.com/')
+const STA_BASE_URL = ref('https://sta-lookup.xxxxx-tsa-precheck.com/')
 const qrBaseUrl: string | undefined = import.meta.env['VITE_QR_BASE_URL']
-const QR_BASE_URL = qrBaseUrl ? ref(qrBaseUrl) : ref('https://qr.telos-tsa-precheck.com/')
+const QR_BASE_URL = qrBaseUrl ? ref(qrBaseUrl) : ref('https://qr.xxxxx-tsa-precheck.com/')
 const basicAuthToken = ref<string | null>(null)
 const timeoutMs = ref(5000)
 
@@ -1038,7 +1038,7 @@ export function useApi() {
 }
 
 
-===== C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\types\api.ts =====
+===== C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-lib\src\lib\types\api.ts =====
 // --- Type Definitions ---
 // Basic types
 export type SysId = string // Pattern: '^[A-Za-z0-9]{32}$'
@@ -1425,8 +1425,8 @@ export type CustomerNotificationV2QueryParams = BaseQueryParams
         </div>
 
         <div id="right-panel">
-            <button onclick="save('telos')">save</button>
-            <button onclick="load('telos')">load</button>
+            <button onclick="save('xxxxx')">save</button>
+            <button onclick="load('xxxxx')">load</button>
             <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
         </div>
     </div>
@@ -2388,7 +2388,7 @@ main("1661.json");
 <html>
     <body>
         
-        <img src="telos.png" />
+        <img src="xxxxx.png" />
     </body>
 </html>
 
@@ -3498,22 +3498,22 @@ main("complete.json");
     <script>
 
       function getLocationsFlat() {
-        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations")
+        doIt("https://enrollment-proxy-api.xxxxx-tsa-precheck.com/locations")
       }
 
       function getLocationsLimited() {
-        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations?limit=19")
+        doIt("https://enrollment-proxy-api.xxxxx-tsa-precheck.com/locations?limit=19")
       }
 
       function getLocationsPages() {
-        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/paged")
+        doIt("https://enrollment-proxy-api.xxxxx-tsa-precheck.com/locations/paged")
       }
 
       
 
       function getLocationByLocationId() { 
-//         doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/f90b5d600a0a0b91001d8bf44240ad32")
-        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/f90b5d600a0a0b91001d8bf44240ad32")
+//         doIt("https://enrollment-proxy-api.xxxxx-tsa-precheck.com/locations/f90b5d600a0a0b91001d8bf44240ad32")
+        doIt("https://enrollment-proxy-api.xxxxx-tsa-precheck.com/locations/f90b5d600a0a0b91001d8bf44240ad32")
       }
 
       
@@ -3552,7 +3552,7 @@ main("complete.json");
           .catch((error) => console.error(error));
       }
     </script>
-    <a href="https://enrollment-swagger.telosid.com/">Swagger</a>
+    <a href="https://enrollment-swagger.xxxxxid.com/">Swagger</a>
     <br/>
     <button onclick="getLocationsFlat()">flat</button>
     <br/>
@@ -4350,7 +4350,7 @@ function copyOver(id1, id2) {
 </head>
 <body>
     <canvas id="flowchartCanvas"></canvas>
-    <a href="http://localhost:3000/telos">telos</a>
+    <a href="http://localhost:3000/xxxxx">xxxxx</a>
     <a href="http://localhost:3000/complete">complete</a>
     <a href="http://localhost:3000/1661">1661</a>
 
@@ -4616,7 +4616,7 @@ const theData = downstreamCirclesBetweenBoxes(bigBallOfJson);
 const everything = getDependencies(theData)
 console.log( JSON.stringify( everything, null, 2 )  )
 
-===== telos.html =====
+===== xxxxx.html =====
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -4740,15 +4740,15 @@ console.log( JSON.stringify( everything, null, 2 )  )
         </div>
 
         <div id="right-panel">
-            <button onclick="save('telos')">save</button>
-            <button onclick="load('telos')">load</button>
+            <button onclick="save('xxxxx')">save</button>
+            <button onclick="load('xxxxx')">load</button>
             <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
         </div>
     </div>
 <script src="ETL.js"></script>
 <script src="graph.js"></script>
 <script>
-main("telos.json");
+main("xxxxx.json");
 
 
 
@@ -4757,7 +4757,7 @@ main("telos.json");
 </html>
 
 
-===== telos.json =====
+===== xxxxx.json =====
 {
   "nodes": [
     {

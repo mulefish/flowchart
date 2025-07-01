@@ -1,7 +1,7 @@
 # paths = [
-#     r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src",
-#     r"C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src",
-#     r"C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-types\src"
+#     r"C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src",
+#     r"C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-lib\src",
+#     r"C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-types\src"
 # ]
 
 import os
@@ -10,13 +10,13 @@ from collections import defaultdict
 
 # Start your recursing here!
 paths = [
-    r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src",
-    r"C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src",
-    r"C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-types\src"
+    r"C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src",
+    r"C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-lib\src",
+    r"C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-types\src"
 ]
 
 ignore = ["Props"]  # Types to ignore completely! Props is declared all-over-the-place 
-# but that appears to be a conventional usage here at Telos, so I added this ignore array to skip it.
+# but that appears to be a conventional usage here at XXXXX, so I added this ignore array to skip it.
 
 # I 100% used chatgpt for the regexs! Lol. I s-u-c-k at regexes 
 type_decl_pattern = re.compile(r'\btype\s+(\w+)\s*=')

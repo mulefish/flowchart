@@ -8,11 +8,11 @@ output_file = base_dir / 'combined_output.txt'
 
 # Explicit list of absolute paths
 files_to_include = [
-    ##r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src\stores\useLocationStore.ts",
-    r"C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\services\BlankObject.service.ts",
-    r"C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\composables\useApi.ts",
-    #r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src\components\common\LocationPaginator.vue",
-    r"C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\types\api.ts"
+    ##r"C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src\stores\useLocationStore.ts",
+    r"C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-lib\src\lib\services\BlankObject.service.ts",
+    r"C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-lib\src\lib\composables\useApi.ts",
+    #r"C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src\components\common\LocationPaginator.vue",
+    r"C:\Users\squar\xxxxx\project.desktop\xxxxx\packages\shared-lib\src\lib\types\api.ts"
 ]
 
 # Write all selected content into the output file

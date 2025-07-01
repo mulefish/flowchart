@@ -3,7 +3,7 @@ import tinycss2
 import sys
 import os
 
-CSS_GLOBAL_FILE = r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src\main.css"
+CSS_GLOBAL_FILE = r"C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src\main.css"
 
 def extract_css_selectors(css_content):
     selectors = set()
@@ -62,7 +62,7 @@ def analyze_vue_file(file_path):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python CSSKruft.py <path_to_vue_file>")
-        print(r"Usage: python CSSKrufty.py C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src\views\WebAttributes.vue")
+        print(r"Usage: python CSSKrufty.py C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src\views\WebAttributes.vue")
         sys.exit(1)
 
     vue_file = sys.argv[1]

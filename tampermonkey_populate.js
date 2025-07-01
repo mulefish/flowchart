@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Populate Telos 1
+// @name         Populate XXXXX 1
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Populate signup or location based on URL suffix, with clickByText restored

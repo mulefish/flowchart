@@ -6,7 +6,7 @@ This script helps find that kruft. This will accept the path  to a .vue file and
 to find css selectors and in the <template> section to see what selectors are or are not used. 
 
 Example usage: 
-python CSS_in_use_in_given_file.py C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src\views\Scratchpad.vue
+python CSS_in_use_in_given_file.py C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src\views\Scratchpad.vue
 """
 
 import re

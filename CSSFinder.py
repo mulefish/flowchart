@@ -72,8 +72,8 @@ def process_css_files(directory):
     return css_selectors_count
 
 def main():
-    # starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\precheck\\src'
-    starting_directory = 'C:\\Users\\squar\\telos\\tsapre.desktop\\telos\\apps\\twe\\src'
+    # starting_directory = 'C:\\Users\\squar\\xxxxx\\project.desktop\\xxxxx\\apps\\precheck\\src'
+    starting_directory = 'C:\\Users\\squar\\xxxxx\\project.desktop\\xxxxx\\apps\\twe\\src'
     vue_css_counts = process_vue_files(starting_directory)
     css_file_counts = process_css_files(starting_directory)
      

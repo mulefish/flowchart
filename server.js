@@ -19,8 +19,8 @@ app.get('/endpoints', (req, res) => {
 app.get('/complete', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'complete.html'));
 });
-app.get('/telos', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'telos.html'));
+app.get('/xxxxx', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'xxxxx.html'));
 });
 app.get('/chart', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'chart.html'));

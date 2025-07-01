@@ -12,8 +12,8 @@
 import os
 from pathlib import Path
 
-ASSETS_DIR = Path(r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src\assets")
-SRC_DIR = Path(r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe\src")
+ASSETS_DIR = Path(r"C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src\assets")
+SRC_DIR = Path(r"C:\Users\squar\xxxxx\project.desktop\xxxxx\apps\twe\src")
 
 asset_files = [p.name for p in ASSETS_DIR.iterdir() if p.is_file()]
 refs = {asset: set() for asset in asset_files}

@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-url = "https://enrollment-proxy-api.dev.telos-tsa-precheck.com/locations/paged"
+url = "https://enrollment-proxy-api.dev.xxxxx-tsa-precheck.com/locations/paged"
 params = {
     "include": "schedule"
 }
