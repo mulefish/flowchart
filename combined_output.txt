@@ -1,0 +1,5225 @@
+
+
+===== C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\services\BlankObject.service.ts =====
+import {
+  DocumentKeyFieldDescriptor,
+  EnrollmentAddress,
+  EnrollmentDocDataDescriptor,
+  EnrollmentName,
+  EnrollmentDataLocal,
+  LinkingDocsObject,
+  ReasonForConcernDescriptor,
+  TrustedAgentDescriptor,
+  CustomerDataLocal,
+  FingerprintImages,
+  FingerprintInfo,
+  STAStatusDto,
+  FacePhotoLocalWarnings,
+  WarningReason,
+  ApiWarningReason,
+  FacePhotoApiWarnings,
+  HandsChanged,
+  FourFingerSlap,
+  ThumbSlap,
+  EnrollmentDocDescriptor,
+  DocumentBirthdays,
+  DocumentBirthday,
+  OnsitePages,
+  PhotoDocsObject,
+  PaymentStatus,
+  PayStatus,
+  DocumentsSexParse,
+  DocSexParse,
+  DocumentCleanNameParse
+} from '@telos/shared-types'
+import { LinkingDocName, LinkingDocumentNames, LinkingDocumentOther, OtherName } from '../models/TSADocument'
+import { ApplicationSettings } from '../config/ApplicantDataEnums'
+
+const getBlankName = (): EnrollmentName => {
+  return {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    suffix: ''
+  }
+}
+
+const getBlankCustomerLocalInfo = (): CustomerDataLocal => {
+  return {
+    id: '',
+    emailAddress: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    suffix: '',
+    currentEnrollmentId: '',
+    dateOfBirth: null,
+    phoneNumber: '',
+    otherPhoneNumber: '',
+    mobilePhoneNumber: '',
+    cityOfBirth: '',
+    countryOfBirth: '',
+    stateOrProvinceOfBirth: '',
+    optInForTextNotifications: false,
+    provider: 'TELOS',
+    staExpirationDate: '',
+    rbsrRequired: false
+  }
+}
+
+export interface EnrollmentLocation {
+  id: string
+  name: string
+  bookingSlots: string
+  bookingDuration: string
+  street: string
+  city: string
+  state: string
+  zip?: string
+  timezone: string
+  latitude: string
+  longitude: string
+  phone?: string
+  stage: string
+  distance?: number
+  shortCode: string
+  locationAnnouncement: string
+  ecLocationName: string
+  closureData: string[]
+}
+
+export const getBlankLocation = (): EnrollmentLocation => {
+  return {
+    id: '',
+    name: '',
+    bookingSlots: '',
+    bookingDuration: '',
+    street: '',
+    city: '',
+    state: '',
+    zip: '',
+    timezone: '',
+    latitude: '',
+    longitude: '',
+    phone: '',
+    stage: '',
+    distance: 0,
+    shortCode: '',
+    locationAnnouncement: '',
+    ecLocationName: '',
+    closureData: []
+  }
+}
+
+const getBlankEnrollmentInfo = (): EnrollmentDataLocal => {
+  return {
+    id: '',
+    aliases: [],
+    aliasEverUsed: false,
+    countryOfCitizenship: '',
+    customerId: '',
+    eyeColor: '',
+    gender: '',
+    hairColor: '',
+    hasBeenFoundOfMentalIssue: false,
+    hasBeenReleasedFromIncarcerationPartB: false,
+    hasInterimDisqualifyingOffenses: false,
+    hasMaidenOrPreviousName: false,
+    hasPermanentDisqualifyingOffenses: false,
+    height: '',
+    isUsCitizenOrNationalOrLpr: true,
+    isUsCitizen: true,
+    isLpr: true,
+    isWantedOrUnderIndictment: false,
+    livedAtCurrentMoreThan5Years: true,
+    maidenOrPreviousNamesUsed: [],
+    mailingAddress: getBlankAddress(),
+    mailingAddressSameAsResidential: true,
+    preferredLanguage: 'English',
+    previousAddress: getBlankAddress(),
+    residentialAddress: getBlankAddress(),
+    status: 'created',
+    weight: 0,
+    checkInDate: new Date(),
+    applicationStatus: '',
+    paymentStatus: '',
+    hasNameChangedAfterTsaPreCheck: false,
+    preferredMethodOfContact: [''],
+    projectId: ApplicationSettings.ProjectId,
+    doesNameMatchInIds: true,
+    ssn: '',
+    trustedAgent: getBlankTrustedAgent(),
+    fingerprintDoc: {
+      captureStatus: '',
+      uploadStatus: '',
+      isSkipped: '',
+      skipReason: ''
+    },
+    photoDoc: {
+      captureStatus: '',
+      uploadStatus: '',
+      isSkipped: '',
+      skipReason: ''
+    },
+    docsPhotoIdAndProofOfCitizenship: getBlankEnrollmentDoc(),
+    docsPhotoId: getBlankEnrollmentDoc(),
+    docsProofOfCitizenship: getBlankEnrollmentDoc(),
+    linkingDocs: getBlankEnrollmentDoc(),
+    attestation: false,
+    documentRealId: '',
+    reprintingRequired: -1,
+    reprintingCompleted: -1,
+    // TODO: Change This
+    enrollmentLocation: '3fc3746f38e44fd387468a13eb96a601'
+  }
+}
+
+const getBlankAddress = (): EnrollmentAddress => {
+  return {
+    country: '',
+    street: '',
+    address2: '',
+    city: '',
+    stateOrProvince: '',
+    postalCode: ''
+  }
+}
+
+const getBlankSideInfo = (): FourFingerSlap => {
+  return {
+    index: {},
+    middle: {},
+    ring: {},
+    little: {}
+  }
+}
+
+const getBlankThumbInfo = (): ThumbSlap => {
+  return {
+    left: {},
+    right: {}
+  }
+}
+
+const getBlankFingerprintInfo = () => {
+  return {
+    deviceSerialNumber: '',
+    left: getBlankSideInfo(),
+    right: getBlankSideInfo(),
+    thumbs: getBlankThumbInfo()
+  } as FingerprintInfo
+}
+
+const getBlankFingerprintImages = () => {
+  return {
+    left: {
+      data: '',
+      imgSrc: '',
+      width: 0,
+      height: 0,
+      captureDate: new Date()
+    },
+    right: {
+      data: '',
+      imgSrc: '',
+      width: 0,
+      height: 0,
+      captureDate: new Date()
+    },
+    thumbs: {
+      data: '',
+      imgSrc: '',
+      width: 0,
+      height: 0,
+      captureDate: new Date()
+    }
+  } as FingerprintImages
+}
+
+const getBlankHandsChanged = (): HandsChanged => {
+  return {
+    left: false,
+    right: false,
+    thumbs: false
+  }
+}
+
+const getBlankEnrollmentDoc = (): EnrollmentDocDescriptor => {
+  return {
+    code: '',
+    customerDocs: null,
+    customerDocsFront: null,
+    customerDocsBack: null,
+    customerFpDocs: null,
+    customerVsiDocs: null,
+    customerDLTempDocsFront: null,
+    customerDLTempDocsBack: null,
+    customerDLExpiredDocsFront: null,
+    customerDLExpiredDocsBack: null,
+    detailsManuallyEntered: getBlankName(),
+    detailsScanned: getBlankName(),
+    reasonForMismatch: getBlankName(),
+    originalName: null,
+    newName: null,
+    keyFields: getBlankKeyFields(),
+    scanStatus: '',
+    scanStatusFront: '',
+    scanStatusBack: '',
+    uploadStatus: '',
+    uploadStatusFront: '',
+    uploadStatusBack: '',
+    scanFpStatus: '',
+    uploadFpStatus: '',
+    scanVsiStatus: '',
+    uploadVsiStatus: '',
+    scanDLTempStatusFront: '',
+    scanDLTempStatusBack: '',
+    uploadDLTempStatusFront: '',
+    uploadDLTempStatusBack: '',
+    scanDLExpiredStatusFront: '',
+    scanDLExpiredStatusBack: '',
+    uploadDLExpiredStatusFront: '',
+    uploadDLExpiredStatusBack: '',
+    identityAuthenticationScore: '0%',
+    identityFaceMatchSelfieScore: '',
+    identityReasonForFailure: '',
+    fpIdentityAuthenticationScore: '0%',
+    fpIdentityFaceMatchSelfieScore: '',
+    fpIdentityReasonForFailure: '',
+    vsiIdentityAuthenticationScore: '0%',
+    vsiIdentityFaceMatchSelfieScore: '',
+    vsiIdentityReasonForFailure: '',
+    dlTempUnexpiredIdentityAuthenticationScore: '0%',
+    dlTempUnexpiredIdentityFaceMatchSelfieScore: '',
+    dlTempUnexpiredIdentityReasonForFailure: '',
+    dlTempExpiredIdentityAuthenticationScore: '0%',
+    dlTempExpiredIdentityFaceMatchSelfieScore: '',
+    dlTempExpiredIdentityReasonForFailure: ''
+  }
+}
+
+const getBlankKeyFields = (): DocumentKeyFieldDescriptor => {
+  return {
+    passportNumber: '',
+    passportCardNumber: '',
+    enrollmentNumber: '',
+    licenseNumber: '',
+    idNumber: '',
+    documentNumber: '',
+    arnNumber: '',
+    cinNumber: '',
+    expiryDate: '',
+    issueDate: '',
+    issueState: '',
+    countryOfBirth: '',
+    dateOfBirth: '',
+    visaExpiryDate: '',
+    visaNumber: '',
+    sex: ''
+  }
+}
+
+const getBlankTrustedAgent = (): TrustedAgentDescriptor => {
+  return {
+    name: '',
+    reasonForConcern: getBlankReasonForConcern(),
+    isCertified: false,
+    certifyTime: 0
+  }
+}
+
+const getBlankReasonForConcern = (): ReasonForConcernDescriptor => {
+  return {
+    docsPhotoIdAndProofOfCitizenship: '',
+    docsPhotoId: '',
+    docsProofOfCitizenship: '',
+    linkingDocs: '',
+    facePhoto: getBlankFacePhotoApiWarnings()
+  }
+}
+
+const getBlankDocDataDescriptor = (): EnrollmentDocDataDescriptor => {
+  return {
+    attachmentId: '',
+    attachmentName: '',
+    attachmentSize: 0,
+    attachmentType: '',
+    comments: '',
+    createdOn: 0,
+    docCode: '',
+    filename: '',
+    status: '',
+    updatedOn: 0,
+    uploadAttachmentPath: '',
+    wfeAppId: ''
+  }
+}
+
+const getBlankDocStub = () => {
+  return {
+    code: '',
+    keyFields: {},
+    reasonForMismatch: {}
+  }
+}
+
+const getBlankLinkingDocStub = () => {
+  return {
+    code: '',
+    linkingDocument1: {
+      code: '',
+      customerDocs: '',
+      scanStatus: '',
+      uploadStatus: ''
+    },
+    linkingDocument2: {
+      code: '',
+      customerDocs: '',
+      scanStatus: '',
+      uploadStatus: ''
+    },
+    linkingDocument3: {
+      code: '',
+      customerDocs: '',
+      scanStatus: '',
+      uploadStatus: ''
+    }
+  }
+}
+
+const getBlankLinkingDocsObject = (): LinkingDocsObject => {
+  return {
+    code: '',
+    linkingDocument1: getBlankEnrollmentDoc(),
+    linkingDocument2: getBlankEnrollmentDoc(),
+    linkingDocument3: getBlankEnrollmentDoc()
+  }
+}
+
+const getBlankLinkingDocsNames = (): LinkingDocumentNames => {
+  return {
+    linkingDocumentA: getBlankLinkingDocName(),
+    linkingDocumentB: getBlankLinkingDocName(),
+    linkingDocumentC: getBlankLinkingDocName()
+  }
+}
+
+const getBlankLinkingDocumentOther = (): LinkingDocumentOther => {
+  return {
+    linkingDocumentA: getBlankOtherName(),
+    linkingDocumentB: getBlankOtherName(),
+    linkingDocumentC: getBlankOtherName()
+  }
+}
+
+const getBlankOtherName = (): OtherName => {
+  return {
+    hasNew: false,
+    newName: getBlankName()
+  }
+}
+
+const getBlankLinkingDocName = (): LinkingDocName => {
+  return {
+    newName: null
+  }
+}
+
+const getBlankPhotoDocsObject = (): PhotoDocsObject => {
+  return {
+    code: '',
+    customerDocs: null,
+    captureStatus: '',
+    uploadStatus: '',
+    captureReason: ''
+  }
+}
+
+const getBlankSTAStatus = (): STAStatusDto => {
+  return {
+    ktn: '',
+    status: '',
+    program: '',
+    staExpirationDate: '',
+    hasFingerprints: false,
+    isSubscribed: false,
+    provider: ''
+  }
+}
+
+const getBlankSystemInfo = () => {
+  return {
+    bucket: 'UNKNOWN',
+    computerName: 'UNKNOWN'
+  }
+}
+
+const getBlankImageSource = () => {
+  return {
+    filename: '',
+    source: ''
+  }
+}
+
+const getBlankFacePhotoWarnings = (): FacePhotoLocalWarnings => {
+  return {
+    head: getBlankWarningReason(),
+    eyesLook: getBlankWarningReason(),
+    eyesRelaxed: getBlankWarningReason(),
+    mouth: getBlankWarningReason(),
+    background: getBlankWarningReason(),
+    accessories: getBlankWarningReason()
+  }
+}
+
+const getBlankFacePhotoApiWarnings = (): FacePhotoApiWarnings => {
+  return {
+    wasAutoCaptured: false,
+    head: getBlankApiWarningReason(),
+    eyesLook: getBlankApiWarningReason(),
+    eyesRelaxed: getBlankApiWarningReason(),
+    mouth: getBlankApiWarningReason(),
+    background: getBlankApiWarningReason(),
+    accessories: getBlankApiWarningReason()
+  }
+}
+
+const getBlankWarningReason = (): WarningReason => {
+  return {
+    alert: '',
+    reason: '',
+    otherExplanation: ''
+  }
+}
+
+const getBlankApiWarningReason = (): ApiWarningReason => {
+  return {
+    alert: '',
+    reason: ''
+  }
+}
+
+type PreReviewPageData = {
+  [OnsitePages.LEGAL_NAME]: boolean
+  [OnsitePages.BIRTH_AND_CITIZENSHIP]: boolean
+  [OnsitePages.ADDRESS]: boolean
+  [OnsitePages.ATTRIBUTES]: boolean
+  [OnsitePages.CONTACT_METHOD]: boolean
+  [OnsitePages.ELIGIBILITY_QUESTIONNAIRE]: boolean
+}
+
+const getBlankPreReviewValid = (): PreReviewPageData => {
+  return {
+    [OnsitePages.LEGAL_NAME]: true,
+    [OnsitePages.BIRTH_AND_CITIZENSHIP]: true,
+    [OnsitePages.ADDRESS]: true,
+    [OnsitePages.ATTRIBUTES]: true,
+    [OnsitePages.CONTACT_METHOD]: true,
+    [OnsitePages.ELIGIBILITY_QUESTIONNAIRE]: true
+  }
+}
+
+export const getBlankPaymentStatus = (): PaymentStatus => {
+  return {
+    status: PayStatus.NOT_COMPLETE,
+    accountNumber: '',
+    accountNumberFormatted: '',
+    accountType: '',
+    cardHolderName: '',
+    emailForReceipt: '',
+    modeOfPayment: '',
+    paymentAmount: 0,
+    paymentFor: '',
+    paymentId: '',
+    paymentTime: 0,
+    paymentTransactionId: '',
+    paymentTransactionTableSyncStatus: ''
+  }
+}
+
+export const getBlankDocumentBirthday = (): DocumentBirthday => {
+  return {
+    dateOfBirth: undefined,
+    dateOfBirthComment: ''
+  }
+}
+
+export const getBlankDocumentBirthdays = (): DocumentBirthdays => {
+  return {
+    photoId: getBlankDocumentBirthday(),
+    citizenship: getBlankDocumentBirthday()
+  }
+}
+
+export const getBlankDocSexParse = (): DocSexParse => {
+  return {
+    cleanParseOfSex: false,
+    clickedNotPresent: false
+  }
+}
+
+export const getBlankDocumentSexBooleans = (): DocumentsSexParse => {
+  return {
+    photoId: getBlankDocSexParse(),
+    citizenship: getBlankDocSexParse()
+  }
+}
+
+export const getBlankDocumentNameBooleans = (): DocumentCleanNameParse => {
+  return {
+    photoId: false,
+    citizenship: false
+  }
+}
+
+export {
+  getBlankAddress,
+  getBlankCustomerLocalInfo,
+  getBlankEnrollmentInfo,
+  getBlankFingerprintInfo,
+  getBlankFingerprintImages,
+  getBlankName,
+  getBlankEnrollmentDoc,
+  getBlankKeyFields,
+  getBlankTrustedAgent,
+  getBlankReasonForConcern,
+  getBlankDocDataDescriptor,
+  getBlankLinkingDocsObject,
+  getBlankPhotoDocsObject,
+  getBlankSTAStatus,
+  getBlankSystemInfo,
+  getBlankImageSource,
+  getBlankFacePhotoWarnings,
+  getBlankFacePhotoApiWarnings,
+  getBlankLinkingDocsNames,
+  getBlankLinkingDocumentOther,
+  getBlankOtherName,
+  getBlankLinkingDocName,
+  getBlankDocStub,
+  getBlankLinkingDocStub,
+  getBlankHandsChanged,
+  getBlankSideInfo,
+  getBlankThumbInfo,
+  getBlankPreReviewValid
+}
+
+
+===== C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\composables\useApi.ts =====
+// useApi.ts
+
+import { ref } from 'vue'
+import {
+  Announcement,
+  SysId,
+  Booking,
+  BookingRequest,
+  GuidString,
+  Location,
+  FaqQueryParams,
+  PagedResult,
+  Faq,
+  LocationQueryParams,
+  LocationFindParams,
+  LocationFindResult,
+  AvailableDatesParams,
+  BookingDateAvailability,
+  AppDate,
+  AvailableTimesParams,
+  BookingTimeAvailability,
+  CustomerOtpRequest,
+  CustomerOtpVerifyRequest,
+  OtpVerificationResult
+} from '../types/api'
+import {
+  CustomerDataApiResponse,
+  StaSearchObject,
+  EnrollmentDataLocal,
+  Pricing,
+  CustomerDataApi,
+  FindCustomerRequest,
+  STAStatusDto,
+  EnrollmentApiResponse,
+  EnrollmentDataApiFull,
+  ApiResponse,
+  ApiResponses
+} from '@telos/shared-types'
+import { isAllAllowedCharsAndSame } from '../services/SharedDataCleaner.service'
+import { useApplicantInfoStore } from '../stores/useApplicantInfoStore'
+import { useErrorHandler } from './useLogHandler'
+
+// --- Configuration ---
+const apiBaseUrl: string | undefined = import.meta.env['VITE_API_BASE_URL']
+const API_BASE_URL = apiBaseUrl ? ref(apiBaseUrl) : ref('https://enrollment-proxy-api.telos-tsa-precheck.com/')
+const STA_BASE_URL = ref('https://sta-lookup.telos-tsa-precheck.com/')
+const qrBaseUrl: string | undefined = import.meta.env['VITE_QR_BASE_URL']
+const QR_BASE_URL = qrBaseUrl ? ref(qrBaseUrl) : ref('https://qr.telos-tsa-precheck.com/')
+const basicAuthToken = ref<string | null>(null)
+const timeoutMs = ref(5000)
+
+// --- Composable ---
+export function useApi() {
+  const { logError } = useErrorHandler()
+
+  // --- Configuration Methods ---
+  const setBaseUrl = (url: string) => {
+    API_BASE_URL.value = url.endsWith('/') ? url : `${url}/`
+  }
+  const setCredentials = (credentials: string) => {
+    basicAuthToken.value = `Basic ${credentials}`
+  }
+  const clearCredentials = () => {
+    basicAuthToken.value = null
+  }
+
+  // --- Private Core Request Function ---
+  const _request = async <T>(
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+    path: string,
+    options: { query?: Record<string, any>; body?: any } = {},
+    isStaLookup = false,
+    isQrLookup = false
+  ): Promise<ApiResponse<T>> => {
+    const url = new URL(path, isStaLookup ? STA_BASE_URL.value : isQrLookup ? QR_BASE_URL.value : API_BASE_URL.value)
+    if (options.query) {
+      Object.entries(options.query).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            value.forEach((val) => url.searchParams.append(key, String(val)))
+          } else {
+            url.searchParams.append(key, String(value))
+          }
+        }
+      })
+    }
+
+    const headers: HeadersInit = {
+      Accept: 'application/json'
+    }
+
+    if (options.body) {
+      headers['Content-Type'] = 'application/json'
+    }
+
+    if (isStaLookup) {
+      const mockCustomer: null | string = getWebMockStaConfig()
+      if (mockCustomer !== null) {
+        headers['Prefer'] = `example=customer${mockCustomer}`
+      }
+    }
+
+    const fetchOptions: RequestInit = {
+      method,
+      headers,
+      body: options.body ? JSON.stringify(options.body) : undefined
+    }
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), timeoutMs.value)
+      let response: Response
+      try {
+        response = await fetch(url.toString(), { ...fetchOptions, signal: controller.signal })
+      } catch (err: any) {
+        clearTimeout(timeout)
+        let errorMsg: ApiResponses = ApiResponses.ERROR
+        if (err.name === 'AbortError') {
+          errorMsg = ApiResponses.CANNOT_CONNECT
+        } else if (err.code === 'ECONNABORTED' || err.code === 'ENOENT' || err.code === 'EACCES') {
+          errorMsg = ApiResponses.CANNOT_CONNECT
+        }
+        logError(err)
+        return { data: undefined, status: 0, error: errorMsg }
+      }
+      clearTimeout(timeout)
+      if (!response.ok) {
+        let errorData: any = null
+        let errorMsg: ApiResponses = ApiResponses.ERROR
+        const status = response.status
+        try {
+          const contentType = response.headers.get('content-type')
+          if (contentType && contentType.includes('application/json')) {
+            errorData = await response.json()
+          } else {
+            errorData = await response.text()
+          }
+        } catch {
+          /* ignore */
+        }
+        if (status === 404) {
+          errorMsg = ApiResponses.RESOURCE_NOT_FOUND
+        } else if (
+          status === 403 &&
+          errorData &&
+          typeof errorData === 'object' &&
+          errorData.errors &&
+          Array.isArray(errorData.errors) &&
+          errorData.errors.includes('exists')
+        ) {
+          errorMsg = ApiResponses.CUSTOMER_EXISTS
+        } else if (status === 0) {
+          errorMsg = ApiResponses.CANNOT_CONNECT
+        } else if (status === 503 && path.includes('sta')) {
+          errorMsg = ApiResponses.CANNOT_CONNECT_STA
+        }
+        return { data: undefined, status, error: errorMsg }
+      }
+      if (response.status === 204) {
+        return { data: null as any, status: 204, error: undefined }
+      }
+      const contentLength = response.headers.get('content-length')
+      if (contentLength === '0') {
+        return { data: {} as T, status: response.status, error: undefined }
+      }
+      try {
+        const results = (await response.json()) as T
+        return { data: results, status: response.status, error: undefined }
+      } catch {
+        const textResponse = await response.text()
+        logError(
+          new Error(
+            `Failed to parse JSON response for ${method} ${path}. Status: ${response.status}. Response Text: ${textResponse}`
+          )
+        )
+        return { data: undefined, status: response.status, error: ApiResponses.ERROR }
+      }
+    } catch (err: any) {
+      let errorMsg: ApiResponses = ApiResponses.ERROR
+      if (err.name === 'AbortError') {
+        errorMsg = ApiResponses.CANNOT_CONNECT
+      }
+      logError(err)
+      return { data: undefined, status: 0, error: errorMsg }
+    }
+  }
+
+  // --- Private Core Request Function for Binary Data (e.g., PNG) ---
+  const _requestBinary = async (
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+    path: string,
+    options: { query?: Record<string, any>; body?: any } = {},
+    isStaLookup = false,
+    isQrLookup = false
+  ): Promise<{ data: Blob | undefined; status: number; error?: ApiResponses }> => {
+    const url = new URL(path, isStaLookup ? STA_BASE_URL.value : isQrLookup ? QR_BASE_URL.value : API_BASE_URL.value)
+    if (options.query) {
+      Object.entries(options.query).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            value.forEach((val) => url.searchParams.append(key, String(val)))
+          } else {
+            url.searchParams.append(key, String(value))
+          }
+        }
+      })
+    }
+
+    const headers: HeadersInit = {
+      Accept: 'image/png'
+    }
+    if (options.body) {
+      headers['Content-Type'] = 'application/json'
+    }
+    const fetchOptions: RequestInit = {
+      method,
+      headers,
+      body: options.body ? JSON.stringify(options.body) : undefined
+    }
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), timeoutMs.value)
+      let response: Response
+      try {
+        response = await fetch(url.toString(), { ...fetchOptions, signal: controller.signal })
+      } catch (err: any) {
+        clearTimeout(timeout)
+        let errorMsg: ApiResponses = ApiResponses.ERROR
+        if (err.name === 'AbortError') {
+          errorMsg = ApiResponses.CANNOT_CONNECT
+        } else if (err.code === 'ECONNABORTED' || err.code === 'ENOENT' || err.code === 'EACCES') {
+          errorMsg = ApiResponses.CANNOT_CONNECT
+        }
+        logError(err)
+        return { data: undefined, status: 0, error: errorMsg }
+      }
+      clearTimeout(timeout)
+      if (!response.ok) {
+        let errorMsg: ApiResponses = ApiResponses.ERROR
+        const status = response.status
+        if (status === 404) {
+          errorMsg = ApiResponses.RESOURCE_NOT_FOUND
+        } else if (status === 0) {
+          errorMsg = ApiResponses.CANNOT_CONNECT
+        } else if (status === 503 && path.includes('sta')) {
+          errorMsg = ApiResponses.CANNOT_CONNECT_STA
+        }
+        return { data: undefined, status, error: errorMsg }
+      }
+      const blob = await response.blob()
+      return { data: blob, status: response.status, error: undefined }
+    } catch (err: any) {
+      let errorMsg: ApiResponses = ApiResponses.ERROR
+      if (err.name === 'AbortError') {
+        errorMsg = ApiResponses.CANNOT_CONNECT
+      }
+      logError(err)
+      return { data: undefined, status: 0, error: errorMsg }
+    }
+  }
+
+  // --- API Endpoint Methods ---
+  // -- Announcements --
+  const getAnnouncements = (): Promise<ApiResponse<Announcement[]>> => {
+    return _request<Announcement[]>('GET', '/announcements')
+  }
+
+  // -- Bookings --
+  const getBookingById = (id: SysId): Promise<ApiResponse<Booking>> => {
+    return _request<Booking>('GET', `/bookings/${id}`)
+  }
+  const cancelBooking = (id: SysId): Promise<ApiResponse<null>> => {
+    return _request<null>('POST', `/bookings/${id}/cancel`)
+  }
+  const requestBooking = (data: BookingRequest): Promise<ApiResponse<Booking>> => {
+    return _request<Booking>('POST', '/bookings/request', { body: data })
+  }
+  const getCustomerCurrentBooking = (id: SysId): Promise<ApiResponse<Booking>> => {
+    return _request<Booking>('GET', `/customers/${id}/currentbooking`)
+  }
+
+  // -- Customers --
+  const createCustomer = async (data: FindCustomerRequest): Promise<ApiResponse<CustomerDataApiResponse> | false> => {
+    try {
+      return await _request<CustomerDataApiResponse>('POST', '/customers', { body: data })
+    } catch (e: unknown) {
+      return false
+    }
+  }
+  const getCustomerById = (id: SysId): Promise<ApiResponse<CustomerDataApiResponse>> => {
+    return _request<CustomerDataApiResponse>('GET', `/customers/${id}`)
+  }
+  const patchCustomer = (id: SysId, data: Partial<CustomerDataApi>): Promise<ApiResponse<CustomerDataApiResponse>> => {
+    return _request<CustomerDataApiResponse>('PATCH', `/customers/${id}`, { body: data })
+  }
+  const findCustomer = async (data: FindCustomerRequest): Promise<ApiResponse<CustomerDataApiResponse> | false> => {
+    try {
+      return await _request<CustomerDataApiResponse>('POST', '/customers/find', { body: data })
+    } catch (e: unknown) {
+      return false
+    }
+  }
+
+  // -- Enrollments --
+  const createEnrollment = (data: EnrollmentDataLocal): Promise<ApiResponse<EnrollmentDataLocal>> => {
+    return _request<EnrollmentDataLocal>('POST', '/enrollments', { body: data })
+  }
+  const getEnrollmentById = (id: GuidString): Promise<ApiResponse<EnrollmentApiResponse>> => {
+    return _request<EnrollmentApiResponse>('GET', `/enrollments/${id}`)
+  }
+  const patchEnrollment = (
+    id: GuidString,
+    data: Partial<EnrollmentDataApiFull>
+  ): Promise<ApiResponse<EnrollmentApiResponse>> => {
+    return _request<EnrollmentApiResponse>('PATCH', `/enrollments/${id}`, { body: data })
+  }
+
+  // -- FAQs --
+  const getFaqs = (params?: FaqQueryParams): Promise<ApiResponse<PagedResult<Faq>>> => {
+    return _request<PagedResult<Faq>>('GET', '/faqs', { query: params })
+  }
+
+  // -- Locations --
+  const getLocationsPaged = (params?: LocationQueryParams): Promise<ApiResponse<PagedResult<Location>>> => {
+    return _request<PagedResult<Location>>('GET', '/locations/paged', { query: params })
+  }
+  const findLocations = (params: LocationFindParams): Promise<ApiResponse<LocationFindResult[]>> => {
+    return _request<LocationFindResult[]>('GET', '/locations/find', { query: params })
+  }
+  const getLocationById = (id: SysId, params?: { include?: string }): Promise<ApiResponse<Location>> => {
+    return _request<Location>('GET', `/locations/${id}`, { query: params })
+  }
+  const getLocationAvailableDates = (
+    id: SysId,
+    params?: AvailableDatesParams
+  ): Promise<ApiResponse<BookingDateAvailability[]>> => {
+    return _request<BookingDateAvailability[]>('GET', `/locations/${id}/availabledates`, { query: params })
+  }
+  const getLocationAvailableTimes = (
+    id: SysId,
+    date: AppDate,
+    params?: AvailableTimesParams
+  ): Promise<ApiResponse<BookingTimeAvailability[]>> => {
+    return _request<BookingTimeAvailability[]>('GET', `/locations/${id}/availabledates/${date}/availabletimes`, {
+      query: params
+    })
+  }
+
+  // -- OTP --
+  const generateCustomerOtp = (data: CustomerOtpRequest): Promise<ApiResponse<any>> => {
+    return _request<any>('POST', '/otp/customer/generate', { body: data })
+  }
+  const verifyCustomerOtp = (data: CustomerOtpVerifyRequest): Promise<ApiResponse<OtpVerificationResult>> => {
+    return _request<OtpVerificationResult>('POST', '/otp/customer/verify', { body: data })
+  }
+
+  // -- Precheck Pricing --
+  const getPrecheckPricings = (): Promise<ApiResponse<Pricing[]>> => {
+    return _request<Pricing[]>('GET', '/precheckPricings')
+  }
+
+  // -- STA Lookup --
+  const searchSTA = (data: StaSearchObject): Promise<ApiResponse<STAStatusDto>> => {
+    return _request<STAStatusDto>('POST', 'api/PreEnrollment/STAStatus', { body: data }, true)
+  }
+
+  const getQRCode = async (customerID: SysId): Promise<string | undefined> => {
+    const result = await _requestBinary('POST', `qr?id=${customerID}&format=png`, {}, false, true)
+    if (result.data) {
+      // Convert Blob to base64 data URL string
+      const blob = result.data
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          if (typeof reader.result === 'string') {
+            resolve(reader.result)
+          } else {
+            reject(undefined)
+          }
+        }
+        reader.onerror = () => reject(undefined)
+        reader.readAsDataURL(blob)
+      })
+    }
+    return undefined
+  }
+
+  const getWebMockStaConfig = (): null | string => {
+    const applicantInfoStore = useApplicantInfoStore()
+    let numStr = null
+    const isMockMode = true
+    if (isMockMode) {
+      if (isAllAllowedCharsAndSame(applicantInfoStore.customerInfo.mobilePhoneNumber.replace(/\D/g, ''))) {
+        numStr = applicantInfoStore.customerInfo.mobilePhoneNumber[0]
+      } else {
+        numStr = '0'
+      }
+    }
+    console.log('Fetching mock customer:', numStr)
+    return numStr
+  }
+
+  // --- Return all public methods ---
+  return {
+    setBaseUrl,
+    setCredentials,
+    clearCredentials,
+    getAnnouncements,
+    getBookingById,
+    cancelBooking,
+    requestBooking,
+    createCustomer,
+    getCustomerById,
+    patchCustomer,
+    getCustomerCurrentBooking,
+    findCustomer,
+    createEnrollment,
+    getEnrollmentById,
+    patchEnrollment,
+    getFaqs,
+    getLocationsPaged,
+    findLocations,
+    getLocationById,
+    getLocationAvailableDates,
+    getLocationAvailableTimes,
+    generateCustomerOtp,
+    getQRCode,
+    verifyCustomerOtp,
+    getPrecheckPricings,
+    searchSTA
+  }
+}
+
+
+===== C:\Users\squar\telos\tsapre.desktop\telos\packages\shared-lib\src\lib\types\api.ts =====
+// --- Type Definitions ---
+// Basic types
+export type SysId = string // Pattern: '^[A-Za-z0-9]{32}$'
+export type AppDate = string // Pattern: '^\d{4}-\d{2}-\d{2}$'
+export type AppTimeString = string // Pattern: '^\d{2}:\d{2}:\d{2}$'
+export type AppTime = number // Unix timestamp ms
+export type PhoneNumber = string // Pattern: /^\d{11}/
+export type GuidString = string // Pattern: '[A-Za-z0-9]{32}'
+
+export interface Announcement {
+  id?: SysId
+  caption?: string | null
+  enabled?: boolean
+  message: string
+  severity?: number
+  condition?: string
+}
+
+export interface Booking {
+  id?: SysId
+  customerId?: SysId
+  locationId?: SysId
+  bookingDate?: AppDate
+  startTimestamp?: AppTime
+  endTimestamp?: AppTime
+  localStartTime?: AppTimeString
+  localEndTime?: AppTimeString
+  status?: 'open' | 'booked' | 'closed - exception' | 'closed - closure'
+  additionalComments?: string
+  timezone?: string
+  timezoneAbbreviation?: string
+}
+
+export interface BookingRequest {
+  customerId: SysId
+  locationId: SysId
+  scheduledDate: AppDate
+  scheduledTime: AppTimeString
+}
+
+export type ValidName = string // Add pattern validation if needed: /^[A-Z a-z0-9'-]+$/
+
+// export interface Customer {
+//   id?: SysId
+//   number?: string
+//   firstName: ValidName
+//   middleName?: ValidName
+//   lastName: ValidName
+//   emailAddress?: string
+//   suffix?: string
+//   currentEnrollmentId?: SysId
+//   dateOfBirth: AppDate
+//   ktnApproved?: boolean
+//   phoneNumber?: PhoneNumber
+//   otherPhoneNumber?: PhoneNumber
+//   mobilePhoneNumber?: PhoneNumber
+//   countryOfBirth: string
+//   cityOfBirth?: string
+//   stateOrProvinceOfBirth?: string
+//   syncApplicationId?: string
+//   selectedLocationId?: SysId
+//   optInForTextNotifications?: boolean
+//   provider?: string
+//   staExpirationDate?: AppDate
+//   created?: AppTime
+//   updated?: AppTime
+//   referralUrl?: string
+//   rbsrRequired?: boolean
+//   ktnComputedExpirationDate?: AppDate
+// }
+
+export interface NotificationEntry {
+  id: GuidString
+  recipients?: string
+  created?: string // Consider Date type
+  subject?: string
+}
+
+export interface CustomerNotificationV2 {
+  id: GuidString
+  key?: string
+  mainBody?: string
+  notificationTime?: number // Timestamp
+  sourceType?: string
+  subject?: string
+}
+
+export interface CustomerNotificationV2Summary {
+  meta: ResultMeta
+  results: CustomerNotificationV2[]
+}
+
+export interface NotificationEntryDetail extends NotificationEntry {
+  body?: string
+  bodyText?: string
+  contentType?: string
+  to?: string
+  cc?: string
+  bcc?: string
+}
+
+export interface Faq {
+  id?: SysId
+  enabled?: boolean
+  section: string
+  order?: number
+  question: string
+  answer: string
+}
+
+export interface Location {
+  id?: SysId
+  name?: string
+  street?: string
+  city?: string
+  state?: string
+  zip?: string
+  latitude?: number
+  longitude?: number
+  timezone?: string
+  phone?: string
+  bookingSlots?: number
+  bookingDuration?: number
+  stage?: string
+  shortCode?: string
+  locationAnnouncement?: string
+  ecLocationName?: string
+  closureData?: LocationClosureDataEntry[]
+  schedule?: LocationSchedule
+}
+
+export interface LocationClosureDataEntry {
+  closureDate?: AppDate
+  reason?: string
+}
+
+// Define fully if using 'include=schedule'
+export interface LocationSchedule {
+  id?: GuidString
+  locationId?: GuidString
+  openMonday?: boolean
+  mondayStartTime?: AppTimeString
+  mondayEndTime?: AppTimeString
+  openTuesday?: boolean
+  tuesdayStartTime?: AppTimeString
+  tuesdayEndTime?: AppTimeString
+  openWednesday?: boolean
+  wednesdayStartTime?: AppTimeString
+  wednesdayEndTime?: AppTimeString
+  openThursday?: boolean
+  thursdayStartTime?: AppTimeString
+  thursdayEndTime?: AppTimeString
+  openFriday?: boolean
+  fridayStartTime?: AppTimeString
+  fridayEndTime?: AppTimeString
+  openSaturday?: boolean
+  saturdayStartTime?: AppTimeString
+  saturdayEndTime?: AppTimeString
+  openSunday?: boolean
+  sundayStartTime?: AppTimeString
+  sundayEndTime?: AppTimeString
+}
+
+export interface LocationFindResult {
+  distance?: number
+  location?: Location
+}
+
+export interface BookingDateAvailability {
+  bookingDate?: AppDate
+  status?:
+    | 'available'
+    | 'not available - no open bookings'
+    | 'not available - closure'
+    | 'not available - closed per schedule'
+  additionalInfo?: string
+}
+
+export interface BookingTimeAvailability {
+  localStartTime?: string // HH:mm:ss
+  localEndTime?: string // HH:mm:ss
+  startTimestamp?: number // UTC ms
+  endTimestamp?: number // UTC ms
+  status?: 'available' | 'not available - exception' | 'not available - reserved' | 'not available - booked'
+  additionalInfo?: string
+}
+
+export interface CustomerOtpRequest {
+  customerId: SysId
+}
+
+export interface CustomerOtpVerifyRequest {
+  customerId: SysId
+  code: string // Pattern: '[0-9]{6}'
+}
+
+export interface OtpVerificationResult {
+  passed: boolean
+  data?: string
+}
+
+// --- Utility Types ---
+export interface PagedResult<T> {
+  results: T[]
+  meta: ResultMeta
+}
+
+export interface ResultMeta {
+  sortBy?: string
+  sortDirection?: 'asc' | 'desc'
+  limit?: number
+  offset?: number
+  totalRecords?: number
+}
+
+export interface ErrorEntry {
+  property?: string
+  message: string
+}
+
+export interface ApiErrorResponse {
+  errors?: string | ErrorEntry[]
+}
+
+// Query parameter interfaces
+export interface BaseQueryParams {
+  limit?: number
+  offset?: number
+  sortBy?: string
+  sortDirection?: 'asc' | 'desc'
+  filter?: string
+  search?: string
+}
+
+export interface LocationQueryParams extends BaseQueryParams {
+  include?: string // e.g., 'schedule'
+}
+
+export interface LocationFindParams {
+  latitude: number
+  longitude: number
+  rangeLimit?: number
+  projectId?: SysId
+}
+
+export interface AvailableDatesParams {
+  projectId?: SysId
+}
+
+export interface AvailableTimesParams {
+  projectId?: SysId
+}
+
+export type FaqQueryParams = BaseQueryParams // Uses base params
+
+export interface EnrollmentQueryParams {
+  filter?: string // Only filter is listed for GET /enrollments
+}
+
+export type CustomerNotificationV2QueryParams = BaseQueryParams
+
+
+===== 1661.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+    window.onerror = function(msg, url, line, col, error) {
+        let  extra = !col ? '' : '\ncolumn: ' + col;
+        extra += !error ? '' : '\nerror: ' + error;
+        document.getElementById("errors").innerHTML = "Error: " + msg + "<br/>line: " + line + "<br/>" + extra;
+    }
+</script>
+    <meta charset="UTF-8" />
+    <title>Flowchart Canvas - Full Functionality</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #left-container {
+            /* width: 65%; */            
+            background-color: lightgray;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #right-panel {
+            /* width: 35%; */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            display: block;
+            background-color: #e0e0e0;
+            width: 100vw;
+            height: 600px;
+        }
+
+        #horizontal {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        input {
+            width:200px;
+            background-color: #ffffff;
+            font-size: 16px;
+        }
+        .highlight { 
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="flowchartCanvas"></canvas>
+
+    <div id="main-container">
+        <div id="left-container">
+            <div id="horizontal">
+                <table border="1">
+                    <tr><td><input type="text" id="nodeKey" required placeholder="key"
+                        onmouseout="copyOver('nodeKey', 'nodeHuman')"
+                        onblur="copyOver('nodeKey', 'nodeHuman')" /></td></tr>
+                    <tr><td><input type="text" id="nodeHuman" required placeholder="human" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addNode()">add node</button></td></tr>
+                    <tr><td><input type="color" id="nodeColor" value="#ffffff" /></td></tr>
+                    <tr><td>
+                        <select id="nodeType">
+                            <option value="box">Box</option>
+                            <option value="diamond">Diamond</option>
+                            <option value="circle">Circle</option>
+                        </select>
+                    </td></tr>
+                </table>
+
+                <table border="1">
+                    <tr><td><input type="text" id="fromNode" required placeholder="fromNode" /></td></tr>
+                    <tr><td><input type="text" id="toNode" required placeholder="toNode" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addConnection_step0()">add connection</button></td></tr>
+                    <tr><td>
+                        <select id="lineType">
+                            <option value="normal">Normal (Black)</option>
+                            <option value="yes">Yes (Green)</option>
+                            <option value="no">No (Red)</option>
+                        </select>
+                    </td></tr>
+                </table>
+
+                <table border="1">
+                    <tr><td><input type="text" id="circleKey" required placeholder="circleKey" /></td></tr>
+                    <tr><td><input type="text" id="ancestor" required placeholder="ancestor" /></td></tr>
+                    <tr><td><input type="text" id="fromNode2" required placeholder="fromNode2" /></td></tr>
+                    <tr><td><input type="text" id="toNode2" required placeholder="toNode2" /></td></tr>
+                    <tr><td>
+                        <select id="circleChoice">
+                            <option value="none">None</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </td></tr>
+                    <tr><td><button class="highlight" onclick="addDecisionPoint()">add decision</button></td></tr>
+                </table>
+            </div>
+            <hr/>
+            <table border="1">
+                    <tr><td><input type="text" id="nodeKeyDetail" placeholder="letter"></span></td></tr>
+                    <tr><td><input type="text" id="nodeLabelDetail" placeholder="human"></span></td></tr>
+                    <tr><td><input type="text" id="nodeColorDetail" placeholder="color"></span></td></tr>
+                    <tr><td><button id="deleteNode" >delete</button></td></tr>
+                    <tr><td><button onclick="scaleNodesToFit()" >scale</button></td></tr>
+                    <tr><td><button onClick="emitGraph()">emit graph</button></td></tr>
+                    <tr><td><button class="highlight" onClick="emitPinia()">emit pinia</button></td></tr>
+            </table>
+            <hr/>
+            <div id="errors"></div>
+        </div>
+
+        <div id="right-panel">
+            <button onclick="save('telos')">save</button>
+            <button onclick="load('telos')">load</button>
+            <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
+        </div>
+    </div>
+<script src="ETL.js"></script>
+<script src="graph.js"></script>
+<script>
+main("1661.json");
+
+
+
+</script>
+</body>
+</html>
+
+
+===== 1661.json =====
+{
+  "nodes": [
+    {
+      "letter": "home",
+      "x": 30.728955442864,
+      "y": 14.973881768526269,
+      "human": "home",
+      "color": "#ff6633",
+      "type": "box",
+      "ancestor": "",
+      "target": "disclose"
+    },
+    {
+      "letter": "signin",
+      "x": 14.77281477891497,
+      "y": 153.3586835947188,
+      "human": "signin",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "signup"
+    },
+    {
+      "letter": "password",
+      "x": 194.8790100628693,
+      "y": 58.214020919124806,
+      "human": "password",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "signup",
+      "x": 118.60132943494258,
+      "y": 305.96731213284113,
+      "human": "signup",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "account_details"
+    },
+    {
+      "letter": "account_details",
+      "x": 88.08828083874756,
+      "y": 447.29982534275086,
+      "human": "account_details",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "is_enroll_snow_no"
+    },
+    {
+      "letter": "associate_to_account",
+      "x": 205.4135532363584,
+      "y": 525.7033900655576,
+      "human": "associate_to_account",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "continue_enrollment_flow",
+      "x": 770.5124610354916,
+      "y": 303.1451299437784,
+      "human": "continue_enrollment_flow",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "continue_renewal_flow",
+      "x": 538.817020269794,
+      "y": 536.9999930800996,
+      "human": "continue_renewal_flow",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "reprint_notice",
+      "x": 451.99530650871196,
+      "y": 139.2432281402999,
+      "human": "reprint_notice",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "location"
+    },
+    {
+      "letter": "location",
+      "x": 510.27877222015115,
+      "y": 74.56954179780811,
+      "human": "location",
+      "color": "#44ee88",
+      "type": "box",
+      "ancestor": "",
+      "target": "legal_names"
+    },
+    {
+      "letter": "birth_and_citizenship",
+      "x": 705.3884020216125,
+      "y": 200.887060771463,
+      "human": "birth_and_citizenship",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "eligibility"
+    },
+    {
+      "letter": "eligibility",
+      "x": 842.9750532984942,
+      "y": 113.56895567244212,
+      "human": "eligibility",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "enrollment_no"
+    },
+    {
+      "letter": "attributes",
+      "x": 1024.2368500752427,
+      "y": 45.839833251284475,
+      "human": "attributes",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "address"
+    },
+    {
+      "letter": "payment",
+      "x": 1374.541729908294,
+      "y": 168.805994073198,
+      "human": "payment",
+      "color": "#A020F0",
+      "type": "box",
+      "ancestor": "",
+      "target": "summary_online"
+    },
+    {
+      "letter": "photo_citizen",
+      "x": 1625.5291654721304,
+      "y": 93.83951531279807,
+      "human": "photo_citizen",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "is_list_a_no"
+    },
+    {
+      "letter": "summary_online",
+      "x": 1201.126003571559,
+      "y": 221.39176417079443,
+      "human": "summary_online",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "dashboard"
+    },
+    {
+      "letter": "citizen_docs",
+      "x": 1805.897306781196,
+      "y": 272.7857278634765,
+      "human": "citizen_docs",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "name_check"
+    },
+    {
+      "letter": "name_check",
+      "x": 1509.817917541287,
+      "y": 241.3320131334537,
+      "human": "name_check",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "photoid_citizen_match_yes"
+    },
+    {
+      "letter": "add_linking_doc",
+      "x": 1530.5825998042094,
+      "y": 427.87774738434535,
+      "human": "add_linking_doc",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "link_complete_yes"
+    },
+    {
+      "letter": "schedule",
+      "x": 2120.1072279051637,
+      "y": 407.97988328164513,
+      "human": "schedule",
+      "color": "#44ee88",
+      "type": "box",
+      "ancestor": "",
+      "target": "summary_appointment"
+    },
+    {
+      "letter": "summary_appointment",
+      "x": 2049.196092441447,
+      "y": 523.5935980513966,
+      "human": "summary_appointment",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "dashboard"
+    },
+    {
+      "letter": "mfa",
+      "x": 341.6059539692239,
+      "y": 330.43055283772844,
+      "human": "mfa",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "sta_yes"
+    },
+    {
+      "letter": "disclose",
+      "x": 101.73459433698645,
+      "y": 53.60236599916247,
+      "human": "disclose",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "signin"
+    },
+    {
+      "letter": "is_enroll_snow_yes",
+      "x": 34.075128425162845,
+      "y": 536.0323477026351,
+      "human": "is_enroll_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "associate_to_account",
+      "choice": "yes"
+    },
+    {
+      "letter": "is_enroll_snow_no",
+      "x": 9.731432957087463,
+      "y": 345.72733824851133,
+      "human": "is_enroll_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "signin",
+      "choice": "no"
+    },
+    {
+      "letter": "dashboard",
+      "x": 1149.7620217924077,
+      "y": 537.1729705135308,
+      "human": "dashboard",
+      "color": "#ffff00",
+      "type": "diamond",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "photoid_citizen_match_no",
+      "x": 1328.9140739834495,
+      "y": 333.7162351777358,
+      "human": "photoid_citizen_match_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "add_linking_doc",
+      "choice": "no"
+    },
+    {
+      "letter": "link_complete_yes",
+      "x": 1801.8845336889133,
+      "y": 447.31389064293063,
+      "human": "link_complete_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "schedule",
+      "choice": "yes"
+    },
+    {
+      "letter": "is_list_a_yes",
+      "x": 1949.1081791885351,
+      "y": 137.7304669483816,
+      "human": "is_list_a_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "schedule",
+      "choice": "yes"
+    },
+    {
+      "letter": "is_list_a_no",
+      "x": 1856.126333922454,
+      "y": 183.9473899717953,
+      "human": "is_list_a_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "citizen_docs",
+      "choice": "no"
+    },
+    {
+      "letter": "photo_lpr",
+      "x": 2084.9999892552423,
+      "y": 39.1438882977974,
+      "human": "photo_lpr",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "schedule"
+    },
+    {
+      "letter": "address",
+      "x": 1171.3799530472688,
+      "y": 40.59551876114428,
+      "human": "address",
+      "color": "#d0ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "online_renewal_yes"
+    },
+    {
+      "letter": "online_renewal_yes",
+      "x": 1288.850647310343,
+      "y": 25.519340702124893,
+      "human": "online_renewal_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "is_citizen_yes",
+      "choice": "yes"
+    },
+    {
+      "letter": "is_citizen_no",
+      "x": 1875.064775813247,
+      "y": 15.893716511200083,
+      "human": "is_citizen_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "photo_lpr",
+      "choice": "no"
+    },
+    {
+      "letter": "is_citizen_yes",
+      "x": 1547.5004867574419,
+      "y": -1.021052890825942,
+      "human": "is_citizen_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "photo_citizen",
+      "choice": "yes"
+    },
+    {
+      "letter": "photoid_citizen_match_yes",
+      "x": 1743.8343665892328,
+      "y": 364.55513217831367,
+      "human": "photoid_citizen_match_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "schedule",
+      "choice": "yes"
+    },
+    {
+      "letter": "enrollment_yes",
+      "x": 957.4688711839143,
+      "y": 129.5714127320249,
+      "human": "enrollment_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "attributes",
+      "choice": "yes"
+    },
+    {
+      "letter": "enrollment_no",
+      "x": 985.4219661102512,
+      "y": 206.81445341791985,
+      "human": "enrollment_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "address",
+      "choice": "no"
+    },
+    {
+      "letter": "legal_names",
+      "x": 690.5844160938054,
+      "y": 87.51798230211027,
+      "human": "legal_names",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "birth_and_citizenship"
+    },
+    {
+      "letter": "sta_no",
+      "x": 513.987007889818,
+      "y": 266.56687876830443,
+      "human": "sta_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "active_enrollment_in_snow_yes",
+      "choice": "no"
+    },
+    {
+      "letter": "active_enrollment_in_snow_no",
+      "x": 588.7891648786756,
+      "y": 146.9684621944937,
+      "human": "active_enrollment_in_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "location",
+      "choice": "no"
+    },
+    {
+      "letter": "active_enrollment_in_snow_yes",
+      "x": 998.4768527561854,
+      "y": 440.1479303001049,
+      "human": "active_enrollment_in_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "pre_enrollment_complete_no",
+      "choice": "yes"
+    },
+    {
+      "letter": "pre_enrollment_complete_yes",
+      "x": 1125.8709479341796,
+      "y": 311.65961127840967,
+      "human": "pre_enrollment_complete_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "dashboard",
+      "choice": "yes"
+    },
+    {
+      "letter": "pre_enrollment_complete_no",
+      "x": 983.2791478517258,
+      "y": 290.3502928760496,
+      "human": "pre_enrollment_complete_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "continue_enrollment_flow",
+      "choice": "no"
+    },
+    {
+      "letter": "sta_yes",
+      "x": 571.5700756279418,
+      "y": 379.0218964061834,
+      "human": "sta_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "active_renewal_in_snow_yes",
+      "choice": "yes"
+    },
+    {
+      "letter": "active_renewal_in_snow_no",
+      "x": 681.4275836162051,
+      "y": 506.0358195682756,
+      "human": "active_renewal_in_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "eligible_to_renew_no",
+      "choice": "no"
+    },
+    {
+      "letter": "eligible_to_renew_no",
+      "x": 933.1626408257537,
+      "y": 507.85340486808053,
+      "human": "eligible_to_renew_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "prompt_for_renewal_yes",
+      "choice": "no"
+    },
+    {
+      "letter": "active_renewal_in_snow_yes",
+      "x": 429.5838598043167,
+      "y": 441.7212560809545,
+      "human": "active_renewal_in_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "continue_renewal_flow",
+      "choice": "yes"
+    },
+    {
+      "letter": "prompt_for_renewal_yes",
+      "x": 160.70297568930962,
+      "y": 142.1324810157925,
+      "human": "prompt_for_renewal_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "reprint_required_no",
+      "choice": "yes"
+    },
+    {
+      "letter": "reprint_required_yes",
+      "x": 365.4707223348463,
+      "y": 192.23783789692413,
+      "human": "reprint_required_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "reprint_notice",
+      "choice": "yes"
+    },
+    {
+      "letter": "reprint_required_no",
+      "x": 337.5335001921457,
+      "y": 14.221899807869253,
+      "human": "reprint_required_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "citizenship_or_name_change_no",
+      "choice": "no"
+    },
+    {
+      "letter": "citizenship_or_name_change_yes",
+      "x": 353.9074391542335,
+      "y": 83.29136866171427,
+      "human": "citizenship_or_name_change_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "location",
+      "choice": "yes"
+    },
+    {
+      "letter": "citizenship_or_name_change_no",
+      "x": 923.7789337678936,
+      "y": 12.907520934899846,
+      "human": "citizenship_or_name_change_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "eligibility",
+      "choice": "no"
+    }
+  ],
+  "connections": [
+    {
+      "from": "home",
+      "to": "disclose",
+      "type": "normal",
+      "ancestor": "home"
+    },
+    {
+      "from": "disclose",
+      "to": "signin",
+      "type": "normal",
+      "ancestor": "disclose"
+    },
+    {
+      "from": "signin",
+      "to": "password",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signin",
+      "to": "mfa",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signin",
+      "to": "signup",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signup",
+      "to": "account_details",
+      "type": "normal",
+      "ancestor": "signup"
+    },
+    {
+      "from": "reprint_notice",
+      "to": "location",
+      "type": "normal",
+      "ancestor": "reprint_notice"
+    },
+    {
+      "from": "account_details",
+      "to": "is_enroll_snow_yes",
+      "type": "yes",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "is_enroll_snow_yes",
+      "to": "associate_to_account",
+      "type": "yes",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "account_details",
+      "to": "is_enroll_snow_no",
+      "type": "no",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "is_enroll_snow_no",
+      "to": "signin",
+      "type": "no",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "name_check",
+      "to": "photoid_citizen_match_no",
+      "type": "no",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "photoid_citizen_match_no",
+      "to": "add_linking_doc",
+      "type": "no",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "add_linking_doc",
+      "to": "link_complete_yes",
+      "type": "yes",
+      "ancestor": "add_linking_doc"
+    },
+    {
+      "from": "link_complete_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "add_linking_doc"
+    },
+    {
+      "from": "citizen_docs",
+      "to": "name_check",
+      "type": "normal",
+      "ancestor": "citizen_docs"
+    },
+    {
+      "from": "photo_citizen",
+      "to": "is_list_a_yes",
+      "type": "yes",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "is_list_a_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "photo_citizen",
+      "to": "is_list_a_no",
+      "type": "no",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "is_list_a_no",
+      "to": "citizen_docs",
+      "type": "no",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "address",
+      "to": "online_renewal_yes",
+      "type": "yes",
+      "ancestor": "address"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "payment",
+      "type": "yes",
+      "ancestor": "address"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "is_citizen_no",
+      "type": "no",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "is_citizen_no",
+      "to": "photo_lpr",
+      "type": "no",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "is_citizen_yes",
+      "type": "yes",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "is_citizen_yes",
+      "to": "photo_citizen",
+      "type": "yes",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "payment",
+      "to": "summary_online",
+      "type": "normal",
+      "ancestor": "payment"
+    },
+    {
+      "from": "summary_online",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "summary_online"
+    },
+    {
+      "from": "photo_lpr",
+      "to": "schedule",
+      "type": "normal",
+      "ancestor": "photo_lpr"
+    },
+    {
+      "from": "schedule",
+      "to": "summary_appointment",
+      "type": "normal",
+      "ancestor": "schedule"
+    },
+    {
+      "from": "summary_appointment",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "summary_appointment"
+    },
+    {
+      "from": "name_check",
+      "to": "photoid_citizen_match_yes",
+      "type": "yes",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "photoid_citizen_match_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "eligibility",
+      "to": "enrollment_yes",
+      "type": "yes",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "enrollment_yes",
+      "to": "attributes",
+      "type": "yes",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "eligibility",
+      "to": "enrollment_no",
+      "type": "no",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "enrollment_no",
+      "to": "address",
+      "type": "no",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "attributes",
+      "to": "address",
+      "type": "normal",
+      "ancestor": "attributes"
+    },
+    {
+      "from": "birth_and_citizenship",
+      "to": "eligibility",
+      "type": "normal",
+      "ancestor": "birth_and_citizenship"
+    },
+    {
+      "from": "legal_names",
+      "to": "birth_and_citizenship",
+      "type": "normal",
+      "ancestor": "legal_names"
+    },
+    {
+      "from": "location",
+      "to": "legal_names",
+      "type": "normal",
+      "ancestor": "location"
+    },
+    {
+      "from": "mfa",
+      "to": "sta_no",
+      "type": "no",
+      "ancestor": "mfa"
+    },
+    {
+      "from": "sta_no",
+      "to": "active_enrollment_in_snow_no",
+      "type": "no",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "active_enrollment_in_snow_no",
+      "to": "location",
+      "type": "no",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "sta_no",
+      "to": "active_enrollment_in_snow_yes",
+      "type": "yes",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "active_enrollment_in_snow_yes",
+      "to": "pre_enrollment_complete_yes",
+      "type": "yes",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "pre_enrollment_complete_yes",
+      "to": "dashboard",
+      "type": "yes",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "active_enrollment_in_snow_yes",
+      "to": "pre_enrollment_complete_no",
+      "type": "no",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "pre_enrollment_complete_no",
+      "to": "continue_enrollment_flow",
+      "type": "no",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "mfa",
+      "to": "sta_yes",
+      "type": "yes",
+      "ancestor": "mfa"
+    },
+    {
+      "from": "sta_yes",
+      "to": "active_renewal_in_snow_no",
+      "type": "no",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "active_renewal_in_snow_no",
+      "to": "eligible_to_renew_no",
+      "type": "no",
+      "ancestor": "active_renewal_in_snow_no"
+    },
+    {
+      "from": "eligible_to_renew_no",
+      "to": "dashboard",
+      "type": "no",
+      "ancestor": "active_renewal_in_snow_no"
+    },
+    {
+      "from": "sta_yes",
+      "to": "active_renewal_in_snow_yes",
+      "type": "yes",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "active_renewal_in_snow_yes",
+      "to": "continue_renewal_flow",
+      "type": "yes",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "eligible_to_renew_no",
+      "to": "prompt_for_renewal_yes",
+      "type": "yes",
+      "ancestor": "eligible_to_renew_no"
+    },
+    {
+      "from": "prompt_for_renewal_yes",
+      "to": "reprint_required_yes",
+      "type": "yes",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "reprint_required_yes",
+      "to": "reprint_notice",
+      "type": "yes",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "prompt_for_renewal_yes",
+      "to": "reprint_required_no",
+      "type": "no",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "reprint_required_no",
+      "to": "citizenship_or_name_change_yes",
+      "type": "yes",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "citizenship_or_name_change_yes",
+      "to": "location",
+      "type": "yes",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "reprint_required_no",
+      "to": "citizenship_or_name_change_no",
+      "type": "no",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "citizenship_or_name_change_no",
+      "to": "eligibility",
+      "type": "no",
+      "ancestor": "reprint_required_no"
+    }
+  ]
+}
+
+===== chart.html =====
+<html>
+    <body>
+        
+        <img src="telos.png" />
+    </body>
+</html>
+
+===== complete.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+    window.onerror = function(msg, url, line, col, error) {
+        let  extra = !col ? '' : '\ncolumn: ' + col;
+        extra += !error ? '' : '\nerror: ' + error;
+        document.getElementById("errors").innerHTML = "Error: " + msg + "<br/>line: " + line + "<br/>" + extra;
+    }
+</script>
+    <meta charset="UTF-8" />
+    <title>Flowchart Canvas - Full Functionality</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #left-container {
+            /* width: 65%; */            
+            background-color: lightgray;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #right-panel {
+            /* width: 35%; */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            display: block;
+            background-color: #e0e0e0;
+            width: 100vw;
+            height: 600px;
+        }
+
+        #horizontal {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        input {
+            width:200px;
+            background-color: #ffffff;
+            font-size: 16px;
+        }
+        .highlight { 
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="flowchartCanvas"></canvas>
+
+    <div id="main-container">
+        <div id="left-container">
+            <div id="horizontal">
+                <table border="1">
+                    <tr><td><input type="text" id="nodeKey" required placeholder="key"
+                        onmouseout="copyOver('nodeKey', 'nodeHuman')"
+                        onblur="copyOver('nodeKey', 'nodeHuman')" /></td></tr>
+                    <tr><td><input type="text" id="nodeHuman" required placeholder="human" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addNode()">add node</button></td></tr>
+                    <tr><td><input type="color" id="nodeColor" value="#ffffff" /></td></tr>
+                    <tr><td>
+                        <select id="nodeType">
+                            <option value="box">Box</option>
+                            <option value="diamond">Diamond</option>
+                            <option value="circle">Circle</option>
+                        </select>
+                    </td></tr>
+                </table>
+
+                <table border="1">
+                    <tr><td><input type="text" id="fromNode" required placeholder="fromNode" /></td></tr>
+                    <tr><td><input type="text" id="toNode" required placeholder="toNode" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addConnection_step0()">add connection</button></td></tr>
+                    <tr><td>
+                        <select id="lineType">
+                            <option value="normal">Normal (Black)</option>
+                            <option value="yes">Yes (Green)</option>
+                            <option value="no">No (Red)</option>
+                        </select>
+                    </td></tr>
+                </table>
+
+                <table border="1">
+                    <tr><td><input type="text" id="circleKey" required placeholder="circleKey" /></td></tr>
+                    <tr><td><input type="text" id="ancestor" required placeholder="ancestor" /></td></tr>
+                    <tr><td><input type="text" id="fromNode2" required placeholder="fromNode2" /></td></tr>
+                    <tr><td><input type="text" id="toNode2" required placeholder="toNode2" /></td></tr>
+                    <tr><td>
+                        <select id="circleChoice">
+                            <option value="none">None</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </td></tr>
+                    <tr><td><button class="highlight" onclick="addDecisionPoint()">add decision</button></td></tr>
+                </table>
+            </div>
+            <hr/>
+            <table border="1">
+                    <tr><td><input type="text" id="nodeKeyDetail" placeholder="letter"></span></td></tr>
+                    <tr><td><input type="text" id="nodeLabelDetail" placeholder="human"></span></td></tr>
+                    <tr><td><input type="text" id="nodeColorDetail" placeholder="color"></span></td></tr>
+                    <tr><td><button id="deleteNode" >delete</button></td></tr>
+                    <tr><td><button onclick="scaleNodesToFit()" >scale</button></td></tr>
+                    <tr><td><button onClick="emitGraph()">emit graph</button></td></tr>
+                    <tr><td><button class="highlight" onClick="emitPinia()">emit pinia</button></td></tr>
+            </table>
+            <hr/>
+            <div id="errors"></div>
+        </div>
+
+        <div id="right-panel">
+            <button onclick="save('complete')">save</button>
+            <button onclick="load('complete')">load</button>
+            <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
+        </div>
+    </div>
+<script src="ETL.js"></script>
+<script src="graph.js"></script>
+<script>
+main("complete.json");
+
+
+
+</script>
+</body>
+</html>
+
+
+===== complete.json =====
+{
+  "nodes": [
+    {
+      "letter": "home",
+      "x": 43.728955442864,
+      "y": 41.97388176852627,
+      "human": "home",
+      "color": "#ff6633",
+      "type": "box",
+      "ancestor": "",
+      "target": "disclose"
+    },
+    {
+      "letter": "signin",
+      "x": 45.77281477891497,
+      "y": 147.3586835947188,
+      "human": "signin",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "signup"
+    },
+    {
+      "letter": "password",
+      "x": 181.8790100628693,
+      "y": 77.2140209191248,
+      "human": "password",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "signup",
+      "x": 44.601329434942585,
+      "y": 245.96731213284116,
+      "human": "signup",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "account_details"
+    },
+    {
+      "letter": "account_details",
+      "x": 91.08828083874756,
+      "y": 402.29982534275086,
+      "human": "account_details",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "is_enroll_snow_no"
+    },
+    {
+      "letter": "associate_to_account",
+      "x": 95.41355323635841,
+      "y": 555.7033900655576,
+      "human": "associate_to_account",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "continue_enrollment_flow",
+      "x": 629.5124610354916,
+      "y": 272.1451299437784,
+      "human": "continue_enrollment_flow",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "continue_renewal_flow",
+      "x": 278.81702026979406,
+      "y": 556.9999930800996,
+      "human": "continue_renewal_flow",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "reprint_notice",
+      "x": 399.99530650871196,
+      "y": 157.2432281402999,
+      "human": "reprint_notice",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "location"
+    },
+    {
+      "letter": "location",
+      "x": 463.27877222015115,
+      "y": 108.56954179780811,
+      "human": "location",
+      "color": "#44ee88",
+      "type": "box",
+      "ancestor": "",
+      "target": "legal_names"
+    },
+    {
+      "letter": "birth_and_citizenship",
+      "x": 571.3884020216125,
+      "y": 152.887060771463,
+      "human": "birth_and_citizenship",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "eligibility"
+    },
+    {
+      "letter": "eligibility",
+      "x": 692.9750532984942,
+      "y": 198.56895567244212,
+      "human": "eligibility",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "enrollment_no"
+    },
+    {
+      "letter": "attributes",
+      "x": 925.2368500752426,
+      "y": 53.839833251284475,
+      "human": "attributes",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "address"
+    },
+    {
+      "letter": "payment",
+      "x": 1022.541729908294,
+      "y": 242.805994073198,
+      "human": "payment",
+      "color": "#A020F0",
+      "type": "box",
+      "ancestor": "",
+      "target": "summary_online"
+    },
+    {
+      "letter": "photo_citizen",
+      "x": 1317.5291654721304,
+      "y": 106.83951531279807,
+      "human": "photo_citizen",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "is_list_a_no"
+    },
+    {
+      "letter": "summary_online",
+      "x": 965.1260035715592,
+      "y": 369.39176417079443,
+      "human": "summary_online",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "dashboard"
+    },
+    {
+      "letter": "citizen_docs",
+      "x": 1166.897306781196,
+      "y": 183.78572786347647,
+      "human": "citizen_docs",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "name_check"
+    },
+    {
+      "letter": "name_check",
+      "x": 1090.817917541287,
+      "y": 288.3320131334537,
+      "human": "name_check",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "photoid_citizen_match_yes"
+    },
+    {
+      "letter": "add_linking_doc",
+      "x": 1220.5825998042094,
+      "y": 433.87774738434535,
+      "human": "add_linking_doc",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "link_complete_yes"
+    },
+    {
+      "letter": "schedule",
+      "x": 1390.1072279051637,
+      "y": 492.97988328164513,
+      "human": "schedule",
+      "color": "#44ee88",
+      "type": "box",
+      "ancestor": "",
+      "target": "summary_appointment"
+    },
+    {
+      "letter": "summary_appointment",
+      "x": 1053.1960924414468,
+      "y": 529.5935980513966,
+      "human": "summary_appointment",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "dashboard"
+    },
+    {
+      "letter": "mfa",
+      "x": 222.6059539692239,
+      "y": 269.43055283772844,
+      "human": "mfa",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "sta_yes"
+    },
+    {
+      "letter": "disclose",
+      "x": 42.73459433698644,
+      "y": 95.60236599916247,
+      "human": "disclose",
+      "color": "#fbd5d5",
+      "type": "box",
+      "ancestor": "",
+      "target": "signin"
+    },
+    {
+      "letter": "is_enroll_snow_yes",
+      "x": 26.07512842516284,
+      "y": 450.0323477026351,
+      "human": "is_enroll_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "associate_to_account",
+      "choice":"yes"
+    },
+    {
+      "letter": "is_enroll_snow_no",
+      "x": 130.73143295708746,
+      "y": 288.72733824851133,
+      "human": "is_enroll_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "signin",
+      "choice":"no"
+    },
+    {
+      "letter": "dashboard",
+      "x": 768.7620217924078,
+      "y": 517.1729705135308,
+      "human": "dashboard",
+      "color": "#ffff00",
+      "type": "diamond",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "photoid_citizen_match_no",
+      "x": 1147.9140739834495,
+      "y": 354.7162351777358,
+      "human": "photoid_citizen_match_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "add_linking_doc",
+      "choice":"no"
+    },
+    {
+      "letter": "link_complete_yes",
+      "x": 1296.8845336889133,
+      "y": 370.31389064293063,
+      "human": "link_complete_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "schedule",
+      "choice":"yes"
+    },
+    {
+      "letter": "is_list_a_yes",
+      "x": 1394.1081791885351,
+      "y": 207.7304669483816,
+      "human": "is_list_a_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "schedule",
+      "choice":"yes"
+    },
+    {
+      "letter": "is_list_a_no",
+      "x": 1323.126333922454,
+      "y": 161.9473899717953,
+      "human": "is_list_a_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "citizen_docs",
+      "choice":"no"
+    },
+    {
+      "letter": "photo_lpr",
+      "x": 1374.9999892552423,
+      "y": 43.1438882977974,
+      "human": "photo_lpr",
+      "color": "#6d71f3",
+      "type": "box",
+      "ancestor": "",
+      "target": "schedule"
+    },
+    {
+      "letter": "address",
+      "x": 1003.3799530472688,
+      "y": 112.59551876114428,
+      "human": "address",
+      "color": "#d0ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "online_renewal_yes"
+    },
+    {
+      "letter": "online_renewal_yes",
+      "x": 1136.850647310343,
+      "y": 107.5193407021249,
+      "human": "online_renewal_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "is_citizen_yes",
+      "choice":"yes"
+    },
+    {
+      "letter": "is_citizen_no",
+      "x": 1120.064775813247,
+      "y": 35.89371651120008,
+      "human": "is_citizen_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "photo_lpr",
+      "choice":"no"
+    },
+    {
+      "letter": "is_citizen_yes",
+      "x": 1254.5004867574419,
+      "y": 94.97894710917406,
+      "human": "is_citizen_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "photo_citizen",
+      "choice":"yes"
+    },
+    {
+      "letter": "photoid_citizen_match_yes",
+      "x": 1321.8343665892328,
+      "y": 306.55513217831367,
+      "human": "photoid_citizen_match_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "schedule",
+      "choice":"yes"
+    },
+    {
+      "letter": "enrollment_yes",
+      "x": 829.4688711839143,
+      "y": 105.5714127320249,
+      "human": "enrollment_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "attributes",
+      "choice":"yes"
+    },
+    {
+      "letter": "enrollment_no",
+      "x": 920.4219661102512,
+      "y": 205.81445341791985,
+      "human": "enrollment_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "address",
+      "choice":"no"
+    },
+    {
+      "letter": "legal_names",
+      "x": 569.5844160938054,
+      "y": 65.51798230211027,
+      "human": "legal_names",
+      "color": "#d9ea57",
+      "type": "box",
+      "ancestor": "",
+      "target": "birth_and_citizenship"
+    },
+    {
+      "letter": "sta_no",
+      "x": 392.98700788981796,
+      "y": 243.56687876830443,
+      "human": "sta_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "active_enrollment_in_snow_yes",
+      "choice":"no"
+    },
+    {
+      "letter": "active_enrollment_in_snow_no",
+      "x": 459.78916487867565,
+      "y": 203.9684621944937,
+      "human": "active_enrollment_in_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "location",
+      "choice":"no"
+    },
+    {
+      "letter": "active_enrollment_in_snow_yes",
+      "x": 617.4768527561854,
+      "y": 364.1479303001049,
+      "human": "active_enrollment_in_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "pre_enrollment_complete_no",
+      "choice":"yes"
+    },
+    {
+      "letter": "pre_enrollment_complete_yes",
+      "x": 712.8709479341795,
+      "y": 450.65961127840967,
+      "human": "pre_enrollment_complete_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "dashboard",
+      "choice":"yes"
+    },
+    {
+      "letter": "pre_enrollment_complete_no",
+      "x": 692.2791478517258,
+      "y": 325.3502928760496,
+      "human": "pre_enrollment_complete_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "continue_enrollment_flow",
+      "choice":"no"
+    },
+    {
+      "letter": "sta_yes",
+      "x": 163.57007562794178,
+      "y": 376.0218964061834,
+      "human": "sta_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "active_renewal_in_snow_yes",
+      "choice":"yes"
+    },
+    {
+      "letter": "active_renewal_in_snow_no",
+      "x": 274.427583616205,
+      "y": 470.0358195682756,
+      "human": "active_renewal_in_snow_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "eligible_to_renew_no",
+      "choice":"no"
+    },
+    {
+      "letter": "eligible_to_renew_no",
+      "x": 401.16264082575367,
+      "y": 438.85340486808053,
+      "human": "eligible_to_renew_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "prompt_for_renewal_yes",
+      "choice":"no"
+    },
+    {
+      "letter": "active_renewal_in_snow_yes",
+      "x": 151.5838598043167,
+      "y": 503.7212560809545,
+      "human": "active_renewal_in_snow_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "continue_renewal_flow",
+      "choice":"yes"
+    },
+    {
+      "letter": "prompt_for_renewal_yes",
+      "x": 204.70297568930962,
+      "y": 164.1324810157925,
+      "human": "prompt_for_renewal_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "reprint_required_no",
+      "choice":"yes"
+    },
+    {
+      "letter": "reprint_required_yes",
+      "x": 326.4707223348463,
+      "y": 203.23783789692413,
+      "human": "reprint_required_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "reprint_notice",
+      "choice":"yes"
+    },
+    {
+      "letter": "reprint_required_no",
+      "x": 264.5335001921457,
+      "y": 18.221899807869253,
+      "human": "reprint_required_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "citizenship_or_name_change_no",
+      "choice":"no"
+    },
+    {
+      "letter": "citizenship_or_name_change_yes",
+      "x": 387.9074391542335,
+      "y": 58.291368661714266,
+      "human": "citizenship_or_name_change_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "location",
+      "choice":"yes"
+    },
+    {
+      "letter": "citizenship_or_name_change_no",
+      "x": 686.7789337678936,
+      "y": 17.907520934899846,
+      "human": "citizenship_or_name_change_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "eligibility",
+      "choice":"no"
+    }
+  ],
+  "connections": [
+    {
+      "from": "home",
+      "to": "disclose",
+      "type": "normal",
+      "ancestor": "home"
+    },
+    {
+      "from": "disclose",
+      "to": "signin",
+      "type": "normal",
+      "ancestor": "disclose"
+    },
+    {
+      "from": "signin",
+      "to": "password",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signin",
+      "to": "mfa",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signin",
+      "to": "signup",
+      "type": "normal",
+      "ancestor": "signin"
+    },
+    {
+      "from": "signup",
+      "to": "account_details",
+      "type": "normal",
+      "ancestor": "signup"
+    },
+    {
+      "from": "reprint_notice",
+      "to": "location",
+      "type": "normal",
+      "ancestor": "reprint_notice"
+    },
+    {
+      "from": "account_details",
+      "to": "is_enroll_snow_yes",
+      "type": "yes",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "is_enroll_snow_yes",
+      "to": "associate_to_account",
+      "type": "yes",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "account_details",
+      "to": "is_enroll_snow_no",
+      "type": "no",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "is_enroll_snow_no",
+      "to": "signin",
+      "type": "no",
+      "ancestor": "account_details"
+    },
+    {
+      "from": "name_check",
+      "to": "photoid_citizen_match_no",
+      "type": "no",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "photoid_citizen_match_no",
+      "to": "add_linking_doc",
+      "type": "no",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "add_linking_doc",
+      "to": "link_complete_yes",
+      "type": "yes",
+      "ancestor": "add_linking_doc"
+    },
+    {
+      "from": "link_complete_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "add_linking_doc"
+    },
+    {
+      "from": "citizen_docs",
+      "to": "name_check",
+      "type": "normal",
+      "ancestor": "citizen_docs"
+    },
+    {
+      "from": "photo_citizen",
+      "to": "is_list_a_yes",
+      "type": "yes",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "is_list_a_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "photo_citizen",
+      "to": "is_list_a_no",
+      "type": "no",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "is_list_a_no",
+      "to": "citizen_docs",
+      "type": "no",
+      "ancestor": "photo_citizen"
+    },
+    {
+      "from": "address",
+      "to": "online_renewal_yes",
+      "type": "yes",
+      "ancestor": "address"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "payment",
+      "type": "yes",
+      "ancestor": "address"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "is_citizen_no",
+      "type": "no",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "is_citizen_no",
+      "to": "photo_lpr",
+      "type": "no",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "online_renewal_yes",
+      "to": "is_citizen_yes",
+      "type": "yes",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "is_citizen_yes",
+      "to": "photo_citizen",
+      "type": "yes",
+      "ancestor": "online_renewal_yes"
+    },
+    {
+      "from": "payment",
+      "to": "summary_online",
+      "type": "normal",
+      "ancestor": "payment"
+    },
+    {
+      "from": "summary_online",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "summary_online"
+    },
+    {
+      "from": "photo_lpr",
+      "to": "schedule",
+      "type": "normal",
+      "ancestor": "photo_lpr"
+    },
+    {
+      "from": "schedule",
+      "to": "summary_appointment",
+      "type": "normal",
+      "ancestor": "schedule"
+    },
+    {
+      "from": "summary_appointment",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "summary_appointment"
+    },
+    {
+      "from": "name_check",
+      "to": "photoid_citizen_match_yes",
+      "type": "yes",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "photoid_citizen_match_yes",
+      "to": "schedule",
+      "type": "yes",
+      "ancestor": "name_check"
+    },
+    {
+      "from": "eligibility",
+      "to": "enrollment_yes",
+      "type": "yes",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "enrollment_yes",
+      "to": "attributes",
+      "type": "yes",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "eligibility",
+      "to": "enrollment_no",
+      "type": "no",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "enrollment_no",
+      "to": "address",
+      "type": "no",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "attributes",
+      "to": "address",
+      "type": "normal",
+      "ancestor": "attributes"
+    },
+    {
+      "from": "birth_and_citizenship",
+      "to": "eligibility",
+      "type": "normal",
+      "ancestor": "birth_and_citizenship"
+    },
+    {
+      "from": "legal_names",
+      "to": "birth_and_citizenship",
+      "type": "normal",
+      "ancestor": "legal_names"
+    },
+    {
+      "from": "location",
+      "to": "legal_names",
+      "type": "normal",
+      "ancestor": "location"
+    },
+    {
+      "from": "mfa",
+      "to": "sta_no",
+      "type": "no",
+      "ancestor": "mfa"
+    },
+    {
+      "from": "sta_no",
+      "to": "active_enrollment_in_snow_no",
+      "type": "no",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "active_enrollment_in_snow_no",
+      "to": "location",
+      "type": "no",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "sta_no",
+      "to": "active_enrollment_in_snow_yes",
+      "type": "yes",
+      "ancestor": "sta_no"
+    },
+    {
+      "from": "active_enrollment_in_snow_yes",
+      "to": "pre_enrollment_complete_yes",
+      "type": "yes",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "pre_enrollment_complete_yes",
+      "to": "dashboard",
+      "type": "yes",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "active_enrollment_in_snow_yes",
+      "to": "pre_enrollment_complete_no",
+      "type": "no",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "pre_enrollment_complete_no",
+      "to": "continue_enrollment_flow",
+      "type": "no",
+      "ancestor": "active_enrollment_in_snow_yes"
+    },
+    {
+      "from": "mfa",
+      "to": "sta_yes",
+      "type": "yes",
+      "ancestor": "mfa"
+    },
+    {
+      "from": "sta_yes",
+      "to": "active_renewal_in_snow_no",
+      "type": "no",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "active_renewal_in_snow_no",
+      "to": "eligible_to_renew_no",
+      "type": "no",
+      "ancestor": "active_renewal_in_snow_no"
+    },
+    {
+      "from": "eligible_to_renew_no",
+      "to": "dashboard",
+      "type": "no",
+      "ancestor": "active_renewal_in_snow_no"
+    },
+    {
+      "from": "sta_yes",
+      "to": "active_renewal_in_snow_yes",
+      "type": "yes",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "active_renewal_in_snow_yes",
+      "to": "continue_renewal_flow",
+      "type": "yes",
+      "ancestor": "sta_yes"
+    },
+    {
+      "from": "eligible_to_renew_no",
+      "to": "prompt_for_renewal_yes",
+      "type": "yes",
+      "ancestor": "eligible_to_renew_no"
+    },
+    {
+      "from": "prompt_for_renewal_yes",
+      "to": "reprint_required_yes",
+      "type": "yes",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "reprint_required_yes",
+      "to": "reprint_notice",
+      "type": "yes",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "prompt_for_renewal_yes",
+      "to": "reprint_required_no",
+      "type": "no",
+      "ancestor": "prompt_for_renewal_yes"
+    },
+    {
+      "from": "reprint_required_no",
+      "to": "citizenship_or_name_change_yes",
+      "type": "yes",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "citizenship_or_name_change_yes",
+      "to": "location",
+      "type": "yes",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "reprint_required_no",
+      "to": "citizenship_or_name_change_no",
+      "type": "no",
+      "ancestor": "reprint_required_no"
+    },
+    {
+      "from": "citizenship_or_name_change_no",
+      "to": "eligibility",
+      "type": "no",
+      "ancestor": "reprint_required_no"
+    }
+  ]
+}
+
+===== datepicker.html =====
+<html>
+	<body>
+
+		<script> 
+
+
+
+		</script> 
+
+
+
+
+	</body> 
+</html> 
+
+
+===== endpoints.html =====
+<html>
+  <body>
+    <script>
+
+      function getLocationsFlat() {
+        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations")
+      }
+
+      function getLocationsLimited() {
+        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations?limit=19")
+      }
+
+      function getLocationsPages() {
+        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/paged")
+      }
+
+      
+
+      function getLocationByLocationId() { 
+//         doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/f90b5d600a0a0b91001d8bf44240ad32")
+        doIt("https://enrollment-proxy-api.telos-tsa-precheck.com/locations/f90b5d600a0a0b91001d8bf44240ad32")
+      }
+
+      
+      function doIt(url) {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append(
+          "Authorization",
+          "Basic ZW5yb2xsbWVudF9hcGlfdXNlcjpBRjQyb1lOci50aXJ2cjxdK2FDR05fQURoTWV9V0VWYi5eS2F3TWJGd3RHY14qZWVdbFFsWVZPRFhOZ1FkXTU2b29WaC1LaV9GJGJrNVhkSWJsM1B3bnAxbXAjeCwrTFsqOVk+"
+        );
+
+        const raw = JSON.stringify({
+          firstName: "fname",
+          lastName: "lname",
+          countryOfBirth: "US",
+          dateOfBirth: "2000-01-01",
+        });
+
+        const requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+          redirect: "follow",
+        };
+
+        fetch(
+          url,
+          requestOptions
+        )
+          .then((response) => response.text())
+          .then((result) => {
+            console.log( result )
+            const locations = JSON.parse( result )
+            const x = url + "\nlen(" + locations.length + ") \n " + JSON.stringify( locations[0] , null, 2 )
+            document.getElementById("output").value = x 
+          })
+          .catch((error) => console.error(error));
+      }
+    </script>
+    <a href="https://enrollment-swagger.telosid.com/">Swagger</a>
+    <br/>
+    <button onclick="getLocationsFlat()">flat</button>
+    <br/>
+    <button onclick="getLocationsLimited()">limited</button>
+    <br/>
+    <button onclick="getLocationsPages()">paged</button>
+    <br/>
+    <button onclick="getLocationByLocationId()">getLocationByLocationId</button>
+    <br/>
+
+
+    
+    <textarea id="output" rows="100" cols="100"> </textarea>
+  </body>
+</html>
+
+
+===== ETL.js =====
+
+
+function emitPinia() {
+    const nodes = [];
+    graph.forEach((shape) => {
+      nodes.push({
+        letter: shape.letter,
+        human: shape.human,
+        type: shape.type,
+      });
+    });
+  
+    const graphData = { nodes, connections };
+  
+    const theData = downstreamCirclesBetweenBoxes(graphData);
+    document.getElementById("graphJson").value = JSON.stringify(theData, null, 2 )
+  }
+  function downstreamCirclesBetweenBoxes(graph) {
+    // 1) Create a lookup from letter -> node object
+    const nodeByLetter = {};
+    graph.nodes.forEach((node) => {
+      nodeByLetter[node.letter] = node;
+    });
+  
+    // 2) Build a forward adjacency list,
+    //    but store objects: { next: toNodeLetter, edgeType: connection.type }.
+    const adjacency = {};
+    graph.nodes.forEach((node) => {
+      adjacency[node.letter] = [];
+    });
+    graph.connections.forEach(({ from, to, type: edgeType }) => {
+      adjacency[from].push({ next: to, edgeType });
+    });
+  
+    // 3) Gather all "box" nodes. We'll add .downstream to store results.
+    const boxes = {};
+    graph.nodes.forEach((node) => {
+      if (node.type === "box" || node.type === "diamond") {
+        boxes[node.letter] = {
+          ...node,
+          // We'll have objects like:
+          //   { box: 'downstreamBoxLetter', circles: [ { letter, choice }, ... ] }
+          downstream: [],
+        };
+      }
+    });
+  
+    // Helper function to merge two sets of circle objects
+    // we track circles in a Map keyed by circle letter -> { letter, choice }
+    function unionCircleMaps(mapA, mapB) {
+      const result = new Map(mapA); // clone
+      for (const [letter, circleObj] of mapB.entries()) {
+        result.set(letter, circleObj);
+      }
+      return result;
+    }
+  
+    // 4) For each box, we do a DFS down the graph to find the *next* box(es),
+    //    collecting any circle nodes encountered along each path.
+    function collectDownstreamBoxesAndCircles(startBoxLetter) {
+      // We'll store a map: boxLetter -> Map(circleLetter -> { letter, choice })
+      const boxToCirclesMap = new Map();
+  
+      // DFS function carries a Map of circles so far (by letter), 
+      // and merges as it goes deeper.
+      function dfs(currentLetter, circlesSoFar, visited) {
+        const currentNode = nodeByLetter[currentLetter];
+  
+        // Explore all children in adjacency
+        for (const { next: childLetter, edgeType } of adjacency[currentLetter]) {
+          if (!visited.has(childLetter)) {
+            visited.add(childLetter);
+  
+            // Copy the circlesSoFar map so each path can diverge
+            let newCircles = new Map(circlesSoFar);
+  
+            // If the child is a circle, we add it with its "choice" = edgeType
+            const childNode = nodeByLetter[childLetter];
+            if (childNode.type === "circle") {
+              // Possibly only store if edgeType is "yes" or "no"?
+              // For now, we store the raw edgeType:
+              newCircles.set(childLetter, {
+                letter: childLetter,
+                choice: edgeType, // e.g. "yes", "no", "normal", etc.
+              });
+            }
+  
+            // If the child is a *different* box, we've reached the next box
+            if ( ( childNode.type === "box" || childNode.type === "diamond" ) && childLetter !== startBoxLetter) {
+              // Merge these circles into whatever we had for that box
+              const existingMap = boxToCirclesMap.get(childLetter) || new Map();
+              const combined = unionCircleMaps(existingMap, newCircles);
+              boxToCirclesMap.set(childLetter, combined);
+              // Stop going deeper from here
+            } else {
+              // Keep DFSing
+              dfs(childLetter, newCircles, visited);
+            }
+          }
+        }
+      }
+  
+      const visited = new Set([startBoxLetter]);
+      dfs(startBoxLetter, new Map(), visited);
+  
+      // Convert the boxToCirclesMap into an array:
+      //   [ { box: "someBoxLetter", circles: [ { letter, choice }, ... ] } ... ]
+      return [...boxToCirclesMap.entries()].map(([downstreamBox, circlesMap]) => ({
+        box: downstreamBox,
+        circles: [...circlesMap.values()],
+      }));
+    }
+  
+    // 5) Populate each box’s .downstream property
+    for (const boxLetter in boxes) {
+      boxes[boxLetter].downstream = collectDownstreamBoxesAndCircles(boxLetter);
+    }
+  
+    return boxes;
+  }
+  
+  
+  function getDependencies() {
+    const raw = downstreamCirclesBetweenBoxes(bigBallOfJson);
+    const dependencies = {} 
+    for ( let k in raw ) {
+      const obj = convertShape( raw[k].letter,  raw[k].downstream)
+      dependencies[k]=obj
+    }
+    const squares = {}
+    const diamonds = {}
+    for ( let i in bigBallOfJson.nodes ) { 
+      const letter = bigBallOfJson.nodes[i].letter
+      const type = bigBallOfJson.nodes[i].type
+      if ( type === "circle" ) { 
+        diamonds[letter]="NILL"
+      } else {
+        squares[letter]="NILL"
+      }
+    }
+    return {diamonds, squares, dependencies}
+   
+  }
+  
+  function convertShape(letter, downstream) {
+    let obj = {} 
+    obj["url"] = letter 
+    obj["preconditions"] = []
+    let neededThings = [] 
+    downstream.forEach((obj2)=>{
+      const precognition = []
+      obj2.circles.forEach((thing)=> { 
+       const x = {
+          "category":"diamonds",
+          "key":thing.letter,
+          "expected": thing.choice     
+        }
+        obj["preconditions"].push(x)
+      })
+    })
+    return obj
+  }
+  
+  
+  
+  
+
+===== graph.js =====
+const YES = "yes";
+const NO = "no";
+// const NORMAL = "SOMETHING";
+const YELLOW = "background-color:yellow;";
+const LIGHTGREEN = "background-color:lightgreen";
+const CHARCOAL = "rgba(0, 0, 0, 0.9)"; 
+// const SAD = "rgba(255, 200, 130, 1.0)"; // a kind of orange -- too pale
+// const HAPPY = "rgba(144, 238, 144, 1.0)"; // a sort of green  -- too pale
+const HAPPY = "green";
+const SAD = "red"
+const canvas = document.getElementById("flowchartCanvas");
+canvas.width = window.innerWidth;
+canvas.height = 600; //// 600;
+const ctx = canvas.getContext("2d");
+const boxWidth = 40;
+const boxHeight = 40;
+const diamondWidth = 40;
+const diamondHeight = 40;
+const circleDiameter = 20;
+let selectedNode = null;
+let everything = undefined;
+const nudge = -25; // nudge text upwards a little
+const FROM_NODE_WIDGET = document.getElementById("fromNode");
+const FROM_NODE2_WIDGET = document.getElementById("fromNode2");
+const TO_NODE_WIDGET = document.getElementById("toNode");
+const TO_NODE2_WIDGET = document.getElementById("toNode2");
+const NODE_KEY_DETAIL_WIDGET = document.getElementById("nodeKeyDetail");
+const ANCESTOR = document.getElementById("ancestor");
+const NODE_LABEL_DETAIL_WIDGET = document.getElementById("nodeLabelDetail");
+const NODE_COLOR_DETAIL_WIDGET = document.getElementById("nodeColorDetail");
+
+const NODE_ANCESTOR_DETAIL_WIDGET =
+  document.getElementById("nodeAncestorDetail");
+const DELETE_NOTE_BUTTON = document.getElementById("deleteNode");
+
+function drawBox(x, y, width, height, text, color, selected, human) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.rect(x, y, width, height);
+  ctx.fill();
+  ctx.strokeStyle = selected ? "orange" : "black";
+  ctx.lineWidth = selected ? 3 : 1;
+  ctx.stroke();
+
+  ctx.fillStyle = "black";
+  ctx.font = "17px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  const t = text + " : " + human;
+  ctx.fillText(text, x + width / 2, nudge + y + height / 2);
+}
+
+function drawDiamond(x, y, width, height, text, color, selected, human) {
+  const centerX = x + width / 2;
+  const centerY = y + height / 2;
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(centerX, y);
+  ctx.lineTo(x + width, centerY);
+  ctx.lineTo(centerX, y + height);
+  ctx.lineTo(x, centerY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = selected ? "red" : "black";
+  ctx.lineWidth = selected ? 3 : 1;
+  ctx.stroke();
+
+  ctx.fillStyle = "black";
+  ctx.font = "17px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  const t = text + " : " + human;
+  ctx.fillText(text, centerX, nudge + centerY);
+}
+
+function drawArrow_quadraticBezier(fromX, fromY, toX, toY, color = "black") {
+  const headLength = 10; // Arrowhead size
+
+  // Randomized control point for curve
+  const controlX = (fromX + toX) / 2 + (Math.random() * 100 - 50);
+  const controlY = (fromY + toY) / 2 + (Math.random() * 100 - 50);
+
+  // Draw the quadratic curve
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(fromX, fromY);
+  ctx.quadraticCurveTo(controlX, controlY, toX, toY);
+  ctx.stroke();
+
+  // t defines how far along the curve the arrow will be placed
+  const t = 0.5;
+
+  // Calculate point on curve at t
+  const curveX =
+    Math.pow(1 - t, 2) * fromX +
+    2 * (1 - t) * t * controlX +
+    Math.pow(t, 2) * toX;
+  const curveY =
+    Math.pow(1 - t, 2) * fromY +
+    2 * (1 - t) * t * controlY +
+    Math.pow(t, 2) * toY;
+
+  // Calculate the derivative for angle (direction) at t
+  const dx = 2 * (1 - t) * (controlX - fromX) + 2 * t * (toX - controlX);
+  const dy = 2 * (1 - t) * (controlY - fromY) + 2 * t * (toY - controlY);
+  const angle = Math.atan2(dy, dx);
+
+  // Draw the arrowhead at the correct angle
+  ctx.beginPath();
+  ctx.moveTo(curveX, curveY);
+  ctx.lineTo(
+    curveX - headLength * Math.cos(angle - Math.PI / 6),
+    curveY - headLength * Math.sin(angle - Math.PI / 6)
+  );
+  ctx.lineTo(
+    curveX - headLength * Math.cos(angle + Math.PI / 6),
+    curveY - headLength * Math.sin(angle + Math.PI / 6)
+  );
+  ctx.lineTo(curveX, curveY);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.strokeStyle = "black"; // Reset for future strokes
+}
+class Shape {
+  constructor(letter, x, y, human, color, type, choice) {
+    this.letter = letter;
+    this.x = x || Math.floor(Math.random() * (800 - 100)) + 100;
+    this.y = y || Math.floor(Math.random() * (400 - 100)) + 100;
+    this.human = human;
+    this.color = color;
+    this.type = type;
+    this.ancestor = "";
+    this.target = "";
+    this.choice = choice 
+    graph.set(letter, this);
+  }
+  setAncestor(a) {
+    setAncestr;
+  }
+}
+
+let graph = new Map();
+let connections = [];
+let seen = {};
+function addConnection(fromNode, toNode, type, ancestor) {
+  graph.get(fromNode).target = toNode;
+  const compoundKey = fromNode + ":" + toNode;
+  if (seen.hasOwnProperty(compoundKey)) {
+    seen[compoundKey]++;
+  } else {
+    seen[compoundKey] = 1;
+  }
+  connections.push({ from: fromNode, to: toNode, type, ancestor });
+  drawGraph(graph);
+}
+
+function deleteNode(nodeKey) {
+  graph.delete(nodeKey);
+  connections = connections.filter(
+    (conn) => conn.from !== nodeKey && conn.to !== nodeKey
+  );
+  selectedNode = null;
+  FROM_NODE_WIDGET.value = "";
+  FROM_NODE2_WIDGET.value = "";
+  TO_NODE_WIDGET.value = "";
+  TO_NODE2_WIDGET.value = "";
+  NODE_KEY_DETAIL_WIDGET.value = "";
+  NODE_LABEL_DETAIL_WIDGET.value = "";
+  NODE_COLOR_DETAIL_WIDGET.value = "";
+
+  ANCESTOR.value = "";
+
+  drawGraph(graph);
+}
+let count = 0;
+function updateNodeDetails(node, whence = "TBD") {
+  if (count % 2 == 0) {
+    FROM_NODE_WIDGET.value = node.letter;
+    FROM_NODE2_WIDGET.value = node.letter;
+    ANCESTOR.value = node.letter;
+  } else {
+    TO_NODE_WIDGET.value = node.letter;
+    TO_NODE2_WIDGET.value = node.letter;
+  }
+  count++;
+  NODE_KEY_DETAIL_WIDGET.value = node.letter;
+  NODE_LABEL_DETAIL_WIDGET.value = node.human;
+  NODE_COLOR_DETAIL_WIDGET.value = node.color;
+  
+  DELETE_NOTE_BUTTON.disabled = !node;
+  document.getElementById("graphJson").value = JSON.stringify(node, null, 2 )
+}
+
+function drawCircle(x, y, diameter, text, color, selected, human) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+
+  ctx.arc(x + diameter / 2, y + diameter / 2, diameter / 2, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.strokeStyle = selected ? "red" : "black";
+  ctx.lineWidth = selected ? 3 : 1;
+  ctx.stroke();
+
+  ctx.fillStyle = "gray";
+  ctx.font = "12px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, x + diameter / 2, nudge + y + diameter / 2);
+}
+
+function drawGraph(xy) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  connections.forEach((conn) => {
+    const from = xy.get(conn.from);
+    const to = xy.get(conn.to);
+
+    if (from && to) {
+      // let color = "black";
+      // if (conn.type === YES) color = "green";
+      // else if (conn.type === NO) color = "red";
+      let color = CHARCOAL
+      if (conn.type === YES) color = HAPPY
+      else if (conn.type === NO) color = SAD
+
+      const fromCenterX =
+        from.x +
+        (from.type === "diamond"
+          ? diamondWidth / 2
+          : from.type === "circle"
+          ? circleDiameter / 2
+          : boxWidth / 2);
+      const fromCenterY =
+        from.y +
+        (from.type === "diamond"
+          ? diamondHeight / 2
+          : from.type === "circle"
+          ? circleDiameter / 2
+          : boxHeight / 2);
+      const toCenterX =
+        to.x +
+        (to.type === "diamond"
+          ? diamondWidth / 2
+          : to.type === "circle"
+          ? circleDiameter / 2
+          : boxWidth / 2);
+      const toCenterY =
+        to.y +
+        (to.type === "diamond"
+          ? diamondHeight / 2
+          : to.type === "circle"
+          ? circleDiameter / 2
+          : boxHeight / 2);
+
+      drawArrow_quadraticBezier(
+        fromCenterX,
+        fromCenterY,
+        toCenterX,
+        toCenterY,
+        color
+      );
+    }
+  });
+
+  xy.forEach((shape) => {
+    const isSelected = selectedNode && shape.letter === selectedNode.letter;
+    if (shape.type === "diamond") {
+      drawDiamond(
+        shape.x,
+        shape.y,
+        diamondWidth,
+        diamondHeight,
+        shape.letter,
+        shape.color,
+        isSelected,
+        shape.human
+      );
+    } else if (shape.type === "circle") {
+      drawCircle(
+        shape.x,
+        shape.y,
+        circleDiameter,
+        shape.letter,
+        shape.color,
+        isSelected,
+        shape.human
+      );
+    } else {
+      drawBox(
+        shape.x,
+        shape.y,
+        boxWidth,
+        boxHeight,
+        shape.letter,
+        shape.color,
+        isSelected,
+        shape.human
+      );
+    }
+  });
+}
+
+let draggingShape = null;
+let offsetX, offsetY;
+
+canvas.addEventListener("mousedown", (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  let foundNode = false;
+  graph.forEach((shape) => {
+    const width = shape.type === "diamond" ? diamondWidth : boxWidth;
+    const height = shape.type === "diamond" ? diamondHeight : boxHeight;
+
+    if (
+      mouseX >= shape.x &&
+      mouseX <= shape.x + width &&
+      mouseY >= shape.y &&
+      mouseY <= shape.y + height
+    ) {
+      draggingShape = shape;
+      offsetX = mouseX - shape.x;
+      offsetY = mouseY - shape.y;
+      selectedNode = shape;
+      foundNode = true;
+      updateNodeDetails(shape, "addEventListener");
+    }
+  });
+
+  if (!foundNode) {
+    selectedNode = null;
+  }
+  drawGraph(graph);
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (draggingShape) {
+    const rect = canvas.getBoundingClientRect();
+    draggingShape.x = e.clientX - rect.left - offsetX;
+    draggingShape.y = e.clientY - rect.top - offsetY;
+    updateNodeDetails(draggingShape, "mousemove");
+    drawGraph(graph);
+  }
+});
+
+canvas.addEventListener("mouseup", () => (draggingShape = null));
+canvas.addEventListener("mouseleave", () => (draggingShape = null));
+
+document.getElementById("deleteNode").addEventListener("click", () => {
+  if (selectedNode) {
+    deleteNode(selectedNode.letter);
+  }
+});
+function addNode() {
+  const key = document.getElementById("nodeKey").value;
+  const label = document.getElementById("nodeHuman").value;
+  const color = document.getElementById("nodeColor").value;
+  const type = document.getElementById("nodeType").value;
+  new Shape(key, null, null, label, color, type, "TBD");
+  drawGraph(graph);
+  document.getElementById("nodeKey").value = "";
+  document.getElementById("nodeHuman").value = "";
+}
+
+function addConnection_step0() {
+  const fromNode = document.getElementById("fromNode").value;
+  const toNode = document.getElementById("toNode").value;
+  const lineType = document.getElementById("lineType").value;
+  if (fromNode === toNode) {
+    alert("Self-calls are not permitted");
+  } else {
+    addConnection(fromNode, toNode, lineType, fromNode);
+  }
+}
+
+function emitGraph() {
+  const nodes = [];
+  graph.forEach((shape) => {
+    nodes.push(shape);
+  });
+
+  const graphData = { nodes, connections };
+  document.getElementById("graphJson").value = JSON.stringify(
+    graphData,
+    null,
+    2
+  );
+}
+
+function save(key) {
+  const nodes = [];
+  graph.forEach((shape) => {
+    nodes.push(shape);
+  });
+  const graphData = { nodes, connections };
+  const graphData_asString =  JSON.stringify( graphData  );
+  document.getElementById("graphJson").value = graphData_asString
+  localStorage.setItem(key, graphData_asString);
+}
+
+function load(key) {
+
+  graph = new Map();
+  connections = [];
+  seen = {};
+  count = 0 
+
+  const graphData_asString = localStorage.getItem(key);
+  document.getElementById("graphJson").value = "Loaded " + graphData_asString.length + " bytes"
+
+  try {
+    everything = JSON.parse(graphData_asString)
+
+    everything.nodes.forEach((node) => {
+      new Shape(node.letter, node.x, node.y, node.human, node.color, node.type, node.choice);
+    });
+
+    everything.connections.forEach((conn) =>
+      addConnection(conn.from, conn.to, conn.type, conn.ancestor)
+    );
+
+    drawGraph(graph);
+  } catch (error) {
+    console.error("Failed to load initial data:", error);
+  }
+
+
+
+}
+
+
+
+
+function scaleNodesToFit() {
+  if (!everything || !everything.nodes || everything.nodes.length === 0) {
+    console.log("No nodes available to scale.");
+    return;
+  }
+
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
+
+  everything.nodes.forEach((node) => {
+    if (node.x < minX) minX = node.x;
+    if (node.y < minY) minY = node.y;
+    if (node.x > maxX) maxX = node.x;
+    if (node.y > maxY) maxY = node.y;
+  });
+  const divideByZeroisBad = 0.00001;
+  minX += divideByZeroisBad;
+  minY += divideByZeroisBad;
+  maxX += divideByZeroisBad;
+  maxY += divideByZeroisBad;
+  const width = canvas.width;
+  const height = canvas.height;
+
+  everything.nodes.forEach((node) => {
+    node.x = ((width - 50) * node.x) / maxX;
+    node.y = ((height - 30) * node.y) / maxY;
+  });
+
+  graph.clear();
+  everything.nodes.forEach((node) => {
+    console.log( node )
+    new Shape(node.letter, node.x, node.y, node.human, node.color, node.type, node.choice);
+  });
+  drawGraph(graph);
+}
+
+function addDecisionPoint() {
+  const fromKey = document.getElementById("fromNode2").value;
+  const circleKey = document.getElementById("circleKey").value;
+  const toKey = document.getElementById("toNode2").value;
+  const circleChoice = document.getElementById("circleChoice").value;
+  const fromShape = graph.get(fromKey);
+  const toShape = graph.get(toKey);
+  if (!fromShape || !toShape || circleKey.length == 0) {
+    alert("Invalid node keys provided or the circleKey is missing.");
+    return;
+  }
+
+  connections = connections.filter(
+    (conn) => !(conn.from === fromKey && conn.to === toKey)
+  );
+  const circleX = (fromShape.x + toShape.x) / 2;
+
+  const circleY = (fromShape.y + toShape.y) / 2;
+
+  let circleColor = "#ffffff";
+  if (circleChoice.toLowerCase() === "yes") {
+    circleColor = "#00ff00";
+  } else if (circleChoice.toLowerCase() === "no") {
+    circleColor = "#ff0000";
+  }
+
+  new Shape(circleKey, circleX, circleY, circleKey, circleColor, "circle", circleChoice);
+  const circleShape = graph.get(circleKey);
+  circleShape.choice = circleChoice;
+  console.log("CHOICE " + circleShape.choice ) 
+  let connType;
+  if (circleChoice.toLowerCase() === "yes") {
+    connType = YES;
+  } else if (circleChoice.toLowerCase() === "no") {
+    connType = NO;
+  } else {
+    connType = "?";
+  }
+  addConnection(fromKey, circleKey, connType, fromKey);
+  addConnection(circleKey, toKey, connType, fromKey);
+
+  drawGraph(graph);
+
+  document.getElementById("fromNode2").value = "";
+  document.getElementById("circleKey").value = "";
+  document.getElementById("toNode2").value = "";
+  document.getElementById("ancestor").value = "";
+}
+
+async function main(nameOfTheJsonFile) {
+  try {
+    const response = await fetch(nameOfTheJsonFile);
+    everything = await response.json();
+
+    everything.nodes.forEach((node) => {
+      new Shape(node.letter, node.x, node.y, node.human, node.color, node.type, node.choice);
+    });
+
+    everything.connections.forEach((conn) =>
+      addConnection(conn.from, conn.to, conn.type, conn.ancestor)
+    );
+
+    drawGraph(graph);
+  } catch (error) {
+    console.error("Failed to load initial data:", error);
+  }
+}
+function copyOver(id1, id2) {
+  const value1 = document.getElementById(id1).value;
+  const value2 = document.getElementById(id2).value;
+  if (value2.length === 0) {
+    document.getElementById(id2).value = value1;
+  }
+}
+
+
+===== index.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+    window.onerror = function(msg, url, line, col, error) {
+        let  extra = !col ? '' : '\ncolumn: ' + col;
+        extra += !error ? '' : '\nerror: ' + error;
+        document.getElementById("errors").innerHTML = "Error: " + msg + "<br/>line: " + line + "<br/>" + extra;
+    }
+</script>
+    <meta charset="UTF-8" />
+    <title>Flowchart Canvas - Full Functionality</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #left-container {
+            /* width: 65%; */            
+            background-color: lightgray;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #right-panel {
+            /* width: 35%; */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            display: block;
+            background-color: #e0e0e0;
+            width: 100vw;
+            height: 600px;
+        }
+
+        #horizontal {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        input {
+            width:200px;
+            background-color: #ffffff;
+            font-size: 16px;
+        }
+        .highlight { 
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="flowchartCanvas"></canvas>
+    <a href="http://localhost:3000/telos">telos</a>
+    <a href="http://localhost:3000/complete">complete</a>
+    <a href="http://localhost:3000/1661">1661</a>
+
+    <div id="main-container">
+        <div id="left-container">
+            <div id="horizontal">
+                <table border="1">
+                    <tr><td><input type="text" id="nodeKey" required placeholder="key"
+                        onmouseout="copyOver('nodeKey', 'nodeHuman')"
+                        onblur="copyOver('nodeKey', 'nodeHuman')" /></td></tr>
+                    <tr><td><input type="text" id="nodeHuman" required placeholder="human" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addNode()">add node</button></td></tr>
+                    <tr><td><input type="color" id="nodeColor" value="#ffffff" /></td></tr>
+                    <tr><td>
+                        <select id="nodeType">
+                            <option value="box">Box</option>
+                            <option value="diamond">Diamond</option>
+                            <option value="circle">Circle</option>
+                        </select>
+                    </td></tr>
+                </table>
+
+                <table border="1">
+                    <tr><td><input type="text" id="fromNode" required placeholder="fromNode" /></td></tr>
+                    <tr><td><input type="text" id="toNode" required placeholder="toNode" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addConnection_step0()">add connection</button></td></tr>
+                    <tr><td>
+                        <select id="lineType">
+                            <option value="normal">Normal (Black)</option>
+                            <option value="yes">Yes (Green)</option>
+                            <option value="no">No (Red)</option>
+                        </select>
+                    </td></tr>
+                </table>
+
+                <table border="1">
+                    <tr><td><input type="text" id="circleKey" required placeholder="circleKey" /></td></tr>
+                    <tr><td><input type="text" id="ancestor" required placeholder="ancestor" /></td></tr>
+                    <tr><td><input type="text" id="fromNode2" required placeholder="fromNode2" /></td></tr>
+                    <tr><td><input type="text" id="toNode2" required placeholder="toNode2" /></td></tr>
+                    <tr><td>
+                        <select id="circleChoice">
+                            <option value="none">None</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </td></tr>
+                    <tr><td><button class="highlight" onclick="addDecisionPoint()">add decision</button></td></tr>
+                </table>
+            </div>
+            <hr/>
+            <table border="1">
+                    <tr><td><input type="text" id="nodeKeyDetail" placeholder="letter"></span></td></tr>
+                    <tr><td><input type="text" id="nodeLabelDetail" placeholder="human"></span></td></tr>
+                    <tr><td><input type="text" id="nodeColorDetail" placeholder="color"></span></td></tr>
+                    <tr><td><button id="deleteNode" >delete</button></td></tr>
+                    <tr><td><button onclick="scaleNodesToFit()" >scale</button></td></tr>
+                    <tr><td><button onClick="emitGraph()">emit graph</button></td></tr>
+                    <tr><td><button class="highlight" onClick="emitPinia()">emit pinia</button></td></tr>
+            </table>
+            <hr/>
+            <div id="errors"></div>
+        </div>
+
+        <div id="right-panel">
+            <button onclick="save('core')">save</button>
+            <button onclick="load('core')">load</button>
+            <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
+        </div>
+    </div>
+<script src="ETL.js"></script>
+<script src="graph.js"></script>
+<script>
+main("initialData.json");
+
+
+
+</script>
+</body>
+</html>
+
+
+===== initialData.json =====
+{
+  "nodes": [
+  ],
+  "connections": [
+  ]
+}
+
+===== tdd_bfs.js =====
+const bigBallOfJson = require("./test_data.json");
+
+function downstreamCirclesBetweenBoxes(graph) {
+  // 1) Create a lookup from letter -> node object
+  const nodeByLetter = {};
+  graph.nodes.forEach((node) => {
+    nodeByLetter[node.letter] = node;
+  });
+
+  // 2) Build a forward adjacency list,
+  //    but store objects: { next: toNodeLetter, edgeType: connection.type }.
+  const adjacency = {};
+  graph.nodes.forEach((node) => {
+    adjacency[node.letter] = [];
+  });
+  graph.connections.forEach(({ from, to, type: edgeType }) => {
+    adjacency[from].push({ next: to, edgeType });
+  });
+
+  // 3) Gather all "box" nodes. We'll add .downstream to store results.
+  const boxes = {};
+  graph.nodes.forEach((node) => {
+    if (node.type === "box" || node.type === "diamond") {
+      boxes[node.letter] = {
+        ...node,
+        // We'll have objects like:
+        //   { box: 'downstreamBoxLetter', circles: [ { letter, choice }, ... ] }
+        downstream: [],
+      };
+    }
+  });
+
+  // Helper function to merge two sets of circle objects
+  // we track circles in a Map keyed by circle letter -> { letter, choice }
+  function unionCircleMaps(mapA, mapB) {
+    const result = new Map(mapA); // clone
+    for (const [letter, circleObj] of mapB.entries()) {
+      result.set(letter, circleObj);
+    }
+    return result;
+  }
+
+  // 4) For each box, we do a DFS down the graph to find the *next* box(es),
+  //    collecting any circle nodes encountered along each path.
+  function collectDownstreamBoxesAndCircles(startBoxLetter) {
+    // We'll store a map: boxLetter -> Map(circleLetter -> { letter, choice })
+    const boxToCirclesMap = new Map();
+
+    // DFS function carries a Map of circles so far (by letter), 
+    // and merges as it goes deeper.
+    function dfs(currentLetter, circlesSoFar, visited) {
+      const currentNode = nodeByLetter[currentLetter];
+
+      // Explore all children in adjacency
+      for (const { next: childLetter, edgeType } of adjacency[currentLetter]) {
+        if (!visited.has(childLetter)) {
+          visited.add(childLetter);
+
+          // Copy the circlesSoFar map so each path can diverge
+          let newCircles = new Map(circlesSoFar);
+
+          // If the child is a circle, we add it with its "choice" = edgeType
+          const childNode = nodeByLetter[childLetter];
+          if (childNode.type === "circle") {
+            // Possibly only store if edgeType is "yes" or "no"?
+            // For now, we store the raw edgeType:
+            newCircles.set(childLetter, {
+              letter: childLetter,
+              choice: edgeType, // e.g. "yes", "no", "normal", etc.
+            });
+          }
+
+          // If the child is a *different* box, we've reached the next box
+          if ( ( childNode.type === "box" || childNode.type === "diamond" ) && childLetter !== startBoxLetter) {
+            // Merge these circles into whatever we had for that box
+            const existingMap = boxToCirclesMap.get(childLetter) || new Map();
+            const combined = unionCircleMaps(existingMap, newCircles);
+            boxToCirclesMap.set(childLetter, combined);
+            // Stop going deeper from here
+          } else {
+            // Keep DFSing
+            dfs(childLetter, newCircles, visited);
+          }
+        }
+      }
+    }
+
+    const visited = new Set([startBoxLetter]);
+    dfs(startBoxLetter, new Map(), visited);
+
+    // Convert the boxToCirclesMap into an array:
+    //   [ { box: "someBoxLetter", circles: [ { letter, choice }, ... ] } ... ]
+    return [...boxToCirclesMap.entries()].map(([downstreamBox, circlesMap]) => ({
+      box: downstreamBox,
+      circles: [...circlesMap.values()],
+    }));
+  }
+
+  // 5) Populate each box’s .downstream property
+  for (const boxLetter in boxes) {
+    boxes[boxLetter].downstream = collectDownstreamBoxesAndCircles(boxLetter);
+  }
+
+  return boxes;
+}
+
+// Example usage:
+function testDownstream() {
+  const results = downstreamCirclesBetweenBoxes(bigBallOfJson);
+  console.dir(results["attributes"], { depth: null });
+  /*
+    You might see something like:
+    {
+      letter: 'attributes',
+      ...
+      downstream: [
+        {
+          box: 'address',
+          circles: [ { letter: 'is_match_good_no', choice: 'no' }, ... ]
+        },
+        ...
+      ]
+    }
+  */
+}
+
+
+
+function getDependencies(raw) {
+  const dependencies = {} 
+  for ( let k in raw ) {
+    const obj = convertShape( raw[k].letter,  raw[k].downstream)
+    dependencies[k]=obj
+  }
+  const squares = {}
+  const diamonds = {}
+  for ( let i in bigBallOfJson.nodes ) { 
+    const letter = bigBallOfJson.nodes[i].letter
+    const type = bigBallOfJson.nodes[i].type
+    if ( type === "circle" ) { 
+      diamonds[letter]="NILL"
+    } else {
+      squares[letter]="NILL"
+    }
+  }
+  return {diamonds, squares, dependencies}
+ 
+}
+
+function convertShape(letter, downstream) {
+  let obj = {} 
+  obj["url"] = letter 
+  obj["preconditions"] = []
+  let neededThings = [] 
+  downstream.forEach((obj2)=>{
+    const precognition = []
+    obj2.circles.forEach((thing)=> { 
+     const x = {
+        "category":"diamonds",
+        "key":thing.letter,
+        "expected": thing.choice     
+      }
+      obj["preconditions"].push(x)
+    })
+  })
+  return obj
+}
+
+
+const theData = downstreamCirclesBetweenBoxes(bigBallOfJson);
+
+const everything = getDependencies(theData)
+console.log( JSON.stringify( everything, null, 2 )  )
+
+===== telos.html =====
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+    window.onerror = function(msg, url, line, col, error) {
+        let  extra = !col ? '' : '\ncolumn: ' + col;
+        extra += !error ? '' : '\nerror: ' + error;
+        document.getElementById("errors").innerHTML = "Error: " + msg + "<br/>line: " + line + "<br/>" + extra;
+    }
+</script>
+    <meta charset="UTF-8" />
+    <title>Flowchart Canvas - Full Functionality</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #left-container {
+            /* width: 65%; */            
+            background-color: lightgray;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #right-panel {
+            /* width: 35%; */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            display: block;
+            background-color: #e0e0e0;
+            width: 100vw;
+            height: 600px;
+        }
+
+        #horizontal {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        input {
+            width:200px;
+            background-color: #ffffff;
+            font-size: 16px;
+        }
+        .highlight { 
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="flowchartCanvas"></canvas>
+
+    <div id="main-container">
+        <div id="left-container">
+            <div id="horizontal">
+                <table border="1">
+                    <tr><td><input type="text" id="nodeKey" required placeholder="key"
+                        onmouseout="copyOver('nodeKey', 'nodeHuman')"
+                        onblur="copyOver('nodeKey', 'nodeHuman')" /></td></tr>
+                    <tr><td><input type="text" id="nodeHuman" required placeholder="human" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addNode()">add node</button></td></tr>
+                    <tr><td><input type="color" id="nodeColor" value="#ffffff" /></td></tr>
+                    <tr><td>
+                        <select id="nodeType">
+                            <option value="box">Box</option>
+                            <option value="diamond">Diamond</option>
+                            <option value="circle">Circle</option>
+                        </select>
+                    </td></tr>
+                </table>
+
+                <table border="1">
+                    <tr><td><input type="text" id="fromNode" required placeholder="fromNode" /></td></tr>
+                    <tr><td><input type="text" id="toNode" required placeholder="toNode" /></td></tr>
+                    <tr><td><button class="highlight" onclick="addConnection_step0()">add connection</button></td></tr>
+                    <tr><td>
+                        <select id="lineType">
+                            <option value="normal">Normal (Black)</option>
+                            <option value="yes">Yes (Green)</option>
+                            <option value="no">No (Red)</option>
+                        </select>
+                    </td></tr>
+                </table>
+
+                <table border="1">
+                    <tr><td><input type="text" id="circleKey" required placeholder="circleKey" /></td></tr>
+                    <tr><td><input type="text" id="ancestor" required placeholder="ancestor" /></td></tr>
+                    <tr><td><input type="text" id="fromNode2" required placeholder="fromNode2" /></td></tr>
+                    <tr><td><input type="text" id="toNode2" required placeholder="toNode2" /></td></tr>
+                    <tr><td>
+                        <select id="circleChoice">
+                            <option value="none">None</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </td></tr>
+                    <tr><td><button class="highlight" onclick="addDecisionPoint()">add decision</button></td></tr>
+                </table>
+            </div>
+            <hr/>
+            <table border="1">
+                    <tr><td><input type="text" id="nodeKeyDetail" placeholder="letter"></span></td></tr>
+                    <tr><td><input type="text" id="nodeLabelDetail" placeholder="human"></span></td></tr>
+                    <tr><td><input type="text" id="nodeColorDetail" placeholder="color"></span></td></tr>
+                    <tr><td><button id="deleteNode" >delete</button></td></tr>
+                    <tr><td><button onclick="scaleNodesToFit()" >scale</button></td></tr>
+                    <tr><td><button onClick="emitGraph()">emit graph</button></td></tr>
+                    <tr><td><button class="highlight" onClick="emitPinia()">emit pinia</button></td></tr>
+            </table>
+            <hr/>
+            <div id="errors"></div>
+        </div>
+
+        <div id="right-panel">
+            <button onclick="save('telos')">save</button>
+            <button onclick="load('telos')">load</button>
+            <textarea id="graphJson" rows="50" cols="160" spellcheck="false"></textarea>
+        </div>
+    </div>
+<script src="ETL.js"></script>
+<script src="graph.js"></script>
+<script>
+main("telos.json");
+
+
+
+</script>
+</body>
+</html>
+
+
+===== telos.json =====
+{
+  "nodes": [
+    {
+      "letter": "signup",
+      "x": 107,
+      "y": 431,
+      "human": "signup",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "is_new_yes"
+    },
+    {
+      "letter": "renewal",
+      "x": 236,
+      "y": 88,
+      "human": "renewal",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "birthcitizenship"
+    },
+    {
+      "letter": "birthcitizenship",
+      "x": 434,
+      "y": 110,
+      "human": "birthcitizenship",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "eligibility"
+    },
+    {
+      "letter": "eligibility",
+      "x": 491,
+      "y": 243,
+      "human": "eligibility",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "attributes"
+    },
+    {
+      "letter": "attributes",
+      "x": 634,
+      "y": 186,
+      "human": "attributes",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "address"
+    },
+    {
+      "letter": "photoid",
+      "x": 789,
+      "y": 306,
+      "human": "photoid",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "is_list_a_yes"
+    },
+    {
+      "letter": "proofcitizenship",
+      "x": 836,
+      "y": 549,
+      "human": "proofcitizenship",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "namematch"
+    },
+    {
+      "letter": "namematch",
+      "x": 1058,
+      "y": 426,
+      "human": "namematch",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "is_match_good_yes"
+    },
+    {
+      "letter": "scheduler",
+      "x": 1180,
+      "y": 188,
+      "human": "scheduler",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "dashboard"
+    },
+    {
+      "letter": "adddocuments",
+      "x": 1260,
+      "y": 294,
+      "human": "adddocuments",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "scheduler"
+    },
+    {
+      "letter": "dashboard",
+      "x": 1393,
+      "y": 139,
+      "human": "dashboard",
+      "color": "#c8ea1f",
+      "type": "diamond",
+      "ancestor": "",
+      "target": ""
+    },
+    {
+      "letter": "is_new_no",
+      "x": 271.5,
+      "y": 386.5,
+      "human": "is_new_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "eligibility",
+      "choice":"no"
+    },
+    {
+      "letter": "location",
+      "x": 157,
+      "y": 294,
+      "human": "location",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "legalname"
+    },
+    {
+      "letter": "legalname",
+      "x": 180,
+      "y": 220,
+      "human": "legalname",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "renewal"
+    },
+    {
+      "letter": "address",
+      "x": 710,
+      "y": 240,
+      "human": "address",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "photoid"
+    },
+    {
+      "letter": "is_new_yes",
+      "x": 72.5,
+      "y": 372.5,
+      "human": "is_new_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "location",
+      "choice":"yes"
+    },
+    {
+      "letter": "is_list_a_no",
+      "x": 778.5,
+      "y": 426,
+      "human": "is_list_a_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "proofcitizenship",
+      "choice":"no"
+    },
+    {
+      "letter": "is_list_a_yes",
+      "x": 916,
+      "y": 111.5,
+      "human": "is_list_a_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "scheduler",
+      "choice": "yes"
+    },
+    {
+      "letter": "is_match_good_no",
+      "x": 1260.5,
+      "y": 361.5,
+      "human": "is_match_good_no",
+      "color": "#ff0000",
+      "type": "circle",
+      "ancestor": "",
+      "target": "adddocuments",
+      "choice": "no"
+    },
+    {
+      "letter": "is_match_good_yes",
+      "x": 1136.5,
+      "y": 316.5,
+      "human": "is_match_good_yes",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "scheduler",
+      "choice": "yes"
+    }
+  ],
+  "connections": [
+    {
+      "from": "signup",
+      "to": "is_new_no",
+      "type": "no",
+      "ancestor": "signup"
+    },
+    {
+      "from": "is_new_no",
+      "to": "eligibility",
+      "type": "no",
+      "ancestor": "signup"
+    },
+    {
+      "from": "signup",
+      "to": "is_new_yes",
+      "type": "yes",
+      "ancestor": "signup"
+    },
+    {
+      "from": "is_new_yes",
+      "to": "location",
+      "type": "yes",
+      "ancestor": "signup"
+    },
+    {
+      "from": "location",
+      "to": "legalname",
+      "type": "normal",
+      "ancestor": "location"
+    },
+    {
+      "from": "photoid",
+      "to": "is_list_a_no",
+      "type": "no",
+      "ancestor": "photoid"
+    },
+    {
+      "from": "is_list_a_no",
+      "to": "proofcitizenship",
+      "type": "no",
+      "ancestor": "photoid"
+    },
+    {
+      "from": "photoid",
+      "to": "is_list_a_yes",
+      "type": "yes",
+      "ancestor": "photoid"
+    },
+    {
+      "from": "is_list_a_yes",
+      "to": "scheduler",
+      "type": "yes",
+      "ancestor": "photoid"
+    },
+    {
+      "from": "namematch",
+      "to": "is_match_good_no",
+      "type": "no",
+      "ancestor": "namematch"
+    },
+    {
+      "from": "is_match_good_no",
+      "to": "adddocuments",
+      "type": "no",
+      "ancestor": "namematch"
+    },
+    {
+      "from": "namematch",
+      "to": "is_match_good_yes",
+      "type": "yes",
+      "ancestor": "namematch"
+    },
+    {
+      "from": "is_match_good_yes",
+      "to": "scheduler",
+      "type": "yes",
+      "ancestor": "namematch"
+    },
+    {
+      "from": "adddocuments",
+      "to": "scheduler",
+      "type": "normal",
+      "ancestor": "adddocuments"
+    },
+    {
+      "from": "proofcitizenship",
+      "to": "namematch",
+      "type": "normal",
+      "ancestor": "proofcitizenship"
+    },
+    {
+      "from": "scheduler",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "scheduler"
+    },
+    {
+      "from": "legalname",
+      "to": "renewal",
+      "type": "normal",
+      "ancestor": "legalname"
+    },
+    {
+      "from": "renewal",
+      "to": "birthcitizenship",
+      "type": "normal",
+      "ancestor": "renewal"
+    },
+    {
+      "from": "birthcitizenship",
+      "to": "eligibility",
+      "type": "normal",
+      "ancestor": "birthcitizenship"
+    },
+    {
+      "from": "eligibility",
+      "to": "attributes",
+      "type": "normal",
+      "ancestor": "eligibility"
+    },
+    {
+      "from": "attributes",
+      "to": "address",
+      "type": "normal",
+      "ancestor": "attributes"
+    },
+    {
+      "from": "address",
+      "to": "photoid",
+      "type": "normal",
+      "ancestor": "address"
+    }
+  ]
+}
+
+===== test_data.json =====
+{
+  "nodes": [
+    {
+      "letter": "a",
+      "x": 744,
+      "y": 215,
+      "human": "a",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "C",
+      "choice": "TBD"
+    },
+    {
+      "letter": "b",
+      "x": 277,
+      "y": 282,
+      "human": "b",
+      "color": "#ffffff",
+      "type": "box",
+      "ancestor": "",
+      "target": "END",
+      "choice": "TBD"
+    },
+    {
+      "letter": "C",
+      "x": 510.5,
+      "y": 248.5,
+      "human": "C",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "D",
+      "choice": "yes"
+    },
+    {
+      "letter": "D",
+      "x": 393.75,
+      "y": 265.25,
+      "human": "D",
+      "color": "#00ff00",
+      "type": "circle",
+      "ancestor": "",
+      "target": "b",
+      "choice": "yes"
+    },
+    {
+      "letter": "dashboard",
+      "x": 118,
+      "y": 102,
+      "human": "dashboard",
+      "color": "#dff820",
+      "type": "diamond",
+      "ancestor": "",
+      "target": "",
+      "choice": "TBD"
+    },
+    {
+      "letter": "braobhsad",
+      "x": 657,
+      "y": 327,
+      "human": "braobhsad",
+      "color": "#dff820",
+      "type": "diamond",
+      "ancestor": "",
+      "target": "",
+      "choice": "TBD"
+    },
+    {
+      "letter": "END",
+      "x": 244,
+      "y": 361,
+      "human": "END",
+      "color": "#dff820",
+      "type": "box",
+      "ancestor": "",
+      "target": "",
+      "choice": "TBD"
+    }
+  ],
+  "connections": [
+    {
+      "from": "a",
+      "to": "C",
+      "type": "yes",
+      "ancestor": "a"
+    },
+    {
+      "from": "C",
+      "to": "D",
+      "type": "yes",
+      "ancestor": "C"
+    },
+    {
+      "from": "D",
+      "to": "b",
+      "type": "yes",
+      "ancestor": "C"
+    },
+    {
+      "from": "b",
+      "to": "dashboard",
+      "type": "normal",
+      "ancestor": "b"
+    },
+    {
+      "from": "b",
+      "to": "braobhsad",
+      "type": "normal",
+      "ancestor": "b"
+    },
+    {
+      "from": "b",
+      "to": "END",
+      "type": "normal",
+      "ancestor": "b"
+    }
+  ]
+}

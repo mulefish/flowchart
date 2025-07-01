@@ -8,7 +8,7 @@ from pathlib import Path
 # TARGET_DIR is outside of the project and I will name my targets whatever their 
 # github repo branch name is. 
 
-TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\master")
+TARGET_DIR = Path(r"C:\Users\squar\telos\clone_src\location_v6_mondays_2")
 # SOURCE_DIR = Path(r"C:\Users\squar\telos\tsapre.desktop\telos\apps\twe")
 SOURCE_DIR = Path(r"C:\Users\squar\telos\tsapre.desktop\telos")
 
