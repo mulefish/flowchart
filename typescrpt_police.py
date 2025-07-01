@@ -119,8 +119,9 @@ def walk_and_collect_declarations():
                 if file.endswith('.ts') or file.endswith('.vue'):
                     process_file(os.path.join(root, file))
 
-def report_results():
-    print("\n=== Type/Interface Usage Report ===\n")
+def show_findings():
+    print("+ ------------------------------ Type/Interface Findings -------------+ ")
+
     for name in sorted(set(list(type_usage_counts.keys()) + list(declaration_locations.keys()))):
         if name in ignore:
             continue
@@ -139,25 +140,23 @@ def report_results():
                 short = short.replace(base, "").lstrip("\\/")
             short_paths.append(short)
 
-        print(f"{name:<30} | Total Uses: {uses:<4} | Declared in:")
+        print(f"+++++++++++++++++++++++++++++++++++++\nuses {uses} | {name} ")
         for i, sp in enumerate(short_paths):
             line = decl_lines[i] if i < len(decl_lines) else '?'
-            print(f"    - {sp} (line {line})")
+            print(f"Declared in: {sp} (line {line})")
 
         if len(decl_files) > 1:
             print("  TSK! TSK!: Shadowing is bad!")
 
         used_files = usage_locations.get(name, [])
         if used_files:
-            print("  Used in:")
             for f in sorted(used_files):
                 short_file = f
                 for base in paths:
                     short_file = short_file.replace(base, "").lstrip("\\/")
-                print(f"    - {short_file}")
-        print()
+                print(f"Used in: {short_file}")
 
 if __name__ == "__main__":
     walk_and_collect_declarations()
     process_usages()
-    report_results()
+    show_findings()
